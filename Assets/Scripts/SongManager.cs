@@ -96,4 +96,14 @@ public class SongManager : MonoBehaviour
     {
         
     }
+
+    public int GetTotalBeats()
+    {
+        int totalBeats = 0;
+        foreach (var lane in lanes)
+        {
+            totalBeats += lane.timeStamps.Count;
+        }
+        return totalBeats;
+    }
 }

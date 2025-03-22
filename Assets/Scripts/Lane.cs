@@ -56,31 +56,26 @@ public class Lane : MonoBehaviour
             {
                 if (Math.Abs(audioTime - timeStamp) < marginOfErrorGood)
                 {
-                    Perfect();
-                    print($"Perfect on {inputIndex} note");
+                    ScoreManager.Perfect();
                     Destroy(notes[inputIndex].gameObject);
                     inputIndex++;
                 }
                 else if (marginOfErrorGood < Math.Abs(audioTime - timeStamp) && Math.Abs(audioTime - timeStamp) < marginOfErrorBad)
                 {
-                    Good();
-                    print($"Good on {inputIndex} note");
+                    ScoreManager.Good();
                     Destroy(notes[inputIndex].gameObject);
                     inputIndex++;
                 }
                 else
                 {
-                    Bad();
-                    print($"Bad on {inputIndex} note");
+                    ScoreManager.Bad();
                     Destroy(notes[inputIndex].gameObject);
                     inputIndex++;
-                    // print($"Hit inaccurate on {inputIndex} note with {Math.Abs(audioTime - timeStamp)} delay");
                 }
             }
             if (timeStamp + marginOfErrorBad <= audioTime)
             {
-                Miss();
-                print($"Missed {inputIndex} note");
+                ScoreManager.Miss();
                 inputIndex++;
             }
         }       
