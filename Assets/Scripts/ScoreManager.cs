@@ -24,6 +24,10 @@ public class ScoreManager : MonoBehaviour
     static int goodHits = 0;
     static int badHits = 0;
     static int missHits = 0;
+
+    static int holdPerfects = 0;
+    static int holdGoods = 0;
+    static int earlyReleases = 0;
     
     void Start()
     {
@@ -86,12 +90,59 @@ public class ScoreManager : MonoBehaviour
         Instance.missSFX.Play();
     }
 
+    public static void HoldJudgment(float accuracy) {
+        if (accuracy >= 0.95f) {
+            Perfect();
+            holdPerfects++;
+        }
+        else if (accuracy >= 0.75f) {
+            Good();
+            holdGoods++;
+        }
+        else {
+            EarlyRelease();
+        }
+    }
+
+    public static void HoldPerfect()
+    {
+        totalScore += 100;
+        comboScore++;
+        UpdateMultiplier();
+    }
+
+    public static void HoldMiss()
+    {
+        comboScore = 0;
+        missHits++;
+        UpdateMultiplier();
+    }
+
+    public static void EarlyRelease() {
+        result = "Early!";
+        comboScore = 0;
+        earlyReleases++;
+        totalBeats++;
+        Instance.hitSFX.Play();
+    }
+
     public static float GetAccuracy()
     {
-        if (totalBeats == 0) return 100f; // Hindari pembagian dengan nola
+        // if (totalBeats == 0) return 100f; // Hindari pembagian dengan nola
 
-        float accuracy = ((perfectHits * 1.0f) + (goodHits * 0.75f) + (badHits * 0.5f) + (missHits * 0.0f)) / totalBeats * 100f;
-        return accuracy;
+        // float accuracy = ((perfectHits * 1.0f) + (goodHits * 0.75f) + (badHits * 0.5f) + (missHits * 0.0f)) / totalBeats * 100f;
+        // return accuracy;
+
+
+        // Update formula untuk include hold notes
+        float score = (perfectHits * 1.0f) + 
+                     (goodHits * 0.75f) + 
+                     (holdPerfects * 1.0f) +
+                     (holdGoods * 0.75f) +
+                     (badHits * 0.5f);
+        
+        float totalPossible = totalBeats;
+        return (score / totalPossible) * 100f;
     }
 
     private void Update()
