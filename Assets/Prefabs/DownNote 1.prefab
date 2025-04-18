@@ -51,7 +51,12 @@ MonoBehaviour:
   head: {fileID: 0}
   body: {fileID: 0}
   tail: {fileID: 0}
-  pixelsPerUnit: 100
+  isHoldActive: 0
+  isBeingJudged: 0
+  isShrinking: 0
+  shrinkSpeed: 0
+  originalBodyLength: 0
+  isMissed: 0
 --- !u!212 &6401272534080061596
 SpriteRenderer:
   m_ObjectHideFlags: 0

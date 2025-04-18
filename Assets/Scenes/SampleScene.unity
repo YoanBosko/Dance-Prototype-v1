@@ -1323,7 +1323,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: 107
   hitNotePrefab: {fileID: 1534850418514208906, guid: 9043eb2d71628404d9dfdc92d43fc48c, type: 3}
-  holdNotePrefab: {fileID: 5225049484769428687, guid: 9a2a0a548241a7641ae91f4505739701, type: 3}
+  holdNotePrefab: {fileID: 5225049484769428687, guid: 9d80cc50d3359824984618be76cf32d4, type: 3}
   bombNotePrefab: {fileID: 0}
   noteRestriction: 11
   hitNoteTimeStamps: []
@@ -1461,7 +1461,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: 106
   hitNotePrefab: {fileID: 4003208864679534659, guid: b93f007ca30546343b6fb9f22a218a42, type: 3}
-  holdNotePrefab: {fileID: 4003208864679534659, guid: b93f007ca30546343b6fb9f22a218a42, type: 3}
+  holdNotePrefab: {fileID: 5225049484769428687, guid: 5cb1b16fd5b9a264687c54075dc0b4db, type: 3}
   bombNotePrefab: {fileID: 0}
   noteRestriction: 9
   hitNoteTimeStamps: []
@@ -1716,7 +1716,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: 102
   hitNotePrefab: {fileID: 6401272534080061571, guid: a043c4f729c0ef1429ea13081611a298, type: 3}
-  holdNotePrefab: {fileID: 5225049484769428687, guid: 9a2a0a548241a7641ae91f4505739701, type: 3}
+  holdNotePrefab: {fileID: 5225049484769428687, guid: 859111f1276a8bf4e8a0930681ced0c6, type: 3}
   bombNotePrefab: {fileID: 0}
   noteRestriction: 7
   hitNoteTimeStamps: []
