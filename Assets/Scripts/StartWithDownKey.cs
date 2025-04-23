@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class StartWithDownKey : MonoBehaviour
 {
-    [SerializeField] private string targetSceneName = "Menu Lagu"; // Ganti dengan nama scene tujuan
+    [SerializeField] private string targetSceneName = "Mulai"; // Ganti dengan nama scene tujuan
 
     void Update()
     {
