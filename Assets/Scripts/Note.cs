@@ -75,7 +75,7 @@ public class Note : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isPaused) //problemnya disini
+        if (!isPaused)
         {
             timeSinceInstantiated = SongManager.GetAudioSourceTime() - timeInstantiated - pauseDuration;
             t = (float)(timeSinceInstantiated / SongManager.Instance.noteTime / 2);
@@ -111,12 +111,21 @@ public class Note : MonoBehaviour
         Lane lane = GetComponentInParent<Lane>();
         if (t >= 0.5f && lane.isHolding && !isPaused && !isShrinking)
         {
+            float t2 = ((float)(timeSinceInstantiated + pauseDuration) - SongManager.Instance.noteTime) / SongManager.Instance.noteTime ;
+            float t3 = lateHoldBodySize.y / (SongManager.Instance.noteSpeed * SongManager.Instance.noteTime * 2);
+            if (t2 < t3)
+            {
             StopCoroutine("HoldDeleteCoroutine");
             TakeSnapshotForLateHold();
             StartCoroutine("HoldJudgmentCoroutine");
             Pause();
             // Debug.Log("terpanggil " + "1");
             isShrinking = true;
+            }
+            else
+            {
+                return;
+            }
         }
         else if (t >= 0.5f && !lane.isHolding && !isPaused)
         {
