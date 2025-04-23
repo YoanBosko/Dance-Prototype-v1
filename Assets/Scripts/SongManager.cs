@@ -32,19 +32,41 @@ public class SongManager : MonoBehaviour
     public string bombNoteMidiFile;
 
     public float noteTime => noteSpawnDistance / noteSpeed;
-    public float noteDespawnY => noteTapY;
+
+    // ----------------------------------------------------------------
+    public float noteDespawnY => noteTapY - (noteSpawnY - noteTapY);
+    // public float noteDespawnY => noteTapY;
+
+    // return noteTapY - (noteSpawnY - noteTapY);
+    //-12 -> distance note untuk destroy
+    // ----------------------------------------------------------------
 
     public static MidiFile hitNoteMidi;
     public static MidiFile holdNoteMidi;
     public static MidiFile bombNoteMidi;
 
-    void Start()
+    void Awake()
     {
         Instance = this;
+    }
 
-        if (!string.IsNullOrEmpty(SongDataBridge.songPath))
+    void Start()
+    {
+        // pakai ini untuk test beatmap dalam bentuk aplikasi.exe
+        // if (!string.IsNullOrEmpty(SongDataBridge.songPath))
+        // {
+        //     StartCoroutine(LoadAudioAndMidi());
+        // }
+        // else
+        // {
+        //     ReadFromFile();
+        // }
+
+        // pakai ini untuk pengembangan project dalam unity
+        if (Application.streamingAssetsPath.StartsWith("http://") || Application.streamingAssetsPath.StartsWith("https://"))
         {
-            StartCoroutine(LoadAudioAndMidi());
+            // StartCoroutine(ReadFromWebsite());
+            Debug.Log("dari web");
         }
         else
         {
@@ -76,9 +98,15 @@ public class SongManager : MonoBehaviour
 
     private void ReadFromFile()
     {
-        hitNoteMidi = MidiFile.Read(hitNoteMidiFile);
-        holdNoteMidi = MidiFile.Read(holdNoteMidiFile);
-        bombNoteMidi = MidiFile.Read(bombNoteMidiFile);
+        // pakai ini untuk test beatmap dalam bentuk aplikasi.exe -- cara kerja: mengambil file dari skrip songdatabride
+        // hitNoteMidi = MidiFile.Read(hitNoteMidiFile); 
+        // holdNoteMidi = MidiFile.Read(holdNoteMidiFile);
+        // bombNoteMidi = MidiFile.Read(bombNoteMidiFile);
+
+        // pakai ini untuk pengembangan project dalam unity
+        hitNoteMidi = MidiFile.Read(Application.streamingAssetsPath + "/" + hitNoteMidiFile);
+        holdNoteMidi = MidiFile.Read(Application.streamingAssetsPath + "/" + holdNoteMidiFile);
+        bombNoteMidi = MidiFile.Read(Application.streamingAssetsPath + "/" + bombNoteMidiFile);
 
         GetDataFromMidi();
         Invoke(nameof(StartSong), songDelayInSeconds);
@@ -89,6 +117,14 @@ public class SongManager : MonoBehaviour
         var hitNotes = hitNoteMidi.GetNotes();
         var holdNotes = holdNoteMidi.GetNotes();
         var bombNotes = bombNoteMidi.GetNotes();
+
+        // pakai ini untuk pengembangan project dalam unity, untuk test beatmap dalam bentuk aplikasi bisa dijadiin comment saja
+        var arrayHit = new Melanchall.DryWetMidi.Interaction.Note[hitNotes.Count];
+        hitNotes.CopyTo(arrayHit, 0);
+        var arrayHold = new Melanchall.DryWetMidi.Interaction.Note[holdNotes.Count];
+        holdNotes.CopyTo(arrayHold, 0);
+        var arrayBomb = new Melanchall.DryWetMidi.Interaction.Note[bombNotes.Count];
+        bombNotes.CopyTo(arrayBomb, 0);
 
         foreach (var lane in lanes)
         {
@@ -105,6 +141,7 @@ public class SongManager : MonoBehaviour
 
     public static double GetAudioSourceTime()
     {
+        // return (double)Instance.audioSource.timeSamples / Instance.audioSource.clip.frequency;
         return (double)Instance.audioSource.timeSamples / Instance.audioSource.clip.frequency;
     }
 

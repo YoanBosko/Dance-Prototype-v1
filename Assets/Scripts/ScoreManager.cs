@@ -16,7 +16,7 @@ public class ScoreManager : MonoBehaviour
     static string result;
     static int totalScore = 0;
 
-    static int totalBeats;  // Total beat dalam permainan
+    static int totalBeats = 0;  // Total beat dalam permainan
     public static int successfulHits;  // Jumlah hit yang masuk kategori Perfect atau Good
     static float scoreMultiplier = 1.0f; // Default multiplier
 
@@ -27,7 +27,6 @@ public class ScoreManager : MonoBehaviour
 
     static int holdPerfects = 0;
     static int holdGoods = 0;
-    static int earlyReleases = 0;
     
     void Start()
     {
@@ -43,6 +42,7 @@ public class ScoreManager : MonoBehaviour
         scoreMultiplier = 1.0f + (comboScore / 100.0f * 0.25f);
     }
 
+#region HitScoreManager
     public static void Perfect()
     {
         result = "Perfect";
@@ -89,43 +89,27 @@ public class ScoreManager : MonoBehaviour
         UpdateMultiplier();
         Instance.missSFX.Play();
     }
+#endregion
+#region HoldScoreManager
 
-    public static void HoldJudgment(float accuracy) {
-        if (accuracy >= 0.95f) {
+    public IEnumerator HoldCoroutine()
+    {
+        while (true)
+        {
             Perfect();
-            holdPerfects++;
-        }
-        else if (accuracy >= 0.75f) {
-            Good();
-            holdGoods++;
-        }
-        else {
-            EarlyRelease();
+            yield return new WaitForSeconds(0.2f);
         }
     }
 
-    public static void HoldPerfect()
+    public IEnumerator ReleaseCoroutine()
     {
-        totalScore += 100;
-        comboScore++;
-        UpdateMultiplier();
+        while (true)
+        {
+            Miss();
+            yield return new WaitForSeconds(0.2f);
+        }
     }
-
-    public static void HoldMiss()
-    {
-        comboScore = 0;
-        missHits++;
-        UpdateMultiplier();
-    }
-
-    public static void EarlyRelease() {
-        result = "Early!";
-        comboScore = 0;
-        earlyReleases++;
-        totalBeats++;
-        Instance.hitSFX.Play();
-    }
-
+#endregion
     public static float GetAccuracy()
     {
         // if (totalBeats == 0) return 100f; // Hindari pembagian dengan nola
@@ -151,5 +135,6 @@ public class ScoreManager : MonoBehaviour
         comboText.text = comboScore.ToString() + "X";
         accuracyText.text = "Akurasi: " + GetAccuracy().ToString("F2") + "%"; // Update UI Akurasi
         scoreText.text = totalScore.ToString(); // Menampilkan total skor
+        
     }
 }

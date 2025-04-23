@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using UnityEngine;
 using System.Linq;
+using Melanchall.DryWetMidi.MusicTheory;
 
 public class Lane : MonoBehaviour
 {
@@ -14,19 +15,22 @@ public class Lane : MonoBehaviour
     public GameObject bombNotePrefab;
     public Melanchall.DryWetMidi.MusicTheory.NoteName noteRestriction;
     
-    private List<Note> notes = new List<Note>();
+    [SerializeField]private List<Note> notes = new List<Note>();
     public List<double> hitNoteTimeStamps = new List<double>();
     public List<double> holdNoteTimeStamps = new List<double>();
     public List<double> holdNoteTimeDuration = new List<double>();
     public List<double> bombNoteTimeStamps = new List<double>();
     
     private int hitSpawnIndex = 0;
-    private int hitInputIndex = 0;
+    [HideInInspector]public int InputIndex = 0;
     private int holdSpawnIndex = 0;
+    // [HideInInspector]public int holdInputIndex = 0;
     private int bombSpawnIndex = 0;
     private int bombInputIndex = 0;
     
     public bool isHolding = false;
+    private Coroutine currentCoroutine = null;
+    private bool flip = false;
     private Dictionary<Note, Coroutine> activeHolds = new Dictionary<Note, Coroutine>();
 
     void Update()
@@ -37,13 +41,27 @@ public class Lane : MonoBehaviour
         SpawnHoldNotes();
         SpawnBombNotes();
         
-        HandleHitNotes();
-        HandleHoldNotes(); // Semua logika hold dipindahkan ke sini
-        HandleBombNotes();
+
+        if (InputIndex < notes.Count)
+        {
+            var currentNote = notes[InputIndex];
+            switch (currentNote.noteType)
+            {
+                case Note.NoteType.Hit:
+                    HandleHitNotes();
+                    break;
+                case Note.NoteType.Hold:
+                    HandleHoldNotes();
+                    break;
+                case Note.NoteType.Bomb:
+                    HandleBombNotes();
+                    break;
+            }
+        }
     }
 
     #region Spawn Methods
-    void SpawnHitNotes()
+    private void SpawnHitNotes()
     {
         if (hitSpawnIndex < hitNoteTimeStamps.Count)
         {
@@ -57,7 +75,7 @@ public class Lane : MonoBehaviour
         }
     }
 
-    void SpawnHoldNotes()
+    private void SpawnHoldNotes()
     {
         if (holdSpawnIndex < holdNoteTimeStamps.Count)
         {
@@ -73,7 +91,7 @@ public class Lane : MonoBehaviour
         }
     }
 
-    void SpawnBombNotes()
+    private void SpawnBombNotes()
     {
         if (bombSpawnIndex < bombNoteTimeStamps.Count)
         {
@@ -89,147 +107,79 @@ public class Lane : MonoBehaviour
     #endregion
 
     #region Handle Input Methods
-    void HandleHitNotes()
+    private void HandleHitNotes()
     {
-        if (hitInputIndex < hitNoteTimeStamps.Count)
-        {
-            double timeStamp = hitNoteTimeStamps[hitInputIndex];
-            double audioTime = SongManager.GetAudioSourceTime() - (SongManager.Instance.inputDelayInMilliseconds / 1000.0);
+        double timeStamp = notes[InputIndex].assignedTime;
+        double audioTime = SongManager.GetAudioSourceTime() - (SongManager.Instance.inputDelayInMilliseconds / 1000.0);
 
-            if (Input.GetKeyDown(input) && Note.NoteType.Hit == Note.NoteType.Hold)
+        if (Input.GetKeyDown(input))
+        {
+            if (Math.Abs(audioTime - timeStamp) < SongManager.Instance.marginOfErrorPerfect)
             {
-                if (Math.Abs(audioTime - timeStamp) < SongManager.Instance.marginOfErrorPerfect)
-                {
-                    ScoreManager.Perfect();
-                    Destroy(notes.Find(x => Math.Abs(x.assignedTime - timeStamp) < 0.001f).gameObject);
-                    hitInputIndex++;
-                }
-                else if (SongManager.Instance.marginOfErrorPerfect < Math.Abs(audioTime - timeStamp) && Math.Abs(audioTime - timeStamp) < SongManager.Instance.marginOfErrorGood)
-                {
-                    ScoreManager.Good();
-                    Destroy(notes[hitInputIndex].gameObject);
-                    hitInputIndex++;
-                }
-                else if (SongManager.Instance.marginOfErrorGood < Math.Abs(audioTime - timeStamp) && Math.Abs(audioTime - timeStamp) < SongManager.Instance.marginOfErrorBad)
-                {
-                    ScoreManager.Bad();
-                    Destroy(notes[hitInputIndex].gameObject);
-                    hitInputIndex++;
-                }
+                ScoreManager.Perfect();
+                Destroy(notes.Find(x => Math.Abs(x.assignedTime - timeStamp) < 0.001f).gameObject);
+                InputIndex++;
+            }
+            else if (Math.Abs(audioTime - timeStamp) < SongManager.Instance.marginOfErrorGood)
+            {
+                ScoreManager.Good();
+                Destroy(notes.Find(x => Math.Abs(x.assignedTime - timeStamp) < 0.001f).gameObject);
+                InputIndex++;
+            }
+            else if (Math.Abs(audioTime - timeStamp) < SongManager.Instance.marginOfErrorBad)
+            {
+                ScoreManager.Bad();
+                // Destroy(notes[hitInputIndex].gameObject);
+                Destroy(notes.Find(x => Math.Abs(x.assignedTime - timeStamp) < 0.001f).gameObject);
+                InputIndex++;
             }
         }
     }
 
-    void HandleHoldNotes()
+    private void HandleHoldNotes()
     {
-        foreach (var note in notes.Where(n => n.noteType == Note.NoteType.Hold).ToList())
+        double timeStamp = notes[InputIndex].assignedTime;
+        double audioTime = SongManager.GetAudioSourceTime() - (SongManager.Instance.inputDelayInMilliseconds / 1000.0);
+        // Debug.Log(timeStamp);
+        if ((float)(timeStamp - audioTime) < SongManager.Instance.marginOfErrorPerfect && (float)(audioTime - timeStamp) < notes[InputIndex].holdDuration)
         {
-            // early hold
-            if (isHolding && !note.isShrinking && !note.isMissed)
+            if (isHolding)
             {
-                //tunggu sampe kena judgement line lalu menyusut
-                if (note.transform.position.y <= SongManager.Instance.noteTapY)
+                if (!flip)
                 {
-                    note.shrinkSpeed = SongManager.Instance.noteSpeed;
-
-                    // float timeSinceMiss = (note.transform.position.y - SongManager.Instance.noteTapY) / SongManager.Instance.noteSpeed;
-                    // note.body.GetComponent<SpriteRenderer>().size = new Vector2(
-                    //     note.body.GetComponent<SpriteRenderer>().size.x,
-                    //     Mathf.Max(note.originalBodyLength - (timeSinceMiss * note.shrinkSpeed), 0)
-                    // );
-
-                    activeHolds.Add(note, StartCoroutine(note.HoldJudgmentCoroutine()));
-                    note.isShrinking = true;
+                    // Mulai Coroutine A lewat instance
+                    if (currentCoroutine != null) StopCoroutine(currentCoroutine);
+                    currentCoroutine = StartCoroutine(ScoreManager.Instance.HoldCoroutine());
+                    flip = true;
                 }
+                //kasih score manager input skor
             }
-            // early release
-            else if (!isHolding && note.isShrinking && !note.isMissed)
+            else if (!isHolding)
             {
-                //
-                note.isShrinking = false;
-                note.isMissed = true;
-                note.isBeingJudged = false;
-                StopCoroutine(activeHolds[note]);
-            }
-            // late hold
-            else if (isHolding && !note.isShrinking && note.isMissed)
-            {
-                //
-                note.transform.position = new Vector3(note.transform.position.x, SongManager.Instance.noteTapY, note.transform.position.z);
-                note.isShrinking = true;
-                note.isMissed = false;
-                note.isBeingJudged = false;
-                note.shrinkSpeed = SongManager.Instance.noteSpeed;
-
-                float timeSinceMiss = (note.transform.position.y - SongManager.Instance.noteTapY) / SongManager.Instance.noteSpeed;
-                note.body.GetComponent<SpriteRenderer>().size = new Vector2(
-                    note.body.GetComponent<SpriteRenderer>().size.x,
-                    Mathf.Max(note.originalBodyLength - (timeSinceMiss * note.shrinkSpeed), 0)
-                );
-
-                activeHolds.Add(note, StartCoroutine(note.HoldJudgmentCoroutine()));
-            }
-            // melewati judgement line
-            else if (!isHolding && !note.isShrinking && !note.isMissed)
-            {
-                //
-                if (note.transform.position.y <= SongManager.Instance.noteTapY - SongManager.Instance.marginOfErrorPerfect)
+                bool oneTimeBool = false;
+                if (!oneTimeBool && (float)(timeStamp - audioTime) <= 0f)
                 {
-                    note.isMissed = true;
+                    if (currentCoroutine != null) StopCoroutine(currentCoroutine);
+                    currentCoroutine = StartCoroutine(ScoreManager.Instance.ReleaseCoroutine());
+                    oneTimeBool = true;
                 }
+                else if (flip)
+                {
+                    // Mulai Coroutine B lewat instance
+                    if (currentCoroutine != null) StopCoroutine(currentCoroutine);
+                    currentCoroutine = StartCoroutine(ScoreManager.Instance.ReleaseCoroutine());
+                    flip = false;
+                }
+                //kasih score manager input miss
             }
-
-
-            // // Rule 9: Early release
-            // if (!isHolding && note.isHoldActive && !note.isMissed)
-            // {
-            //     note.isHoldActive = false;
-            //     note.isShrinking = false;
-            //     Debug.Log("call");
-            //     if (activeHolds.ContainsKey(note))
-            //     {
-            //         StopCoroutine(activeHolds[note]);
-            //         activeHolds.Remove(note);
-            //         StartCoroutine(note.ProcessMiss());
-            //         Debug.Log("call");
-            //     }
-            // }
-
-            // // Rule 5 & 11: Mulai penilaian saat menyentuh judgement line dan input sedang di-hold
-            // else if (note.transform.position.y <= SongManager.Instance.noteTapY && !note.isBeingJudged)
-            // {
-            //     if (isHolding) // Tidak perlu GetKeyDown (Rule 11)
-            //     {
-            //         note.isHoldActive = true;
-            //         note.shrinkSpeed = SongManager.Instance.noteSpeed;
-            //         activeHolds.Add(note, StartCoroutine(note.HoldJudgmentCoroutine()));
-            //     }
-            // }
-
-            // // Rule 10: Late activation saat miss
-            // else if (note.isMissed && isHolding && !note.isHoldActive)
-            // {
-            //     LateHoldActivation(note);
-            // }
         }
+        else
+        {
+            if (currentCoroutine != null) StopCoroutine(currentCoroutine);
+        }   
     }
 
-    // void LateHoldActivation(Note note)
-    // {
-    //     note.isMissed = false;
-    //     note.isHoldActive = true;
-        
-    //     // Hitung catch-up shrinkage (Rule 10)
-    //     float timeSinceMiss = (note.transform.position.y - SongManager.Instance.noteTapY) / SongManager.Instance.noteSpeed;
-    //     note.body.GetComponent<SpriteRenderer>().size = new Vector2(
-    //         note.body.GetComponent<SpriteRenderer>().size.x,
-    //         Mathf.Max(note.originalBodyLength - (timeSinceMiss * note.shrinkSpeed), 0)
-    //     );
-        
-    //     // activeHolds.Add(note, StartCoroutine(note.HoldJudgmentCoroutine()));
-    // }
-
-    void HandleBombNotes()
+    private void HandleBombNotes()
     {
         // ... (logic untuk bomb notes)
     }
