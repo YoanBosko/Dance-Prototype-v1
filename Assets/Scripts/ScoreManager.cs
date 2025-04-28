@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class ScoreManager : MonoBehaviour
     public TMPro.TextMeshPro scoreText;
     public TMPro.TextMeshPro resultText;
     public TMPro.TextMeshPro accuracyText;
+    public Slider slider;
     
     static int comboScore;
     static string result;
@@ -28,9 +30,21 @@ public class ScoreManager : MonoBehaviour
     static int holdPerfects = 0;
     static int holdGoods = 0;
     
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // <--- ini penting
+        }
+        else
+        {
+            Destroy(gameObject); // Kalau sudah ada instance, hancurkan yang baru
+        }
+    }
     void Start()
     {
-        Instance = this;
+        // Instance = this;
         comboScore = 0;
         result = "";
         totalBeats = SongManager.Instance.GetTotalBeats(); // Ambil total beat dari SongManager

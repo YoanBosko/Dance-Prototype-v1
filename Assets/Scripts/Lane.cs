@@ -109,29 +109,44 @@ public class Lane : MonoBehaviour
     #region Handle Input Methods
     private void HandleHitNotes()
     {
-        double timeStamp = notes[InputIndex].assignedTime;
         double audioTime = SongManager.GetAudioSourceTime() - (SongManager.Instance.inputDelayInMilliseconds / 1000.0);
 
         if (Input.GetKeyDown(input))
         {
-            if (Math.Abs(audioTime - timeStamp) < SongManager.Instance.marginOfErrorPerfect)
+            // Cari note terdekat berdasarkan waktu audio
+            Note closestNote = null;
+            double smallestTimeDifference = double.MaxValue;
+
+            foreach (var note in notes)
             {
-                ScoreManager.Perfect();
-                Destroy(notes.Find(x => Math.Abs(x.assignedTime - timeStamp) < 0.001f).gameObject);
-                InputIndex++;
+                double timeDifference = Math.Abs(audioTime - note.assignedTime);
+
+                // Cek hanya note yang masih dalam margin BAD, supaya gak sembarang hit
+                if (timeDifference < SongManager.Instance.marginOfErrorBad && timeDifference < smallestTimeDifference)
+                {
+                    closestNote = note;
+                    smallestTimeDifference = timeDifference;
+                }
             }
-            else if (Math.Abs(audioTime - timeStamp) < SongManager.Instance.marginOfErrorGood)
+
+            // Kalau ketemu note yang valid
+            if (closestNote != null)
             {
-                ScoreManager.Good();
-                Destroy(notes.Find(x => Math.Abs(x.assignedTime - timeStamp) < 0.001f).gameObject);
-                InputIndex++;
-            }
-            else if (Math.Abs(audioTime - timeStamp) < SongManager.Instance.marginOfErrorBad)
-            {
-                ScoreManager.Bad();
-                // Destroy(notes[hitInputIndex].gameObject);
-                Destroy(notes.Find(x => Math.Abs(x.assignedTime - timeStamp) < 0.001f).gameObject);
-                InputIndex++;
+                if (smallestTimeDifference < SongManager.Instance.marginOfErrorPerfect)
+                {
+                    ScoreManager.Perfect();
+                }
+                else if (smallestTimeDifference < SongManager.Instance.marginOfErrorGood)
+                {
+                    ScoreManager.Good();
+                }
+                else if (smallestTimeDifference < SongManager.Instance.marginOfErrorBad)
+                {
+                    ScoreManager.Bad();
+                }
+
+                notes.Remove(closestNote); // Hapus dari list supaya tidak dihitung lagi
+                Destroy(closestNote.gameObject); // Hancurkan object notenya
             }
         }
     }

@@ -94,9 +94,6 @@ public class Note : MonoBehaviour
     {
         if (t > 1) //destroy object ketika sudah mencapai t(lokasi despawn obj)
         {
-            Lane lane = GetComponentInParent<Lane>();
-            lane.InputIndex++;
-            ScoreManager.Miss();
             Destroy(gameObject);
         }
         else if (noteType != NoteType.Hold) //mengatur pergerakan jatuhnya note selain hold dengan lerp
