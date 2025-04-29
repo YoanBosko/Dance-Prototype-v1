@@ -1,112 +1,157 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
-public class LoopingScroll : MonoBehaviour, IBeginDragHandler, IEndDragHandler
+public class LoopingScroll : MonoBehaviour
 {
+    [Header("References")]
     public ScrollRect scrollRect;
     public RectTransform viewPortTransform;
     public RectTransform contentPanelTransform;
-    public RectTransform[] itemList;
-    public float itemSpacing = 10f;
-    public float scrollSpeed = 500f;
-    public float smoothTime = 0.1f;
-    public float snapSpeed = 10f;  // Kecepatan snap saat menggulir
+    public RectTransform[] itemPrefabs;
+
+    [Header("Layout Settings")]
+    public float itemSpacingX = 10f;
+
+    [Header("Highlight Settings")]
+    public Color normalColor = Color.white;
+    public Color highlightedColor = Color.yellow;
+    public float scaleMultiplier = 1.5f;
 
     private float itemWidth;
-    private float totalContentWidth;
-    private Vector2 velocity = Vector2.zero;
     private Vector2 targetPosition;
-    private float centerOffset;
+    private Vector2 velocity = Vector2.zero;
     private bool isDragging = false;
-    private int currentIndex = 0;  // Untuk melacak item yang berada di tengah
 
-    bool isSnapped;
+    private List<RectTransform> allItems = new List<RectTransform>();
 
     void Start()
     {
-        isSnapped = false;
+        if (itemPrefabs.Length == 0) return;
 
-        if (itemList.Length == 0) return;
+        itemWidth = itemPrefabs[0].rect.width + itemSpacingX;
+        int itemsToFill = Mathf.CeilToInt(viewPortTransform.rect.width / itemWidth) + 2;
 
-        itemWidth = itemList[0].rect.width + itemSpacing;
-        int itemsToAdd = Mathf.CeilToInt(viewPortTransform.rect.width / itemWidth);
-
-        // Menambah item ke konten
-        for (int i = 0; i < itemsToAdd; i++)
+        // Fill to right
+        for (int i = 0; i < itemsToFill; i++)
         {
-            RectTransform rt = Instantiate(itemList[i % itemList.Length], contentPanelTransform);
-            rt.SetAsLastSibling();
+            RectTransform item = Instantiate(itemPrefabs[i % itemPrefabs.Length], contentPanelTransform);
+            item.name = "Item_Right_" + i;
+            item.localScale = Vector3.one;
+            allItems.Add(item);
         }
 
-        // Menambah item di sisi kiri
-        for (int i = 0; i < itemsToAdd; i++)
+        // Fill to left
+        for (int i = 0; i < itemsToFill; i++)
         {
-            int num = itemList.Length - i - 1;
-            while (num < 0) num += itemList.Length;
-
-            RectTransform rt = Instantiate(itemList[num], contentPanelTransform);
-            rt.SetAsFirstSibling();
+            int index = itemPrefabs.Length - 1 - (i % itemPrefabs.Length);
+            RectTransform item = Instantiate(itemPrefabs[index], contentPanelTransform);
+            item.name = "Item_Left_" + i;
+            item.SetAsFirstSibling();
+            item.localScale = Vector3.one;
+            allItems.Insert(0, item);
         }
 
-        int totalItems = contentPanelTransform.childCount;
-        totalContentWidth = itemWidth * totalItems;
-
-        centerOffset = -itemWidth * (totalItems / 2);
-        targetPosition = new Vector2(centerOffset, contentPanelTransform.anchoredPosition.y);
-        contentPanelTransform.anchoredPosition = targetPosition;
+        CenterContent();
     }
 
     void Update()
     {
+        isDragging = Input.GetMouseButton(0);
+
         if (!isDragging)
         {
-            // Melakukan transisi halus ke posisi target
             contentPanelTransform.anchoredPosition = Vector2.SmoothDamp(
                 contentPanelTransform.anchoredPosition,
                 targetPosition,
                 ref velocity,
-                smoothTime
+                0.1f
             );
+
+            if (Vector2.Distance(contentPanelTransform.anchoredPosition, targetPosition) < 0.1f)
+            {
+                SnapToNearestItem();
+            }
         }
 
-        // Kecepatan scrolling dengan tombol panah (opsional)
-        if (Input.GetKey(KeyCode.RightArrow))
+        HandleKeyboardInput();
+        HighlightCenteredItem();
+    }
+
+    void HandleKeyboardInput()
+    {
+        if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            targetPosition += new Vector2(-scrollSpeed * Time.deltaTime, 0);
+            targetPosition += new Vector2(-itemWidth, 0);
         }
-        else if (Input.GetKey(KeyCode.LeftArrow))
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            targetPosition += new Vector2(scrollSpeed * Time.deltaTime, 0);
+            targetPosition += new Vector2(itemWidth, 0);
         }
     }
 
-    public void OnBeginDrag(PointerEventData eventData)
+    void CenterContent()
     {
-        isDragging = true;
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        isDragging = false;
-
-        // Melakukan snapping ke item terdekat
-        SnapToNearestItem();
+        float centerX = (contentPanelTransform.rect.width - viewPortTransform.rect.width) / 2f;
+        targetPosition = new Vector2(-centerX, contentPanelTransform.anchoredPosition.y);
+        contentPanelTransform.anchoredPosition = targetPosition;
     }
 
     void SnapToNearestItem()
     {
-        // Menghitung posisi item terdekat berdasarkan posisi sekarang
-        float nearestPosX = Mathf.Round(contentPanelTransform.anchoredPosition.x / itemWidth) * itemWidth;
+        float minDistance = float.MaxValue;
+        RectTransform nearestItem = null;
+        Vector2 viewportCenter = viewPortTransform.position;
 
-        // Debugging
-        Debug.Log("Nearest Position X: " + nearestPosX);
+        foreach (var item in allItems)
+        {
+            float distance = Mathf.Abs(item.position.x - viewportCenter.x);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                nearestItem = item;
+            }
+        }
 
-        // Menentukan item yang terletak di tengah
-        currentIndex = Mathf.RoundToInt((contentPanelTransform.anchoredPosition.x - centerOffset) / itemWidth);
-        currentIndex = Mathf.Clamp(currentIndex, 0, contentPanelTransform.childCount - 1);
+        if (nearestItem != null)
+        {
+            Vector2 itemLocalPos = (Vector2)contentPanelTransform.InverseTransformPoint(nearestItem.position);
+            Vector2 centerOffset = new Vector2(itemLocalPos.x, 0);
+            targetPosition = contentPanelTransform.anchoredPosition - centerOffset;
+        }
+    }
 
-        // Menyesuaikan posisi target untuk snapping
-        targetPosition = new Vector2(nearestPosX, contentPanelTransform.anchoredPosition.y);
+    void HighlightCenteredItem()
+    {
+        Vector2 centerWorldPos = viewPortTransform.position;
+        RectTransform closestItem = null;
+        float closestDistance = float.MaxValue;
+
+        foreach (var item in allItems)
+        {
+            float distance = Mathf.Abs(item.position.x - centerWorldPos.x);
+            Image img = item.GetComponent<Image>();
+
+            if (img != null)
+                img.color = normalColor;
+
+            item.localScale = Vector3.one;
+
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestItem = item;
+            }
+        }
+
+        if (closestItem != null)
+        {
+            Image img = closestItem.GetComponent<Image>();
+            if (img != null)
+                img.color = highlightedColor;
+
+            closestItem.localScale = Vector3.one * scaleMultiplier;
+        }
     }
 }
