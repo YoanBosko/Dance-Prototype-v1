@@ -108,21 +108,22 @@ public class Note : MonoBehaviour
         Lane lane = GetComponentInParent<Lane>();
         if (t >= 0.5f && lane.isHolding && !isPaused && !isShrinking)
         {
-            float t2 = ((float)(timeSinceInstantiated + pauseDuration) - SongManager.Instance.noteTime) / SongManager.Instance.noteTime ;
-            float t3 = lateHoldBodySize.y / (SongManager.Instance.noteSpeed * SongManager.Instance.noteTime * 2);
+            float t2 = (float)(timeSinceInstantiated + pauseDuration) - SongManager.Instance.noteTime ; //t2 adalah t saat 0,5. saat t = 0,5 maka t2 mulai berhitung dari 0
+            // float t3 = lateHoldBodySize.y / (SongManager.Instance.noteSpeed * SongManager.Instance.noteTime * 2);
+            float t3 = holdDuration;
             if (t2 < t3)
             {
-            StopCoroutine("HoldDeleteCoroutine");
-            TakeSnapshotForLateHold();
-            StartCoroutine("HoldJudgmentCoroutine");
-            Pause();
-            // Debug.Log("terpanggil " + "1");
-            isShrinking = true;
+                StopCoroutine("HoldDeleteCoroutine");
+                TakeSnapshotForLateHold();
+                StartCoroutine("HoldJudgmentCoroutine");
+                Pause();
+                isShrinking = true;
             }
-            else
-            {
-                return;
-            }
+            // else
+            // {
+            //     Debug.Log("ketahan mas");
+            //     return;
+            // }
         }
         else if (t >= 0.5f && !lane.isHolding && !isPaused)
         {
@@ -181,7 +182,7 @@ public class Note : MonoBehaviour
             );
         }
 
-        Debug.Log("isinya adalah " + tailMovedAmount);
+        // Debug.Log("isinya adalah " + tailMovedAmount);
     }
 
     public IEnumerator HoldJudgmentCoroutine()
@@ -209,7 +210,10 @@ public class Note : MonoBehaviour
         }
         if (body.GetComponent<SpriteRenderer>().size.y == 0)
         {
-            lane.InputIndex++;
+            // lane.InputIndex++;
+            // lane.notes.Remove(this);
+            lane.oneTimeBool = false;
+            lane.preInput = true;
             Destroy(gameObject);
         }
     }
@@ -225,7 +229,9 @@ public class Note : MonoBehaviour
             // Debug.Log("terpanggil " + "5");
             yield return null;
         }
-        lane.InputIndex++;
+        // lane.InputIndex++;
+        // lane.notes.Remove(this);
+        lane.oneTimeBool = false;
         Destroy(gameObject);
     }
 

@@ -1,11 +1,8 @@
 ﻿using Melanchall.DryWetMidi.Interaction;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data.Common;
-using UnityEngine;
 using System.Linq;
-using Melanchall.DryWetMidi.MusicTheory;
+using UnityEngine;
 
 public class Lane : MonoBehaviour
 {
@@ -14,94 +11,73 @@ public class Lane : MonoBehaviour
     public GameObject holdNotePrefab;
     public GameObject bombNotePrefab;
     public Melanchall.DryWetMidi.MusicTheory.NoteName noteRestriction;
-    
-    [SerializeField]private List<Note> notes = new List<Note>();
+
+    public List<Note> notes = new List<Note>();
     public List<double> hitNoteTimeStamps = new List<double>();
     public List<double> holdNoteTimeStamps = new List<double>();
     public List<double> holdNoteTimeDuration = new List<double>();
     public List<double> bombNoteTimeStamps = new List<double>();
-    
+
     private int hitSpawnIndex = 0;
-    [HideInInspector]public int InputIndex = 0;
     private int holdSpawnIndex = 0;
-    // [HideInInspector]public int holdInputIndex = 0;
     private int bombSpawnIndex = 0;
-    private int bombInputIndex = 0;
-    
+
     public bool isHolding = false;
-    private Coroutine currentCoroutine = null;
-    private bool flip = false;
-    private Dictionary<Note, Coroutine> activeHolds = new Dictionary<Note, Coroutine>();
+    [HideInInspector]public bool oneTimeBool = false;
+    [HideInInspector]public bool preInput = false; // Menandai apakah input dilakukan sebelum area
+    public Coroutine currentCoroutine = null;
 
     void Update()
     {
-        isHolding = Input.GetKey(input); // Rule 3: Deteksi input hold
-        
+        isHolding = Input.GetKey(input);
+
         SpawnHitNotes();
         SpawnHoldNotes();
         SpawnBombNotes();
-        
 
-        if (InputIndex < notes.Count)
-        {
-            var currentNote = notes[InputIndex];
-            switch (currentNote.noteType)
-            {
-                case Note.NoteType.Hit:
-                    HandleHitNotes();
-                    break;
-                case Note.NoteType.Hold:
-                    HandleHoldNotes();
-                    break;
-                case Note.NoteType.Bomb:
-                    HandleBombNotes();
-                    break;
-            }
-        }
+        HandleHitNotes();
+        HandleHoldNotes();
+        HandleBombNotes();
     }
 
     #region Spawn Methods
     private void SpawnHitNotes()
     {
-        if (hitSpawnIndex < hitNoteTimeStamps.Count)
+        if (hitSpawnIndex < hitNoteTimeStamps.Count &&
+            SongManager.GetAudioSourceTime() >= hitNoteTimeStamps[hitSpawnIndex] - SongManager.Instance.noteTime)
         {
-            if (SongManager.GetAudioSourceTime() >= hitNoteTimeStamps[hitSpawnIndex] - SongManager.Instance.noteTime)
-            {
-                var note = Instantiate(hitNotePrefab, transform);
-                notes.Add(note.GetComponent<Note>());
-                note.GetComponent<Note>().assignedTime = (float)hitNoteTimeStamps[hitSpawnIndex];
-                hitSpawnIndex++;
-            }
+            var noteObj = Instantiate(hitNotePrefab, transform);
+            var note = noteObj.GetComponent<Note>();
+            note.assignedTime = (float)hitNoteTimeStamps[hitSpawnIndex];
+            notes.Add(note);
+            hitSpawnIndex++;
         }
     }
 
     private void SpawnHoldNotes()
     {
-        if (holdSpawnIndex < holdNoteTimeStamps.Count)
+        if (holdSpawnIndex < holdNoteTimeStamps.Count &&
+            SongManager.GetAudioSourceTime() >= holdNoteTimeStamps[holdSpawnIndex] - SongManager.Instance.noteTime)
         {
-            if (SongManager.GetAudioSourceTime() >= holdNoteTimeStamps[holdSpawnIndex] - SongManager.Instance.noteTime)
-            {
-                var note = Instantiate(holdNotePrefab, transform);
-                var noteComponent = note.GetComponent<Note>();
-                noteComponent.assignedTime = (float)holdNoteTimeStamps[holdSpawnIndex];
-                noteComponent.holdDuration = (float)holdNoteTimeDuration[holdSpawnIndex];
-                notes.Add(noteComponent);
-                holdSpawnIndex++;
-            }
+            var noteObj = Instantiate(holdNotePrefab, transform);
+            var note = noteObj.GetComponent<Note>();
+            note.assignedTime = (float)holdNoteTimeStamps[holdSpawnIndex];
+            note.holdDuration = (float)holdNoteTimeDuration[holdSpawnIndex];
+            notes.Add(note);
+            holdSpawnIndex++;
         }
     }
 
     private void SpawnBombNotes()
     {
-        if (bombSpawnIndex < bombNoteTimeStamps.Count)
+        if (bombSpawnIndex < bombNoteTimeStamps.Count &&
+            SongManager.GetAudioSourceTime() >= bombNoteTimeStamps[bombSpawnIndex] - SongManager.Instance.noteTime)
         {
-            if (SongManager.GetAudioSourceTime() >= bombNoteTimeStamps[bombSpawnIndex] - SongManager.Instance.noteTime)
-            {
-                var note = Instantiate(bombNotePrefab, transform);
-                notes.Add(note.GetComponent<Note>());
-                note.GetComponent<Note>().assignedTime = (float)bombNoteTimeStamps[bombSpawnIndex];
-                bombSpawnIndex++;
-            }
+            var noteObj = Instantiate(bombNotePrefab, transform);
+            var note = noteObj.GetComponent<Note>();
+            note.assignedTime = (float)bombNoteTimeStamps[bombSpawnIndex];
+            notes.Add(note);
+            bombSpawnIndex++;
         }
     }
     #endregion
@@ -111,92 +87,121 @@ public class Lane : MonoBehaviour
     {
         double audioTime = SongManager.GetAudioSourceTime() - (SongManager.Instance.inputDelayInMilliseconds / 1000.0);
 
+        // Auto-miss for Hit notes beyond Bad margin
+        var missedHits = notes
+            .Where(n => n.noteType == Note.NoteType.Hit &&
+                        audioTime - n.assignedTime > SongManager.Instance.marginOfErrorBad)
+            .ToList();
+        foreach (var miss in missedHits)
+        {
+            ScoreManager.Miss();
+            notes.Remove(miss);
+            // Destroy(miss.gameObject);
+        }
+
+        // On key down, find closest valid Hit note
         if (Input.GetKeyDown(input))
         {
-            // Cari note terdekat berdasarkan waktu audio
-            Note closestNote = null;
-            double smallestTimeDifference = double.MaxValue;
+            Note closest = null;
+            double bestDiff = double.MaxValue;
 
-            foreach (var note in notes)
+            foreach (var note in notes.Where(n => n.noteType == Note.NoteType.Hit))
             {
-                double timeDifference = Math.Abs(audioTime - note.assignedTime);
-
-                // Cek hanya note yang masih dalam margin BAD, supaya gak sembarang hit
-                if (timeDifference < SongManager.Instance.marginOfErrorBad && timeDifference < smallestTimeDifference)
+                double diff = Math.Abs(audioTime - note.assignedTime);
+                if (diff <= SongManager.Instance.marginOfErrorBad && diff < bestDiff)
                 {
-                    closestNote = note;
-                    smallestTimeDifference = timeDifference;
+                    closest = note;
+                    bestDiff = diff;
                 }
             }
 
-            // Kalau ketemu note yang valid
-            if (closestNote != null)
+            if (closest != null)
             {
-                if (smallestTimeDifference < SongManager.Instance.marginOfErrorPerfect)
-                {
+                if (bestDiff < SongManager.Instance.marginOfErrorPerfect)
                     ScoreManager.Perfect();
-                }
-                else if (smallestTimeDifference < SongManager.Instance.marginOfErrorGood)
-                {
+                else if (bestDiff < SongManager.Instance.marginOfErrorGood)
                     ScoreManager.Good();
-                }
-                else if (smallestTimeDifference < SongManager.Instance.marginOfErrorBad)
-                {
+                else
                     ScoreManager.Bad();
-                }
 
-                notes.Remove(closestNote); // Hapus dari list supaya tidak dihitung lagi
-                Destroy(closestNote.gameObject); // Hancurkan object notenya
+                notes.Remove(closest);
+                Destroy(closest.gameObject);
             }
         }
     }
 
     private void HandleHoldNotes()
     {
-        double timeStamp = notes[InputIndex].assignedTime;
         double audioTime = SongManager.GetAudioSourceTime() - (SongManager.Instance.inputDelayInMilliseconds / 1000.0);
-        // Debug.Log(timeStamp);
-        if ((float)(timeStamp - audioTime) < SongManager.Instance.marginOfErrorPerfect && (float)(audioTime - timeStamp) < notes[InputIndex].holdDuration)
+        // Auto-miss for Hold notes that have fully expired
+        var expiredHolds = notes
+            .Where(n => n.noteType == Note.NoteType.Hold &&
+                        audioTime > n.assignedTime + n.holdDuration + SongManager.Instance.marginOfErrorBad)
+            .ToList();
+        foreach (var miss in expiredHolds)
         {
-            if (isHolding)
+            // ScoreManager.Miss();
+            notes.Remove(miss);
+            StopAllCoroutines();
+            // Destroy(miss.gameObject);
+        }
+
+        // Process the next upcoming Hold note
+        var nextHold = notes
+            .Where(n => n.noteType == Note.NoteType.Hold)
+            .OrderBy(n => n.assignedTime)
+            .FirstOrDefault();
+
+        if (Input.GetKeyDown(input))
+        {
+            preInput = true;
+        }
+        else if (Input.GetKeyUp(input))
+        {
+            preInput = false;
+        }
+
+        if (nextHold == null) return;
+
+        double start = nextHold.assignedTime;
+        double end = start + nextHold.holdDuration;
+
+        // Within interaction window
+        if (audioTime >= start - SongManager.Instance.marginOfErrorPerfect &&
+            audioTime <= end + SongManager.Instance.marginOfErrorBad)
+        {
+            if (preInput)
             {
-                if (!flip)
-                {
-                    // Mulai Coroutine A lewat instance
-                    if (currentCoroutine != null) StopCoroutine(currentCoroutine);
-                    currentCoroutine = StartCoroutine(ScoreManager.Instance.HoldCoroutine());
-                    flip = true;
-                }
-                //kasih score manager input skor
+                if (currentCoroutine != null) StopCoroutine(currentCoroutine);
+                currentCoroutine = StartCoroutine(ScoreManager.Instance.HoldCoroutine());
+                preInput = false;
             }
-            else if (!isHolding)
+            // else if (Input.GetKeyDown(input))
+            // {
+            //     if (currentCoroutine != null) StopCoroutine(currentCoroutine);
+            //     currentCoroutine = StartCoroutine(ScoreManager.Instance.HoldCoroutine());
+            // }
+            else if (Input.GetKeyUp(input))
             {
-                bool oneTimeBool = false;
-                if (!oneTimeBool && (float)(timeStamp - audioTime) <= 0f)
-                {
-                    if (currentCoroutine != null) StopCoroutine(currentCoroutine);
-                    currentCoroutine = StartCoroutine(ScoreManager.Instance.ReleaseCoroutine());
-                    oneTimeBool = true;
-                }
-                else if (flip)
-                {
-                    // Mulai Coroutine B lewat instance
-                    if (currentCoroutine != null) StopCoroutine(currentCoroutine);
-                    currentCoroutine = StartCoroutine(ScoreManager.Instance.ReleaseCoroutine());
-                    flip = false;
-                }
-                //kasih score manager input miss
+                if (currentCoroutine != null) StopCoroutine(currentCoroutine);
+                currentCoroutine = StartCoroutine(ScoreManager.Instance.ReleaseCoroutine());
+                oneTimeBool = true;
+                // notes.Remove(nextHold);
+                // Destroy(nextHold.gameObject);
+            }
+            else if (oneTimeBool == false && !Input.GetKey(input) && audioTime > start + SongManager.Instance.marginOfErrorBad)
+            {
+                if (currentCoroutine != null) StopCoroutine(currentCoroutine);
+                currentCoroutine = StartCoroutine(ScoreManager.Instance.ReleaseCoroutine());
+                Debug.Log("terpanggil hanya sekali " + oneTimeBool);
+                oneTimeBool = true;
             }
         }
-        else
-        {
-            if (currentCoroutine != null) StopCoroutine(currentCoroutine);
-        }   
     }
 
     private void HandleBombNotes()
     {
-        // ... (logic untuk bomb notes)
+        // (Optional) implement bomb note logic similarly
     }
     #endregion
 
@@ -207,8 +212,8 @@ public class Lane : MonoBehaviour
         {
             if (note.NoteName == noteRestriction)
             {
-                var metricTimeSpan = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time, SongManager.hitNoteMidi.GetTempoMap());
-                hitNoteTimeStamps.Add((double)metricTimeSpan.Minutes * 60f + metricTimeSpan.Seconds + (double)metricTimeSpan.Milliseconds / 1000f);
+                var metric = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time, SongManager.hitNoteMidi.GetTempoMap());
+                hitNoteTimeStamps.Add(metric.Minutes * 60f + metric.Seconds + metric.Milliseconds / 1000f);
             }
         }
     }
@@ -219,13 +224,11 @@ public class Lane : MonoBehaviour
         {
             if (note.NoteName == noteRestriction)
             {
-                var metricStart = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time, SongManager.holdNoteMidi.GetTempoMap());
-                var metricEnd = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time + note.Length, SongManager.holdNoteMidi.GetTempoMap());
-                
-                double startTime = metricStart.Minutes * 60f + metricStart.Seconds + (double)metricStart.Milliseconds / 1000f;
-                double duration = (metricEnd.Minutes * 60f + metricEnd.Seconds + (double)metricEnd.Milliseconds / 1000f) - startTime;
-                
-                holdNoteTimeStamps.Add(startTime);
+                var mStart = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time, SongManager.holdNoteMidi.GetTempoMap());
+                var mEnd = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time + note.Length, SongManager.holdNoteMidi.GetTempoMap());
+                double start = mStart.Minutes * 60f + mStart.Seconds + mStart.Milliseconds / 1000f;
+                double duration = (mEnd.Minutes * 60f + mEnd.Seconds + mEnd.Milliseconds / 1000f) - start;
+                holdNoteTimeStamps.Add(start);
                 holdNoteTimeDuration.Add(duration);
             }
         }
@@ -237,8 +240,8 @@ public class Lane : MonoBehaviour
         {
             if (note.NoteName == noteRestriction)
             {
-                var metricTimeSpan = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time, SongManager.bombNoteMidi.GetTempoMap());
-                bombNoteTimeStamps.Add((double)metricTimeSpan.Minutes * 60f + metricTimeSpan.Seconds + (double)metricTimeSpan.Milliseconds / 1000f);
+                var metric = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time, SongManager.bombNoteMidi.GetTempoMap());
+                bombNoteTimeStamps.Add(metric.Minutes * 60f + metric.Seconds + metric.Milliseconds / 1000f);
             }
         }
     }

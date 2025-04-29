@@ -23,7 +23,7 @@ public class OnAudioEnd : MonoBehaviour
         if (!hasTriggered && audioSource.time >= audioSource.clip.length - endThreshold)
         {
             hasTriggered = true;
-            onAudioEnd.Invoke();
+            onAudioEnd?.Invoke();
         }
     }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -13,10 +14,12 @@ public class ScoreManager : MonoBehaviour
     public TMPro.TextMeshPro resultText;
     public TMPro.TextMeshPro accuracyText;
     public Slider slider;
+    public UnityEvent onHealthZero;
     
     static int comboScore;
     static string result;
     static int totalScore = 0;
+    static int healthBar = 600;
 
     static int totalBeats = 0;  // Total beat dalam permainan
     public static int successfulHits;  // Jumlah hit yang masuk kategori Perfect atau Good
@@ -49,6 +52,7 @@ public class ScoreManager : MonoBehaviour
         result = "";
         totalBeats = SongManager.Instance.GetTotalBeats(); // Ambil total beat dari SongManager
         successfulHits = 0;
+        healthBar = 600;
     }
 
     public static void UpdateMultiplier()
@@ -63,6 +67,7 @@ public class ScoreManager : MonoBehaviour
         comboScore += 1;
         perfectHits++;
         totalBeats++;
+        healthBar += 10;
 
         totalScore += Mathf.RoundToInt(100 * scoreMultiplier); // 100 poin untuk Perfect
         UpdateMultiplier();
@@ -75,6 +80,7 @@ public class ScoreManager : MonoBehaviour
         comboScore += 1;
         goodHits++;
         totalBeats++;
+        healthBar += 5;
 
         totalScore += Mathf.RoundToInt(75 * scoreMultiplier); // 75 poin untuk Good
         UpdateMultiplier();
@@ -87,6 +93,7 @@ public class ScoreManager : MonoBehaviour
         comboScore = 0;  // Reset combo saat kena Bad
         badHits++;
         totalBeats++;
+        healthBar -= 15;
 
         totalScore += Mathf.RoundToInt(50 * scoreMultiplier); // 50 poin untuk Bad
         UpdateMultiplier();
@@ -99,6 +106,7 @@ public class ScoreManager : MonoBehaviour
         comboScore = 0;  // Reset combo saat Miss
         missHits++;
         totalBeats++;
+        healthBar -= 70;
 
         UpdateMultiplier();
         Instance.missSFX.Play();
@@ -145,10 +153,15 @@ public class ScoreManager : MonoBehaviour
 
     private void Update()
     {
+        healthBar = Mathf.Clamp(healthBar, 0, 1000);
         resultText.text = result;
         comboText.text = comboScore.ToString() + "X";
         accuracyText.text = "Akurasi: " + GetAccuracy().ToString("F2") + "%"; // Update UI Akurasi
         scoreText.text = totalScore.ToString(); // Menampilkan total skor
-        
+        slider.value = healthBar;
+        if (slider.value == 0)
+        {
+            onHealthZero?.Invoke();
+        }
     }
 }
