@@ -4,93 +4,102 @@ using UnityEngine.UI;
 
 public class DiagonalScrollSnap : MonoBehaviour
 {
+    public ScrollRect scrollRect;
     public RectTransform content;
-    public List<RectTransform> items;
-    public float snapSpeed = 10f;
-    public float snapThreshold = 0.01f;
-    public Color highlightColor = Color.green;
-    public Color normalColor = Color.white;
+    public RectTransform viewport;
+    public List<RectTransform> items = new List<RectTransform>();
+    public float spacing = 100f; // Jarak antar item
+    public float snapSpeed = 5f;
+    public float highlightScale = 1.2f;
 
-    private int currentIndex = 1; // Karena ada dummy di awal
+    private int currentIndex = 0;
     private Vector2 targetPosition;
-    private bool isSnapping = false;
 
     void Start()
     {
-        if (items == null || items.Count == 0) return;
-
-        // Duplicate first and last items for seamless looping
-        RectTransform firstClone = Instantiate(items[0], content);
-        RectTransform lastClone = Instantiate(items[items.Count - 1], content);
-
-        firstClone.name += "_clone";
-        lastClone.name += "_clone";
-
-        firstClone.SetAsLastSibling();
-        lastClone.SetAsFirstSibling();
-
-        items.Insert(0, lastClone);
-        items.Add(firstClone);
-
-        currentIndex = 1; // item asli pertama
-        SnapToItem(currentIndex, true);
+        ArrangeItemsDiagonally();
+        SnapToIndex(currentIndex);
     }
 
     void Update()
     {
+        HandleArrowInput();
+        SnapContent();
+        HighlightItem();
+        CheckAndRepositionItems();
+    }
+
+    void HandleArrowInput()
+    {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            currentIndex++;
-            SnapToItem(currentIndex);
+            currentIndex = (currentIndex + 1) % items.Count;
+            SnapToIndex(currentIndex);
         }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            currentIndex--;
-            SnapToItem(currentIndex);
-        }
-
-        if (isSnapping)
-        {
-            content.anchoredPosition = Vector2.Lerp(content.anchoredPosition, targetPosition, Time.deltaTime * snapSpeed);
-            if (Vector2.Distance(content.anchoredPosition, targetPosition) < snapThreshold)
-            {
-                content.anchoredPosition = targetPosition;
-                isSnapping = false;
-
-                // Reset index jika menyentuh dummy
-                if (currentIndex == 0)
-                {
-                    currentIndex = items.Count - 2;
-                    SnapToItem(currentIndex, true);
-                }
-                else if (currentIndex == items.Count - 1)
-                {
-                    currentIndex = 1;
-                    SnapToItem(currentIndex, true);
-                }
-            }
+            currentIndex = (currentIndex - 1 + items.Count) % items.Count;
+            SnapToIndex(currentIndex);
         }
     }
 
-    void SnapToItem(int index, bool instant = false)
+    void SnapToIndex(int index)
     {
-        index = Mathf.Clamp(index, 0, items.Count - 1);
+        if (items.Count == 0) return;
 
-        RectTransform viewport = content.parent.GetComponent<RectTransform>();
-        Vector2 itemCenter = items[index].anchoredPosition;
-        Vector2 viewCenter = viewport.sizeDelta / 2;
-        targetPosition = -itemCenter + viewCenter;
-        isSnapping = !instant;
+        Vector2 itemLocalPos = items[index].anchoredPosition;
+        Vector2 viewportCenter = viewport.rect.size / 2f;
+        targetPosition = -itemLocalPos + viewportCenter;
+    }
 
-        if (instant)
-            content.anchoredPosition = targetPosition;
+    void SnapContent()
+    {
+        content.anchoredPosition = Vector2.Lerp(content.anchoredPosition, targetPosition, Time.deltaTime * snapSpeed);
+    }
 
-        // Highlight only real items
-        for (int i = 1; i < items.Count - 1; i++)
+    void HighlightItem()
+    {
+        for (int i = 0; i < items.Count; i++)
         {
-            Image img = items[i].GetComponent<Image>();
-            if (img != null)
-                img.color = (i == index) ? highlightColor : normalColor;
+            float scale = (i == currentIndex) ? highlightScale : 1f;
+            items[i].localScale = Vector3.Lerp(items[i].localScale, Vector3.one * scale, Time.deltaTime * 10f);
+        }
+    }
+
+    void ArrangeItemsDiagonally()
+    {
+        for (int i = 0; i < items.Count; i++)
+        {
+            items[i].anchoredPosition = new Vector2(i * spacing, -i * spacing); // diagonal kanan bawah
+        }
+
+        // Atur ukuran content agar cukup besar
+        float width = (items.Count + 1) * spacing;
+        content.sizeDelta = new Vector2(width, width);
+    }
+
+    void CheckAndRepositionItems()
+    {
+        float leftBound = content.anchoredPosition.x - viewport.rect.width / 2f - spacing;
+        float rightBound = content.anchoredPosition.x + viewport.rect.width / 2f + spacing;
+
+        foreach (RectTransform item in items)
+        {
+            Vector2 pos = item.anchoredPosition;
+            float itemX = pos.x + content.anchoredPosition.x;
+
+            // Jika keluar di kiri, pindah ke kanan
+            if (itemX < leftBound)
+            {
+                pos.x += items.Count * spacing;
+                item.anchoredPosition = pos;
+            }
+            // Jika keluar di kanan, pindah ke kiri
+            else if (itemX > rightBound)
+            {
+                pos.x -= items.Count * spacing;
+                item.anchoredPosition = pos;
+            }
         }
     }
 }

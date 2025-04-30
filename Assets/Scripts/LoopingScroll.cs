@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections.Generic;
 
 public class LoopingScroll : MonoBehaviour
 {
@@ -24,8 +23,6 @@ public class LoopingScroll : MonoBehaviour
     private Vector2 velocity = Vector2.zero;
     private bool isDragging = false;
 
-    private List<RectTransform> allItems = new List<RectTransform>();
-
     void Start()
     {
         if (itemPrefabs.Length == 0) return;
@@ -39,7 +36,6 @@ public class LoopingScroll : MonoBehaviour
             RectTransform item = Instantiate(itemPrefabs[i % itemPrefabs.Length], contentPanelTransform);
             item.name = "Item_Right_" + i;
             item.localScale = Vector3.one;
-            allItems.Add(item);
         }
 
         // Fill to left
@@ -50,7 +46,6 @@ public class LoopingScroll : MonoBehaviour
             item.name = "Item_Left_" + i;
             item.SetAsFirstSibling();
             item.localScale = Vector3.one;
-            allItems.Insert(0, item);
         }
 
         CenterContent();
@@ -58,8 +53,6 @@ public class LoopingScroll : MonoBehaviour
 
     void Update()
     {
-        isDragging = Input.GetMouseButton(0);
-
         if (!isDragging)
         {
             contentPanelTransform.anchoredPosition = Vector2.SmoothDamp(
@@ -93,65 +86,76 @@ public class LoopingScroll : MonoBehaviour
 
     void CenterContent()
     {
-        float centerX = (contentPanelTransform.rect.width - viewPortTransform.rect.width) / 2f;
+        // Calculate the true center of the content based on the viewport's position
+        Vector2 contentSize = contentPanelTransform.rect.size;
+        Vector2 viewportSize = viewPortTransform.rect.size;
+
+        // The center is half of the content width minus half of the viewport width
+        float centerX = (contentSize.x - viewportSize.x) / 2;
+
+        // Set the target position based on this calculated center
         targetPosition = new Vector2(-centerX, contentPanelTransform.anchoredPosition.y);
         contentPanelTransform.anchoredPosition = targetPosition;
     }
 
-    void SnapToNearestItem()
+    void HighlightCenteredItem()
     {
         float minDistance = float.MaxValue;
-        RectTransform nearestItem = null;
-        Vector2 viewportCenter = viewPortTransform.position;
+        RectTransform closestItem = null;
+        Vector3 viewportCenter = viewPortTransform.position;
+        int childCount = contentPanelTransform.childCount;
 
-        foreach (var item in allItems)
+        for (int i = 0; i < childCount; i++)
         {
+            RectTransform item = contentPanelTransform.GetChild(i) as RectTransform;
             float distance = Mathf.Abs(item.position.x - viewportCenter.x);
+
+            // Find the item closest to the viewport center
             if (distance < minDistance)
             {
                 minDistance = distance;
-                nearestItem = item;
-            }
-        }
-
-        if (nearestItem != null)
-        {
-            Vector2 itemLocalPos = (Vector2)contentPanelTransform.InverseTransformPoint(nearestItem.position);
-            Vector2 centerOffset = new Vector2(itemLocalPos.x, 0);
-            targetPosition = contentPanelTransform.anchoredPosition - centerOffset;
-        }
-    }
-
-    void HighlightCenteredItem()
-    {
-        Vector2 centerWorldPos = viewPortTransform.position;
-        RectTransform closestItem = null;
-        float closestDistance = float.MaxValue;
-
-        foreach (var item in allItems)
-        {
-            float distance = Mathf.Abs(item.position.x - centerWorldPos.x);
-            Image img = item.GetComponent<Image>();
-
-            if (img != null)
-                img.color = normalColor;
-
-            item.localScale = Vector3.one;
-
-            if (distance < closestDistance)
-            {
-                closestDistance = distance;
                 closestItem = item;
             }
         }
 
-        if (closestItem != null)
+        // Highlight the centered item and scale it
+        for (int i = 0; i < childCount; i++)
         {
-            Image img = closestItem.GetComponent<Image>();
-            if (img != null)
-                img.color = highlightedColor;
+            RectTransform item = contentPanelTransform.GetChild(i) as RectTransform;
+            Image img = item.GetComponentInChildren<Image>(); // <-- Use child Image
+            Transform child = item.childCount > 0 ? item.GetChild(0) : null;
 
-            closestItem.localScale = Vector3.one * scaleMultiplier;
+            bool isSelected = (item == closestItem);
+
+            if (img != null)
+            {
+                img.color = isSelected ? highlightedColor : normalColor;
+            }
+
+            if (child != null)
+            {
+                // Apply scaling directly to the child element
+                child.localScale = isSelected ? Vector3.one * scaleMultiplier : Vector3.one;
+            }
         }
+    }
+
+    void SnapToNearestItem()
+    {
+        // Snap the content position to the nearest item
+        float currentX = contentPanelTransform.anchoredPosition.x;
+        float snappedX = Mathf.Round(currentX / itemWidth) * itemWidth;
+        targetPosition = new Vector2(snappedX, contentPanelTransform.anchoredPosition.y);
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        isDragging = true;
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        isDragging = false;
+        SnapToNearestItem();
     }
 }
