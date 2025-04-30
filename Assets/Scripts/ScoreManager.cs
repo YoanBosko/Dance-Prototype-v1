@@ -15,6 +15,7 @@ public class ScoreManager : MonoBehaviour
     public TMPro.TextMeshPro accuracyText;
     public Slider slider;
     public UnityEvent onHealthZero;
+    public ScoreData scoreData;
     
     static int comboScore;
     static string result;
@@ -30,29 +31,29 @@ public class ScoreManager : MonoBehaviour
     static int badHits = 0;
     static int missHits = 0;
 
-    static int holdPerfects = 0;
-    static int holdGoods = 0;
     
     void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject); // <--- ini penting
-        }
-        else
-        {
-            Destroy(gameObject); // Kalau sudah ada instance, hancurkan yang baru
-        }
+        // if (Instance == null)
+        // {
+        //     Instance = this;
+        //     DontDestroyOnLoad(gameObject); // <--- ini penting
+        // }
+        // else
+        // {
+        //     Destroy(gameObject); // Kalau sudah ada instance, hancurkan yang baru
+        // }
     }
     void Start()
     {
-        // Instance = this;
+        Instance = this;
         comboScore = 0;
         result = "";
         totalBeats = SongManager.Instance.GetTotalBeats(); // Ambil total beat dari SongManager
         successfulHits = 0;
         healthBar = 600;
+
+        scoreData.ResetScore();
     }
 
     public static void UpdateMultiplier()
@@ -143,8 +144,6 @@ public class ScoreManager : MonoBehaviour
         // Update formula untuk include hold notes
         float score = (perfectHits * 1.0f) + 
                      (goodHits * 0.75f) + 
-                     (holdPerfects * 1.0f) +
-                     (holdGoods * 0.75f) +
                      (badHits * 0.5f);
         
         float totalPossible = totalBeats;
@@ -153,15 +152,28 @@ public class ScoreManager : MonoBehaviour
 
     private void Update()
     {
-        healthBar = Mathf.Clamp(healthBar, 0, 1000);
         resultText.text = result;
         comboText.text = comboScore.ToString() + "X";
         accuracyText.text = "Akurasi: " + GetAccuracy().ToString("F2") + "%"; // Update UI Akurasi
         scoreText.text = totalScore.ToString(); // Menampilkan total skor
+
+        healthBar = Mathf.Clamp(healthBar, 0, 1000);
         slider.value = healthBar;
         if (slider.value == 0)
         {
             onHealthZero?.Invoke();
         }
     }
+
+    public void ScoreDataUpdate()
+    {
+        scoreData.score = totalScore;
+        scoreData.accuracy = GetAccuracy();
+        scoreData.perfectHits = perfectHits;
+        scoreData.goodHits = goodHits;
+        scoreData.badHits = badHits;
+        scoreData.missHits = missHits;
+    }
+
+    
 }

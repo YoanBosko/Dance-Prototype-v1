@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class WinMenu : MonoBehaviour
 {
+    public TMPro.TextMeshPro score;
+    public TMPro.TextMeshPro accuracy;
     public TMPro.TextMeshPro perfectText;
     public TMPro.TextMeshPro goodText;
     public TMPro.TextMeshPro badText;
     public TMPro.TextMeshPro missText;
+    public ScoreData scoreData;
 
     void Start()
     {
@@ -16,16 +19,12 @@ public class WinMenu : MonoBehaviour
 
     public void UpdateScoreDetails()
     {
-        if (ScoreManager.Instance == null)
-        {
-            Debug.LogWarning("ScoreManager instance tidak ditemukan!");
-            return;
-        }
-
-        perfectText.text = "Perfect: " + GetPerfectHits();
-        goodText.text = "Good: " + GetGoodHits();
-        badText.text = "Bad: " + GetBadHits();
-        missText.text = "Miss: " + GetMissHits();
+        score.text = "Total Score: " + scoreData.score;
+        accuracy.text = "Accuracy: " + scoreData.accuracy;
+        perfectText.text = "Perfect: " + scoreData.perfectHits;
+        goodText.text = "Good: " + scoreData.goodHits;
+        badText.text = "Bad: " + scoreData.badHits;
+        missText.text = "Miss: " + scoreData.missHits;
     }
 
     int GetPerfectHits()
