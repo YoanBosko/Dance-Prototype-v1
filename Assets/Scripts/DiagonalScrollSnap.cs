@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Net.Mime;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class DiagonalScrollSnap : MonoBehaviour
 {
@@ -8,28 +10,29 @@ public class DiagonalScrollSnap : MonoBehaviour
     public RectTransform content;
     public RectTransform viewport;
     public List<RectTransform> items = new List<RectTransform>();
-    public float spacing = 100f; // Jarak antar item
+
+    public int visibleItemCount = 5;
     public float snapSpeed = 5f;
     public float highlightScale = 1.2f;
+    public float spacing = 170f;
 
     private int currentIndex = 0;
     private Vector2 targetPosition;
+    private float targetPos;
 
     void Start()
     {
-        ArrangeItemsDiagonally();
         SnapToIndex(currentIndex);
     }
 
     void Update()
     {
-        HandleArrowInput();
+        HandleInput();
         SnapContent();
         HighlightItem();
-        CheckAndRepositionItems();
     }
 
-    void HandleArrowInput()
+    void HandleInput()
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
@@ -49,12 +52,18 @@ public class DiagonalScrollSnap : MonoBehaviour
 
         Vector2 itemLocalPos = items[index].anchoredPosition;
         Vector2 viewportCenter = viewport.rect.size / 2f;
-        targetPosition = -itemLocalPos + viewportCenter;
+        // targetPosition = -itemLocalPos + viewportCenter;
+        targetPosition = -itemLocalPos;
+
+        float itemPos = items[index].anchoredPosition.x;
+        targetPos = -itemPos + 200f;
+
+        LoopItemPositions();
     }
 
     void SnapContent()
     {
-        content.anchoredPosition = Vector2.Lerp(content.anchoredPosition, targetPosition, Time.deltaTime * snapSpeed);
+        content.anchoredPosition = Vector2.Lerp(content.anchoredPosition, new Vector2(targetPos, content.anchoredPosition.y), Time.deltaTime * snapSpeed);
     }
 
     void HighlightItem()
@@ -66,40 +75,27 @@ public class DiagonalScrollSnap : MonoBehaviour
         }
     }
 
-    void ArrangeItemsDiagonally()
+    void LoopItemPositions()
     {
+        if (items.Count == 0) return;
+
+        // float spacing = items[1].anchoredPosition.x - items[0].anchoredPosition.x;
+        int halfCount = items.Count / 2;
+
         for (int i = 0; i < items.Count; i++)
         {
-            items[i].anchoredPosition = new Vector2(i * spacing, -i * spacing); // diagonal kanan bawah
-        }
+            int offset = i - currentIndex;
 
-        // Atur ukuran content agar cukup besar
-        float width = (items.Count + 1) * spacing;
-        content.sizeDelta = new Vector2(width, width);
-    }
+            // Wrap offset agar item terdekat tetap berada dekat visual center
+            if (offset >=  halfCount)
+                offset -= items.Count;
+            else if (offset < -halfCount)
+                offset += items.Count;
 
-    void CheckAndRepositionItems()
-    {
-        float leftBound = content.anchoredPosition.x - viewport.rect.width / 2f - spacing;
-        float rightBound = content.anchoredPosition.x + viewport.rect.width / 2f + spacing;
-
-        foreach (RectTransform item in items)
-        {
-            Vector2 pos = item.anchoredPosition;
-            float itemX = pos.x + content.anchoredPosition.x;
-
-            // Jika keluar di kiri, pindah ke kanan
-            if (itemX < leftBound)
-            {
-                pos.x += items.Count * spacing;
-                item.anchoredPosition = pos;
-            }
-            // Jika keluar di kanan, pindah ke kiri
-            else if (itemX > rightBound)
-            {
-                pos.x -= items.Count * spacing;
-                item.anchoredPosition = pos;
-            }
+            float newX = items[currentIndex].anchoredPosition.x + offset * spacing;
+            Vector2 newPos = new Vector2(newX, items[i].anchoredPosition.y);
+            items[i].anchoredPosition = newPos;
         }
     }
+
 }
