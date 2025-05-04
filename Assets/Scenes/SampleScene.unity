@@ -2106,7 +2106,7 @@ MonoBehaviour:
   marginOfErrorPerfect: 0.05
   marginOfErrorGood: 0.07
   marginOfErrorBad: 0.11
-  inputDelayInMilliseconds: 10
+  inputDelayInMilliseconds: 0
   noteSpeed: 5
   noteSpawnDistance: 10
   noteSpawnY: 7

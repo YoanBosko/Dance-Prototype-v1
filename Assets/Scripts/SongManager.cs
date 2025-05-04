@@ -15,15 +15,15 @@ public class SongManager : MonoBehaviour
     [Header("Timing Settings")]
     public float songDelayInSeconds;
     public float BPM = 120f;
-    public double marginOfErrorPerfect;
-    public double marginOfErrorGood;
-    public double marginOfErrorBad;
+    public double marginOfErrorPerfect = 0.06f;
+    public double marginOfErrorGood = 0.09f;
+    public double marginOfErrorBad = 0.11f;
     public int inputDelayInMilliseconds;
 
     [Header("Note Movement")]
     public float noteSpeed = 5f;
-    public float noteSpawnDistance = 8f;
-    public float noteSpawnY = 6f;
+    public float noteSpawnDistance = 10f;
+    public float noteSpawnY = 7f;
     public float noteTapY = -3f;
 
     [Header("MIDI Files")]
