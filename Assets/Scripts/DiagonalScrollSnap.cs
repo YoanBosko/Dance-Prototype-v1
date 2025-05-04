@@ -10,6 +10,7 @@ public class DiagonalScrollSnap : MonoBehaviour
     public RectTransform content;
     public RectTransform viewport;
     public List<RectTransform> items = new List<RectTransform>();
+    // public List<DaftarLagu> items = new List<DaftarLagu>();
 
     public int visibleItemCount = 5;
     public float snapSpeed = 5f;
@@ -44,6 +45,12 @@ public class DiagonalScrollSnap : MonoBehaviour
             currentIndex = (currentIndex - 1 + items.Count) % items.Count;
             SnapToIndex(currentIndex);
         }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            GameObject obj = items[currentIndex].gameObject;
+            DataHolder dataHolder = obj.GetComponent<DataHolder>();
+            BeatmapTransfer.Instance.CopyData(dataHolder.beatmapData); 
+        }
     }
 
     void SnapToIndex(int index)
@@ -56,7 +63,7 @@ public class DiagonalScrollSnap : MonoBehaviour
         targetPosition = -itemLocalPos;
 
         float itemPos = items[index].anchoredPosition.x;
-        targetPos = -itemPos + 200f;
+        targetPos = -itemPos + 550f;
 
         LoopItemPositions();
     }
