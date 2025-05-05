@@ -3,21 +3,28 @@ using UnityEngine.SceneManagement;
 
 public class SceneSwitcher : MonoBehaviour
 {
-    public float delayBeforeSwitch = 0.5f;
+    public string targetScene = "Menu Lagu"; // Ganti dengan nama scene tujuan
+    private SerialController serialController;
+    private bool sceneSwitched = false; // Cegah perpindahan berulang
+
+    void Start()
+    {
+        serialController = GameObject.Find("SerialController").GetComponent<SerialController>();
+    }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow) ||
-            Input.GetKeyDown(KeyCode.DownArrow) ||
-            Input.GetKeyDown(KeyCode.LeftArrow) ||
-            Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            Invoke(nameof(SwitchScene), delayBeforeSwitch);
-        }
-    }
+        if (sceneSwitched) return;
 
-    void SwitchScene()
-    {
-        SceneManager.LoadScene("Menu Lagu");
+        string message = serialController.ReadSerialMessage();
+        if (message == null) return;
+
+        Debug.Log("RFID Data: " + message);
+
+        if (message.Contains("UID:"))
+        {
+            sceneSwitched = true; // Supaya tidak ganti scene berkali-kali
+            SceneManager.LoadScene(targetScene);
+        }
     }
 }
