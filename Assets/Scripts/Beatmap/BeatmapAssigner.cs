@@ -45,6 +45,7 @@ public class BeatmapAssigner : MonoBehaviour
         if (targetAudioSource != null)
         {
             targetAudioSource.clip = beatmapData.audioClip;
+            targetAudioSource.Play();
         }
 
         // Assign VideoClip ke VideoPlayer (jika ada)
@@ -52,6 +53,18 @@ public class BeatmapAssigner : MonoBehaviour
         {
             targetVideoPlayer.clip = beatmapData.videoClip;
         }
+
+
+        // Assign MIDI File (jika ada)
+        if (beatmapData.midiFile != null)
+        {
+            //byte[] midiBytes = beatmapData.midiFile.bytes;
+            //Debug.Log("MIDI file loaded. Byte length: " + midiBytes.Length);
+
+            // Jika kamu ingin parsing atau memproses MIDI lebih lanjut,
+            // kamu bisa kirim `midiBytes` ke MIDI parser.
+        }
+
 
         Debug.Log("MediaAsset berhasil di-assign ke GameObject.");
     }
