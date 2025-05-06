@@ -14,5 +14,9 @@ public class BeatmapData : ScriptableObject
     public VideoClip videoClip;
 
     [Header("MIDI File (as Text or Binary)")]
-    public TextAsset midiFile;
+    public string midiFile;
+    //public byte[] GetMidiBytes()
+    //{
+    //    return midiFile != null ? midiFile.bytes : null;
+    //}
 }
