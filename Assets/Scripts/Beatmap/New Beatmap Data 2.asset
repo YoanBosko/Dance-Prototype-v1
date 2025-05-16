@@ -13,4 +13,7 @@ MonoBehaviour:
   m_Name: New Beatmap Data 2
   m_EditorClassIdentifier: 
   image: {fileID: 21300000, guid: f6ed6d18e7ea7dd498ea457421c64cf1, type: 3}
-  audioClip: {fileID: 8300000, guid: cada5370920179f4890d70396518f652, type: 3}
+  audioClip: {fileID: 8300000, guid: b4cb0c718fcf48c42912e93755ccca4e, type: 3}
+  videoClip: {fileID: 0}
+  midiFileHit: tapkalebsatu.mid
+  midiFileHold: holdkalebsatu.mid

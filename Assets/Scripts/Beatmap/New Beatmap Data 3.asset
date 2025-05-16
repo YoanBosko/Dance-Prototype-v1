@@ -13,4 +13,7 @@ MonoBehaviour:
   m_Name: New Beatmap Data 3
   m_EditorClassIdentifier: 
   image: {fileID: 21300000, guid: 83c8ca05b741cd34c87f0b124688fa2d, type: 3}
-  audioClip: {fileID: 8300000, guid: 76b1d1de4a3850046abf0d7e71dda7bb, type: 3}
+  audioClip: {fileID: 8300000, guid: 97c3fdcfa8252e14db17b04b4b38af88, type: 3}
+  videoClip: {fileID: 0}
+  midiFileHit: TAP (1).mid
+  midiFileHold: HOLD (1).mid

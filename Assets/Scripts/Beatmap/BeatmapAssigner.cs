@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video; // Tambahkan ini
 
+[DefaultExecutionOrder (-10)]
 public class BeatmapAssigner : MonoBehaviour
 {
     [Header("Media Asset to Assign")]
@@ -12,6 +13,7 @@ public class BeatmapAssigner : MonoBehaviour
     public Image targetUIImage;                   // Untuk UI Image
     public AudioSource targetAudioSource;         // Untuk audio
     public VideoPlayer targetVideoPlayer;         // Untuk video (baru)
+    public SongManager songManager;
 
     public static BeatmapAssigner Instance;
 
@@ -56,13 +58,23 @@ public class BeatmapAssigner : MonoBehaviour
 
 
         // Assign MIDI File (jika ada)
-        if (beatmapData.midiFile != null)
+        if (beatmapData.midiFileHit != null || beatmapData.midiFileHold != null)
         {
             //byte[] midiBytes = beatmapData.midiFile.bytes;
             //Debug.Log("MIDI file loaded. Byte length: " + midiBytes.Length);
 
             // Jika kamu ingin parsing atau memproses MIDI lebih lanjut,
             // kamu bisa kirim `midiBytes` ke MIDI parser.
+        }
+
+        if (songManager != null)
+        {
+            songManager.hitNoteMidiFile = beatmapData.midiFileHit;
+            songManager.holdNoteMidiFile = beatmapData.midiFileHold;
+        }
+        else 
+        {
+            Debug.LogWarning("SongManager belum di-assign! Harap assign SongManager melalui Inspector di Unity.");
         }
 
 

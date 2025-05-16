@@ -3,6 +3,8 @@ using System.Net.Mime;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEditor.SearchService;
+using UnityEngine.SceneManagement;
 
 public class DiagonalScrollSnap : MonoBehaviour
 {
@@ -49,7 +51,8 @@ public class DiagonalScrollSnap : MonoBehaviour
         {
             GameObject obj = items[currentIndex].gameObject;
             DataHolder dataHolder = obj.GetComponent<DataHolder>();
-            BeatmapTransfer.Instance.CopyData(dataHolder.beatmapData); 
+            BeatmapTransfer.Instance.CopyData(dataHolder.beatmapData);
+            SceneManager.LoadScene("SampleScene");
         }
     }
 
