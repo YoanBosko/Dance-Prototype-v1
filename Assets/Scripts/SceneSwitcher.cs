@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,6 +19,21 @@ public class SceneSwitcher : MonoBehaviour
 
     void SwitchScene()
     {
-        SceneManager.LoadScene("Menu Lagu");
+        // SceneManager.LoadScene("Menu Lagu");
+        StartCoroutine(LoadSceneAsync("Menu Lagu"));
+    }
+    IEnumerator LoadSceneAsync(string sceneName)
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+        asyncLoad.allowSceneActivation = false;
+
+        while (asyncLoad.progress < 0.9f)
+        {
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        asyncLoad.allowSceneActivation = true;
     }
 }
