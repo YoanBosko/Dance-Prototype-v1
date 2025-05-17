@@ -153,8 +153,8 @@ public class ScoreManager : MonoBehaviour
     private void Update()
     {
         resultText.text = result;
-        comboText.text = comboScore.ToString() + "X";
-        accuracyText.text = "Akurasi: " + GetAccuracy().ToString("F2") + "%"; // Update UI Akurasi
+        comboText.text = comboScore.ToString() + "";
+        accuracyText.text = "" + GetAccuracy().ToString("F2") + "%"; // Update UI Akurasi
         scoreText.text = totalScore.ToString(); // Menampilkan total skor
 
         healthBar = Mathf.Clamp(healthBar, 0, 1000);
