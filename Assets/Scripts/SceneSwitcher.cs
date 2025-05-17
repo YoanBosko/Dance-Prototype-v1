@@ -3,31 +3,21 @@ using UnityEngine.SceneManagement;
 
 public class SceneSwitcher : MonoBehaviour
 {
+    public float delayBeforeSwitch = 0.5f;
+
     void Update()
     {
-        // Cek input dari tombol panah
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.UpArrow) ||
+            Input.GetKeyDown(KeyCode.DownArrow) ||
+            Input.GetKeyDown(KeyCode.LeftArrow) ||
+            Input.GetKeyDown(KeyCode.RightArrow))
         {
-            SwitchScene("Menu Lagu"); // Ganti dengan nama scene yang sesuai
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            SwitchScene("Menu Lagu"); // Ganti dengan nama scene yang sesuai
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            SwitchScene("Menu Lagu"); // Ganti dengan nama scene yang sesuai
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            SwitchScene("Menu Lagu"); // Ganti dengan nama scene yang sesuai
+            Invoke(nameof(SwitchScene), delayBeforeSwitch);
         }
     }
 
-    // Fungsi untuk memindahkan scene
-    void SwitchScene(string sceneName)
+    void SwitchScene()
     {
-        // Memuat scene dengan nama yang diberikan
-        SceneManager.LoadScene(sceneName);
+        SceneManager.LoadScene("Menu Lagu");
     }
 }
