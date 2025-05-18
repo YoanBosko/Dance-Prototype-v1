@@ -14,13 +14,23 @@ public class ScoreManager : MonoBehaviour
     public TMPro.TextMeshPro resultText;
     public TMPro.TextMeshPro accuracyText;
     public Slider slider;
+    public Image fillImage; // drag Image dari Fill Rect ke sini
     public UnityEvent onHealthZero;
     public ScoreData scoreData;
+
+    public GameObject resultPerfectPrefab;
+    public GameObject resultGoodPrefab;
+    public GameObject resultBadPrefab;
+    public GameObject resultMissPrefab;
+
+    public Transform resultSpawnPoint; // posisi di mana result akan dimunculkan
+    private GameObject currentResultInstance;
     
     static int comboScore;
+    int lastComboMilestone = 0; // untuk menyimpan kelipatan combo terakhir
     static string result;
     static int totalScore = 0;
-    static int healthBar = 600;
+    static int healthBar = 1000;
 
     static int totalBeats = 0;  // Total beat dalam permainan
     public static int successfulHits;  // Jumlah hit yang masuk kategori Perfect atau Good
@@ -51,7 +61,7 @@ public class ScoreManager : MonoBehaviour
         result = "";
         totalBeats = SongManager.Instance.GetTotalBeats(); // Ambil total beat dari SongManager
         successfulHits = 0;
-        healthBar = 600;
+        healthBar = 1000;
 
         scoreData.ResetScore();
     }
@@ -64,7 +74,7 @@ public class ScoreManager : MonoBehaviour
 #region HitScoreManager
     public static void Perfect()
     {
-        result = "Perfect";
+        Instance.ShowResult(Instance.resultPerfectPrefab);
         comboScore += 1;
         perfectHits++;
         totalBeats++;
@@ -77,7 +87,7 @@ public class ScoreManager : MonoBehaviour
 
     public static void Good()
     {
-        result = "Good";
+        Instance.ShowResult(Instance.resultGoodPrefab);    // di fungsi Good
         comboScore += 1;
         goodHits++;
         totalBeats++;
@@ -90,7 +100,7 @@ public class ScoreManager : MonoBehaviour
 
     public static void Bad()
     {
-        result = "Bad";
+        Instance.ShowResult(Instance.resultBadPrefab);    // di fungsi Bad
         comboScore = 0;  // Reset combo saat kena Bad
         badHits++;
         totalBeats++;
@@ -103,7 +113,7 @@ public class ScoreManager : MonoBehaviour
 
     public static void Miss()
     {
-        result = "Miss";
+        Instance.ShowResult(Instance.resultMissPrefab);    // di fungsi Miss
         comboScore = 0;  // Reset combo saat Miss
         missHits++;
         totalBeats++;
@@ -140,7 +150,9 @@ public class ScoreManager : MonoBehaviour
         // float accuracy = ((perfectHits * 1.0f) + (goodHits * 0.75f) + (badHits * 0.5f) + (missHits * 0.0f)) / totalBeats * 100f;
         // return accuracy;
 
-
+        if (totalBeats == 0)
+        return 100f; // Supaya awalnya langsung tampil 100%
+        
         // Update formula untuk include hold notes
         float score = (perfectHits * 1.0f) + 
                      (goodHits * 0.75f) + 
@@ -153,12 +165,28 @@ public class ScoreManager : MonoBehaviour
     private void Update()
     {
         resultText.text = result;
-        comboText.text = comboScore.ToString() + "";
+        if (comboScore > 0)
+        {
+            comboText.gameObject.SetActive(true);
+            comboText.text = comboScore.ToString();
+        }
+        else
+        {
+            comboText.gameObject.SetActive(false);
+        }
+        
+        if (comboScore % 50 == 0 && comboScore > 0)
+        {
+            PostProcessingController.Instance.TriggerEffect();
+        }
+
         accuracyText.text = "" + GetAccuracy().ToString("F2") + "%"; // Update UI Akurasi
         scoreText.text = totalScore.ToString(); // Menampilkan total skor
 
         healthBar = Mathf.Clamp(healthBar, 0, 1000);
         slider.value = healthBar;
+        UpdateFillColor();
+        PostProcessingController.Instance.UpdateLowHealthEffect(healthBar);
         if (slider.value == 0)
         {
             onHealthZero?.Invoke();
@@ -175,5 +203,48 @@ public class ScoreManager : MonoBehaviour
         scoreData.missHits = missHits;
     }
 
-    
+    void ShowResult(GameObject resultPrefab)
+    {
+        // Hancurkan result sebelumnya jika masih ada
+        if (currentResultInstance != null)
+        {
+            Destroy(currentResultInstance);
+        }
+
+        // Spawn yang baru
+        GameObject obj = Instantiate(resultPrefab, resultSpawnPoint.position, Quaternion.identity);
+        currentResultInstance = obj; // Simpan referensi yang aktif sekarang
+
+        Animator anim = obj.GetComponent<Animator>();
+        if (anim != null)
+        {
+            anim.SetTrigger("Spawn");
+        }
+
+        // Optional: hancurkan otomatis jika tidak ada replace dalam 0.75 detik
+        Destroy(obj, 0.5f);
+    }
+
+    void UpdateFillColor()
+    {
+        if (healthBar >= 500)
+        {
+            // 500 - 1000: putih
+            fillImage.color = Color.white;
+        }
+        else if (healthBar >= 250)
+        {
+            // 250 - 500: transisi putih ke kuning
+            float t = (healthBar - 250f) / 250f; // hasil 0–1
+            fillImage.color = Color.Lerp(Color.yellow, Color.white, t); // dari kuning ke putih
+        }
+        else
+        {
+            // 0 - 250: transisi kuning ke merah
+            float t = healthBar / 250f; // hasil 0–1
+            fillImage.color = Color.Lerp(Color.red, Color.yellow, t); // dari merah ke kuning
+        }
+    }
+
+
 }
