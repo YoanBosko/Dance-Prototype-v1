@@ -36,7 +36,7 @@ public class WinState : MonoBehaviour
         {
             if (useDelay)
             {
-                float timer = Time.deltaTime;
+                float timer =+ Time.deltaTime;
                 if (timer >= delayTime)
                 {
                     onAudioEnd?.Invoke();
