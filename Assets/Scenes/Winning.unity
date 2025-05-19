@@ -373,6 +373,21 @@ MonoBehaviour:
           m_StringArgument: BuffPicker
           m_BoolArgument: 0
         m_CallState: 2
+  onAudioEndCycleTime:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114372213}
+        m_TargetAssemblyTypeName: WinState, Assembly-CSharp
+        m_MethodName: ChangeScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Losing
+          m_BoolArgument: 0
+        m_CallState: 2
   useDelay: 0
   delayTime: 0
   fadeController: {fileID: 801118286}
@@ -403,7 +418,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: d8023804e086b204d8d0ed35e6eab074, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 73c5e162f44da6e41bd8a24cdcef3cda, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

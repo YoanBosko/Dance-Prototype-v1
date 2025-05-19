@@ -7,6 +7,7 @@ public class WinState : MonoBehaviour
 {
     public AudioSource audioSource;
     public UnityEvent onAudioEnd;
+    public UnityEvent onAudioEndCycleTime;
     public bool useDelay;
     public float delayTime;
     public FadeController fadeController; // Assign via Inspector
@@ -41,6 +42,10 @@ public class WinState : MonoBehaviour
                 {
                     onAudioEnd?.Invoke();
                 }
+            }
+            else if (GameManager.Instance.cycleTime == 1)
+            {
+                onAudioEndCycleTime?.Invoke();
             }
             else
             {

@@ -15,13 +15,13 @@ public class SongManager : MonoBehaviour
     [Header("Timing Settings")]
     public float songDelayInSeconds;
     public float BPM = 120f;
-    public double marginOfErrorPerfect = 0.06f;
-    public double marginOfErrorGood = 0.09f;
-    public double marginOfErrorBad = 0.11f;
+    public double marginOfErrorPerfect;
+    public double marginOfErrorGood;
+    public double marginOfErrorBad;
     public int inputDelayInMilliseconds;
 
     [Header("Note Movement")]
-    public float noteSpeed = 5f;
+    public float noteSpeed;
     public float noteSpawnDistance = 10f;
     public float noteSpawnY = 7f;
     public float noteTapY = -3f;
@@ -52,6 +52,12 @@ public class SongManager : MonoBehaviour
 
     void Start()
     {
+        //Controlled by Buff
+        marginOfErrorPerfect = 0.05f;
+        marginOfErrorGood = 0.2f;
+        marginOfErrorBad = 0.4f;
+        noteSpeed = 7f;
+
         // pakai ini untuk test beatmap dalam bentuk aplikasi.exe
         // if (!string.IsNullOrEmpty(SongDataBridge.songPath))
         // {

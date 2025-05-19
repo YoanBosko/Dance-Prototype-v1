@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
+[DefaultExecutionOrder(-10)]
 public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager Instance;
@@ -34,7 +35,16 @@ public class ScoreManager : MonoBehaviour
 
     static int totalBeats = 0;  // Total beat dalam permainan
     public static int successfulHits;  // Jumlah hit yang masuk kategori Perfect atau Good
-    static float scoreMultiplier = 1.0f; // Default multiplier
+
+    [Header("Controlled by Buff")]
+    public static float scoreMultiplier; // Default multiplier
+    public static float scorePerfectMultiplier; // Default multiplier
+    public static float healMultiplier; // Default multiplier
+    public static bool isUndead;
+    public static bool isRegen1;
+    public static bool isRegen2;
+    public static bool oneMoreChance;
+    public static bool noBadBreakCombo;
 
     static int perfectHits = 0;
     static int goodHits = 0;
@@ -63,6 +73,16 @@ public class ScoreManager : MonoBehaviour
         successfulHits = 0;
         healthBar = 1000;
 
+        //Controlled by Buff
+        scoreMultiplier = 1;
+        scorePerfectMultiplier = 1;
+        healMultiplier = 1;
+        isUndead = false;
+        isRegen1 = false;
+        isRegen2 = false;
+        oneMoreChance = false;
+        noBadBreakCombo = false;
+
         scoreData.ResetScore();
     }
 
@@ -78,9 +98,9 @@ public class ScoreManager : MonoBehaviour
         comboScore += 1;
         perfectHits++;
         totalBeats++;
-        healthBar += 10;
+        healthBar += (int)(10f * healMultiplier);
 
-        totalScore += Mathf.RoundToInt(100 * scoreMultiplier); // 100 poin untuk Perfect
+        totalScore += Mathf.RoundToInt(100 * scorePerfectMultiplier); // 100 poin untuk Perfect
         UpdateMultiplier();
         Instance.hitSFX.Play();
     }
@@ -91,7 +111,7 @@ public class ScoreManager : MonoBehaviour
         comboScore += 1;
         goodHits++;
         totalBeats++;
-        healthBar += 5;
+        healthBar += (int)(5f * healMultiplier);
 
         totalScore += Mathf.RoundToInt(75 * scoreMultiplier); // 75 poin untuk Good
         UpdateMultiplier();
@@ -101,7 +121,10 @@ public class ScoreManager : MonoBehaviour
     public static void Bad()
     {
         Instance.ShowResult(Instance.resultBadPrefab);    // di fungsi Bad
-        comboScore = 0;  // Reset combo saat kena Bad
+        if (!noBadBreakCombo)
+        {
+            comboScore = 0;  // Reset combo saat kena Bad
+        }
         badHits++;
         totalBeats++;
         healthBar -= 15;
@@ -179,6 +202,20 @@ public class ScoreManager : MonoBehaviour
         {
             PostProcessingController.Instance.TriggerEffect();
         }
+        else if (comboScore > 0 && comboScore % 100 == 0 && isRegen2)
+        {
+            healthBar += (int)(slider.maxValue / 2);
+        }
+        else if (comboScore > 0 && comboScore % 200 == 0 && isRegen1)
+        {
+            healthBar += (int)(slider.maxValue / 4);
+        }
+        
+        if (healthBar < 80 && oneMoreChance)
+        {
+            healthBar = (int)slider.maxValue;
+            oneMoreChance = false;
+        }
 
         accuracyText.text = "" + GetAccuracy().ToString("F2") + "%"; // Update UI Akurasi
         scoreText.text = totalScore.ToString(); // Menampilkan total skor
@@ -187,10 +224,12 @@ public class ScoreManager : MonoBehaviour
         slider.value = healthBar;
         UpdateFillColor();
         PostProcessingController.Instance.UpdateLowHealthEffect(healthBar);
-        if (slider.value == 0)
+        if (slider.value == 0 && !isUndead)
         {
             onHealthZero?.Invoke();
         }
+
+
     }
 
     public void ScoreDataUpdate()
