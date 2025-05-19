@@ -9,8 +9,16 @@ using UnityEngine.SceneManagement;
 public class DiagonalScrollSnap : MonoBehaviour
 {
     public ScrollRect scrollRect;
+    private bool isCanvasActive = false;
+    public Canvas menuCanvas;
+    public GameObject script1; // Assign dari Inspector
+    public KeyCode input1;
+    public KeyCode input2;
+    public KeyCode input3;
+    public KeyCode input4;
     public RectTransform content;
     public RectTransform viewport;
+    public List<string> songNames;
     public List<RectTransform> items = new List<RectTransform>();
     // public List<DaftarLagu> items = new List<DaftarLagu>();
 
@@ -23,9 +31,30 @@ public class DiagonalScrollSnap : MonoBehaviour
     private Vector2 targetPosition;
     private float targetPos;
 
+    [Header("Menu Preview")]
+    public Image imagePreview;
+    public AudioSource audioSourcePreview;
+
+    private bool onetime = true;
+
     void Start()
     {
+        // SnapToIndex(currentIndex);
+        // LoadAllSong();
+
+        // Panggil setiap item dalam list satu kali di awal scene
+        for (int i = 0; i < items.Count; i++)
+        {
+            currentIndex = (currentIndex + 1) % items.Count;
+            SnapToIndex(currentIndex);
+            PreviewMenu();  // Misalnya untuk memuat preview atau menyiapkan UI
+            audioSourcePreview.Play();
+        }
+
+        // Setelah selesai, bisa reset ke index awal
+        currentIndex = 7;
         SnapToIndex(currentIndex);
+        PreviewMenu();
     }
 
     void Update()
@@ -33,26 +62,64 @@ public class DiagonalScrollSnap : MonoBehaviour
         HandleInput();
         SnapContent();
         HighlightItem();
+        
     }
 
+    // void LoadAllSong()
+    // {
+    //     foreach (char name in items.gameObject.GetComponent<DataHolder>().beatmapData.audioClip.name)
+    //     {
+    //         AudioClip clip = Resources.Load<AudioClip>("Songs/" + name);
+    //         if (clip != null)
+    //         {
+    //             items[currentIndex].gameObject.GetComponent<DataHolder>().beatmapData.audioClip = clip;
+    //         }
+    //         else
+    //         {
+    //             Debug.Log("kosong");
+    //         }
+    //     }
+    // }
     void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        // Blokir input1 dan input2 jika canvas aktif
+        if (!menuCanvas.gameObject.activeSelf)
         {
-            currentIndex = (currentIndex + 1) % items.Count;
-            SnapToIndex(currentIndex);
+            if (Input.GetKeyDown(input1))
+            {
+                currentIndex = (currentIndex + 1) % items.Count;
+                SnapToIndex(currentIndex);
+                PreviewMenu();
+                audioSourcePreview.Play();
+            }
+            else if (Input.GetKeyDown(input2))
+            {
+                currentIndex = (currentIndex - 1 + items.Count) % items.Count;
+                SnapToIndex(currentIndex);
+                PreviewMenu();
+                audioSourcePreview.Play();
+            }
+            else if (Input.GetKeyDown(input3))
+            {
+                GameObject obj = items[currentIndex].gameObject;
+                DataHolder dataHolder = obj.GetComponent<DataHolder>();
+
+                if (dataHolder != null && dataHolder.beatmapData != null)
+                {
+                    // 🔁 Kirim beatmap yang dipilih
+                    BeatmapTransfer.Instance.CopyData(dataHolder.beatmapData);
+
+                    // Tampilkan canvas preview
+                    menuCanvas.gameObject.SetActive(true);
+                    script1.gameObject.SetActive(false);
+                }
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        
+        if (Input.GetKeyDown(input4))
         {
-            currentIndex = (currentIndex - 1 + items.Count) % items.Count;
-            SnapToIndex(currentIndex);
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            GameObject obj = items[currentIndex].gameObject;
-            DataHolder dataHolder = obj.GetComponent<DataHolder>();
-            BeatmapTransfer.Instance.CopyData(dataHolder.beatmapData);
-            SceneManager.LoadScene("SampleScene");
+            menuCanvas.gameObject.SetActive(false);
+            isCanvasActive = false;
         }
     }
 
@@ -69,6 +136,13 @@ public class DiagonalScrollSnap : MonoBehaviour
         targetPos = -itemPos + 550f;
 
         LoopItemPositions();
+    }
+    void PreviewMenu()
+    {
+        GameObject obj = items[currentIndex].gameObject;
+        DataHolder dataHolder = obj.GetComponent<DataHolder>();
+        imagePreview.sprite = dataHolder.beatmapData.image;
+        audioSourcePreview.clip = dataHolder.beatmapData.audioClip;
     }
 
     void SnapContent()

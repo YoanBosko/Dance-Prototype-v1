@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
@@ -36,6 +37,15 @@ public class MenuController : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             menuButtons[selectedIndex].onClick.Invoke();
+            if (GameManager.Instance.cycleTime == 3)
+            {
+                SceneManager.LoadScene("Losing");
+            }
+            else
+            {
+                SceneManager.LoadScene("Menu Lagu");
+            }
+            buttonPrefabs.RemoveAt(selectedIndex);
         }
 
         UpdateButtonScales();

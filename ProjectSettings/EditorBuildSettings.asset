@@ -26,6 +26,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Losing.unity
     guid: bf5d6bf36a02c2d43b580a192b14541e
+  - enabled: 1
+    path: Assets/Scenes/BuffPicker.unity
+    guid: ddff75c1168de0949a1c4d444bd33e18
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 9221b48d79328aa4b9a696cab2f71fcb, type: 2}
     enabled: {fileID: 0}
