@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
 
     private List<BuffBase> activeBuffs = new List<BuffBase>();
 
+    [HideInInspector] public int cycleTime = 0;
+
     private void Awake()
     {
         if (Instance == null)
@@ -28,13 +30,24 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "Gameplay")
+        if (scene.name == "SampleScene")
         {
             CreateBuffComponents();
         }
         else
         {
             RemoveBuffComponents();
+        }
+
+        if (scene.name == "Menu Lagu")
+        {
+            cycleTime++;
+            Debug.Log("Cycle Time: " + cycleTime);
+        }
+
+        if (scene.name == "StartGame")
+        {
+            cycleTime = 0;
         }
     }
 
