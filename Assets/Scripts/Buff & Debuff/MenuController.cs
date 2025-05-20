@@ -37,15 +37,10 @@ public class MenuController : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             menuButtons[selectedIndex].onClick.Invoke();
-            if (GameManager.Instance.cycleTime == 3)
-            {
-                SceneManager.LoadScene("Losing");
-            }
-            else
-            {
-                SceneManager.LoadScene("Menu Lagu");
-            }
-            buttonPrefabs.RemoveAt(selectedIndex);
+            string menuButtonsName = menuButtons[selectedIndex].name.Replace("(Clone)", "").Trim();
+            GameObject selectedGameObject = buttonPrefabs.Find(obj => obj.name == menuButtonsName);
+            buttonPrefabs.Remove(selectedGameObject);
+            // SceneManager.LoadScene("Menu Lagu");
         }
 
         UpdateButtonScales();
@@ -54,6 +49,12 @@ public class MenuController : MonoBehaviour
     void HighlightButton()
     {
         EventSystem.current.SetSelectedGameObject(menuButtons[selectedIndex].gameObject);
+        for (int i = 0; i < menuButtons.Length; i++)
+        {
+            BuffLoader buffLoader = menuButtons[i].gameObject.GetComponent<BuffLoader>();
+            if (i == selectedIndex) buffLoader.ActivateMoreDescription();
+            else buffLoader.DeactivateMoreDescription();
+        }
     }
 
     void UpdateButtonScales()
@@ -97,3 +98,7 @@ public class MenuController : MonoBehaviour
         }
     }
 }
+
+
+
+

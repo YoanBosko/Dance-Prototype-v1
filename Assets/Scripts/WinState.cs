@@ -43,7 +43,7 @@ public class WinState : MonoBehaviour
                     onAudioEnd?.Invoke();
                 }
             }
-            else if (GameManager.Instance.cycleTime == 1)
+            else if (GameManager.Instance.cycleTime == 3)
             {
                 onAudioEndCycleTime?.Invoke();
             }
