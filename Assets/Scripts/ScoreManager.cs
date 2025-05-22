@@ -46,6 +46,10 @@ public class ScoreManager : MonoBehaviour
     public static bool oneMoreChance;
     public static bool noBadBreakCombo;
 
+    [Header("Controlled by Debuff")]
+    public static bool isInstaDeath;
+    public static bool isResultHide;
+
     static int perfectHits = 0;
     static int goodHits = 0;
     static int badHits = 0;
@@ -83,6 +87,25 @@ public class ScoreManager : MonoBehaviour
         oneMoreChance = false;
         noBadBreakCombo = false;
 
+        //Controlled by Debuff
+        isInstaDeath = false;
+        isResultHide = false;
+        
+
+        if (!isResultHide)
+        {
+            resultPerfectPrefab.SetActive(true);
+            resultGoodPrefab.SetActive(true);
+            resultBadPrefab.SetActive(true);
+            resultMissPrefab.SetActive(true);
+        }
+        else
+        {
+            resultPerfectPrefab.SetActive(false);
+            resultGoodPrefab.SetActive(false);
+            resultBadPrefab.SetActive(false);
+            resultMissPrefab.SetActive(false);
+        }
         scoreData.ResetScore();
     }
 
@@ -140,7 +163,9 @@ public class ScoreManager : MonoBehaviour
         comboScore = 0;  // Reset combo saat Miss
         missHits++;
         totalBeats++;
-        healthBar -= 70;
+        if (!isInstaDeath) healthBar -= 70;
+        else healthBar = 0;
+
 
         UpdateMultiplier();
         Instance.missSFX.Play();
