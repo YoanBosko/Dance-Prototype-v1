@@ -25,9 +25,9 @@ public class ScoreManager : MonoBehaviour
 
     public Transform resultSpawnPoint; // posisi di mana result akan dimunculkan
     private GameObject currentResultInstance;
-    
+    private LEDController_InGame ledController;
+    int lastComboTriggered = 0;
     static int comboScore;
-    int lastComboMilestone = 0; // untuk menyimpan kelipatan combo terakhir
     static string result;
     static int totalScore = 0;
     static int healthBar = 1000;
@@ -44,15 +44,15 @@ public class ScoreManager : MonoBehaviour
     
     void Awake()
     {
-        // if (Instance == null)
-        // {
-        //     Instance = this;
-        //     DontDestroyOnLoad(gameObject); // <--- ini penting
-        // }
-        // else
-        // {
-        //     Destroy(gameObject); // Kalau sudah ada instance, hancurkan yang baru
-        // }
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // <--- ini penting
+        }
+        else
+        {
+            Destroy(gameObject); // Kalau sudah ada instance, hancurkan yang baru
+        }
     }
     void Start()
     {
@@ -64,6 +64,8 @@ public class ScoreManager : MonoBehaviour
         healthBar = 1000;
 
         scoreData.ResetScore();
+
+        ledController = FindObjectOfType<LEDController_InGame>();
     }
 
     public static void UpdateMultiplier()
@@ -174,10 +176,18 @@ public class ScoreManager : MonoBehaviour
         {
             comboText.gameObject.SetActive(false);
         }
-        
-        if (comboScore % 50 == 0 && comboScore > 0)
+
+        if (comboScore % 15 == 0 && comboScore > 0 && comboScore != lastComboTriggered)
         {
             PostProcessingController.Instance.TriggerEffect();
+
+            // Kirim COMBO_10 ke ESP32
+            if (ledController != null)
+            {
+                ledController.TriggerComboEffect(comboScore);
+            }
+
+            lastComboTriggered = comboScore;
         }
 
         accuracyText.text = "" + GetAccuracy().ToString("F2") + "%"; // Update UI Akurasi
