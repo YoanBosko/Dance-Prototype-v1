@@ -10,7 +10,7 @@ public class DiagonalScrollSnap : MonoBehaviour
 {
     public ScrollRect scrollRect;
     private bool isCanvasActive = false;
-    public Canvas menuCanvas;
+    public GameObject menuCanvas;
     public GameObject script1; // Assign dari Inspector
     public KeyCode input1;
     public KeyCode input2;
