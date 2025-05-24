@@ -24,17 +24,17 @@ public class MenuController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.J))
         {
             selectedIndex = (selectedIndex + 1) % menuButtons.Length;
             HighlightButton();
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (Input.GetKeyDown(KeyCode.D))
         {
             selectedIndex = (selectedIndex - 1 + menuButtons.Length) % menuButtons.Length;
             HighlightButton();
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        else if (Input.GetKeyDown(KeyCode.K))
         {
             menuButtons[selectedIndex].onClick.Invoke();
             if (GameManager.Instance.cycleTime == 3)
