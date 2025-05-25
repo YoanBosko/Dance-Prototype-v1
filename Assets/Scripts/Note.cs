@@ -161,6 +161,7 @@ public class Note : MonoBehaviour
         float bodySizeShrinkAmount = lateHoldBodySize.y * timePass;
         float bodyPositionShrink = lateHoldBodyPosition.y * timePass;
         float tb = 10f / lateHoldBodySize.y;
+        //float tb = SongManager.Instance.noteTime * SongManager.Instance.noteSpeed / lateHoldBodySize.y;
         float peakPos = lateHoldBodySize.y / (lateHoldBodySize.y / SongManager.Instance.noteSpeed)  + lateHoldBodyPosition.y;
         const float endPos = 10f;
         float tailMovedAmount = lateHoldTailPosition.y - tail.transform.localPosition.y;

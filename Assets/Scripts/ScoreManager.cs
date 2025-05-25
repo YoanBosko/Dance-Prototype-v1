@@ -40,6 +40,7 @@ public class ScoreManager : MonoBehaviour
     public static float scoreMultiplier; // Default multiplier
     public static float scorePerfectMultiplier; // Default multiplier
     public static float healMultiplier; // Default multiplier
+    public static float harmMultiplier; // Default multiplier
     public static bool isUndead;
     public static bool isRegen1;
     public static bool isRegen2;
@@ -81,6 +82,7 @@ public class ScoreManager : MonoBehaviour
         scoreMultiplier = 1;
         scorePerfectMultiplier = 1;
         healMultiplier = 1;
+        harmMultiplier = 1;
         isUndead = false;
         isRegen1 = false;
         isRegen2 = false;
@@ -152,7 +154,7 @@ public class ScoreManager : MonoBehaviour
         }
         badHits++;
         totalBeats++;
-        healthBar -= 15;
+        healthBar -= (int)(15 * harmMultiplier);
 
         totalScore += Mathf.RoundToInt(50 * scoreMultiplier); // 50 poin untuk Bad
         UpdateMultiplier();
@@ -165,7 +167,7 @@ public class ScoreManager : MonoBehaviour
         comboScore = 0;  // Reset combo saat Miss
         missHits++;
         totalBeats++;
-        if (!isInstaDeath) healthBar -= 70;
+        if (!isInstaDeath) healthBar -= (int)(70 * harmMultiplier);
         else healthBar = 0;
 
 
