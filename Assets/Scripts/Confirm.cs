@@ -12,7 +12,7 @@ public class Confirm : MonoBehaviour
     public KeyCode inputToStart; // atau input4
     public KeyCode input1;
     public GameObject script1;
-    public Canvas menuCanvas;
+    public GameObject menuCanvas;
 
     void Update()
     {
