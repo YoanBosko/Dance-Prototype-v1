@@ -152,6 +152,10 @@ public class ScoreManager : MonoBehaviour
         {
             comboScore = 0;  // Reset combo saat kena Bad
         }
+        else
+        {
+            comboScore += 1;
+        }
         badHits++;
         totalBeats++;
         healthBar -= (int)(15 * harmMultiplier);

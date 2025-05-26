@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[DefaultExecutionOrder(5)]
+[DefaultExecutionOrder(25)]
 public class DebuffMirrorNote : DebuffBase
 {
     public bool horizontal;
