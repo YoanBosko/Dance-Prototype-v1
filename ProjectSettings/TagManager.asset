@@ -9,6 +9,7 @@ TagManager:
   - ResultForHide
   - HPForHide
   - LaneForHide
+  - Flashbang
   layers:
   - Default
   - TransparentFX

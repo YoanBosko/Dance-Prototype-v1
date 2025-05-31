@@ -50,6 +50,7 @@ public class ScoreManager : MonoBehaviour
     [Header("Controlled by Debuff")]
     public static bool isInstaDeath;
     public static bool isResultHide;
+    public static bool isFlashbang;
 
     static int perfectHits = 0;
     static int goodHits = 0;
@@ -92,6 +93,7 @@ public class ScoreManager : MonoBehaviour
         //Controlled by Debuff
         isInstaDeath = false;
         isResultHide = false;
+        isFlashbang = false;
         
 
         if (!isResultHide)
@@ -174,6 +176,11 @@ public class ScoreManager : MonoBehaviour
         if (!isInstaDeath) healthBar -= (int)(70 * harmMultiplier);
         else healthBar = 0;
 
+        if (isFlashbang)
+        {
+            GameObject canvasFlashbang = GameObject.FindGameObjectWithTag("Flashbang");
+            canvasFlashbang.GetComponent<FadeController>().StartFadeIn();
+        }
 
         UpdateMultiplier();
         Instance.missSFX.Play();

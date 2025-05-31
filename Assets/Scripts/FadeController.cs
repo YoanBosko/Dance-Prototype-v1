@@ -12,6 +12,12 @@ public class FadeController : MonoBehaviour
         StartCoroutine(FadeIn());
     }
 
+    public void StartFadeIn()
+    {
+        StopAllCoroutines();
+        StartCoroutine(FadeIn());
+    }
+
     public IEnumerator FadeIn()
     {
         float t = fadeDuration;
