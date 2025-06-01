@@ -34,6 +34,8 @@ public class DiagonalScrollSnap : MonoBehaviour
     [Header("Menu Preview")]
     public Image imagePreview;
     public AudioSource audioSourcePreview;
+    public Text songTitle;
+    public Text songCredit;
 
     private bool onetime = true;
 
@@ -142,7 +144,9 @@ public class DiagonalScrollSnap : MonoBehaviour
         GameObject obj = items[currentIndex].gameObject;
         DataHolder dataHolder = obj.GetComponent<DataHolder>();
         imagePreview.sprite = dataHolder.beatmapData.image;
-        audioSourcePreview.clip = dataHolder.beatmapData.audioClip;
+        audioSourcePreview.clip = dataHolder.beatmapData.audioClipForMenu;
+        songCredit.text = dataHolder.beatmapData.songCredit;
+        songTitle.text = dataHolder.beatmapData.songTitle;  
     }
 
     void SnapContent()

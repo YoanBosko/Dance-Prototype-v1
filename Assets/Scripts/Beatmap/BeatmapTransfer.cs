@@ -20,10 +20,12 @@ public class BeatmapTransfer : MonoBehaviour
         }
 
         targetAsset.image = sourceAsset.image;
-        targetAsset.audioClip = sourceAsset.audioClip;
+        targetAsset.audioClipForGameplay = sourceAsset.audioClipForGameplay;
         targetAsset.videoClip = sourceAsset.videoClip;
         targetAsset.midiFileHit = sourceAsset.midiFileHit;
         targetAsset.midiFileHold = sourceAsset.midiFileHold;
+        targetAsset.songDifficulty = sourceAsset.songDifficulty;
+        targetAsset.songTitle = sourceAsset.songTitle;
 
         Debug.Log("MediaAsset data copied from source to target.");
 

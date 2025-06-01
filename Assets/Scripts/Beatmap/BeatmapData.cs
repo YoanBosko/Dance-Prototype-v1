@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Video;
 
 [CreateAssetMenu(fileName = "New Beatmap Data", menuName = "Beatmap/Beatmap Data")]
@@ -8,10 +9,16 @@ public class BeatmapData : ScriptableObject
     public Sprite image;
 
     [Header("Audio Asset")]
-    public AudioClip audioClip;
+    public AudioClip audioClipForMenu;
+    public AudioClip audioClipForGameplay;
 
     [Header("Video Asset")]
     public VideoClip videoClip;
+
+    [Header("Text Asset")]
+    public string songTitle;
+    public string songDifficulty;
+    public string songCredit;
 
     [Header("MIDI File (as Text or Binary)")]
     public string midiFileHit;

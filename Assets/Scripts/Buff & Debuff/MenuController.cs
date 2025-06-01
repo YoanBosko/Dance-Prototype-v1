@@ -40,7 +40,14 @@ public class MenuController : MonoBehaviour
             string menuButtonsName = menuButtons[selectedIndex].name.Replace("(Clone)", "").Trim();
             GameObject selectedGameObject = buttonPrefabs.Find(obj => obj.name == menuButtonsName);
             buttonPrefabs.Remove(selectedGameObject);
-            // SceneManager.LoadScene("Menu Lagu");
+            if (GameManager.Instance.cycleTime == 2)
+            {
+                SceneManager.LoadScene("DebuffScene");
+            }
+            else
+            {                
+                SceneManager.LoadScene("Menu Lagu");
+            }
         }
 
         UpdateButtonScales();

@@ -9,8 +9,10 @@ public class GameManager : MonoBehaviour
 
     [Header("List prefab buff (dapat diisi via Inspector atau runtime)")]
     public List<GameObject> buffPrefabs = new List<GameObject>();
+    public GameObject debuffPrefabs;
 
     private List<BuffBase> activeBuffs = new List<BuffBase>();
+    private DebuffBase activeDebuffs;
 
     [HideInInspector] public int cycleTime = 0;
 
@@ -33,10 +35,12 @@ public class GameManager : MonoBehaviour
         if (scene.name == "SampleScene")
         {
             CreateBuffComponents();
+            CreateDebuffComponents();
         }
         else
         {
             RemoveBuffComponents();
+            RemoveDebuffComponents();
         }
 
         if (scene.name == "Menu Lagu")
@@ -76,6 +80,22 @@ public class GameManager : MonoBehaviour
         activeBuffs.Clear();
     }
 
+    private void CreateDebuffComponents()
+    {
+        var type = debuffPrefabs.GetComponent<DebuffBase>()?.GetType();
+        if (type != null && gameObject.GetComponent(type) == null)
+        {
+            var debuff = (DebuffBase)gameObject.AddComponent(type);
+            activeDebuffs = debuff;
+            // buff.ActivateDebuff();
+        }
+    }
+
+    private void RemoveDebuffComponents()
+    {
+        Destroy(activeDebuffs);
+    }
+
     // private void OnDestroy()
     // {
     //     SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -88,5 +108,9 @@ public class GameManager : MonoBehaviour
         {
             buffPrefabs.Add(buffPrefab);
         }
+    }
+    public void AddDebuff(GameObject debuffPrefab)
+    {
+        debuffPrefabs = debuffPrefab;
     }
 }

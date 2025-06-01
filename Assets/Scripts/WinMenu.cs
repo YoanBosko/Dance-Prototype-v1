@@ -10,7 +10,10 @@ public class WinMenu : MonoBehaviour
     public TMPro.TextMeshPro goodText;
     public TMPro.TextMeshPro badText;
     public TMPro.TextMeshPro missText;
+    public TMPro.TextMeshPro songTitle;
+    public TMPro.TextMeshPro songDifficulty;
     public ScoreData scoreData;
+    public BeatmapData beatmapDataAssign;
 
     void Start()
     {
@@ -25,6 +28,8 @@ public class WinMenu : MonoBehaviour
         goodText.text = "Good: " + scoreData.goodHits;
         badText.text = "Bad: " + scoreData.badHits;
         missText.text = "Miss: " + scoreData.missHits;
+        songTitle.text = beatmapDataAssign.songTitle;
+        songDifficulty.text = beatmapDataAssign.songDifficulty;
     }
 
     int GetPerfectHits()

@@ -157,13 +157,14 @@ public class Note : MonoBehaviour
 
     private void TakeSnapshotForLateHold()
     {
-
         float bodySizeShrinkAmount = lateHoldBodySize.y * timePass;
         float bodyPositionShrink = lateHoldBodyPosition.y * timePass;
         float tb = 10f / lateHoldBodySize.y;
         //float tb = SongManager.Instance.noteTime * SongManager.Instance.noteSpeed / lateHoldBodySize.y;
-        float peakPos = lateHoldBodySize.y / (lateHoldBodySize.y / SongManager.Instance.noteSpeed)  + lateHoldBodyPosition.y;
-        const float endPos = 10f;
+        float peakPos = lateHoldBodyPosition.y + 5;
+        float kecepatanBaru = SongManager.Instance.noteSpeed / 5;
+        float pengaturanValueEndPos = (kecepatanBaru - 1) / 2 * 10; 
+        float endPos = 10f;
         float tailMovedAmount = lateHoldTailPosition.y - tail.transform.localPosition.y;
         if (timePass <= tb)
         {
@@ -175,6 +176,7 @@ public class Note : MonoBehaviour
         }
         else
         {
+            //0,12903225 = 
             float factor = (timePass - tb) / (1f - tb);
             body.transform.localPosition = new Vector3(0, peakPos + (endPos - peakPos) * factor, 0);
             body.GetComponent<SpriteRenderer>().size = new Vector2(
@@ -182,8 +184,6 @@ public class Note : MonoBehaviour
                 lateHoldBodySize.y - bodySizeShrinkAmount
             );
         }
-
-        // Debug.Log("isinya adalah " + tailMovedAmount);
     }
 
     public IEnumerator HoldJudgmentCoroutine()
