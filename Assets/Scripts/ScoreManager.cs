@@ -15,7 +15,9 @@ public class ScoreManager : MonoBehaviour
     public TMPro.TextMeshPro resultText;
     public TMPro.TextMeshPro accuracyText;
     public Slider slider;
+    public Slider slider2;
     public Image fillImage; // drag Image dari Fill Rect ke sini
+    public Image fillImage2;
     public UnityEvent onHealthZero;
     public ScoreData scoreData;
 
@@ -35,6 +37,10 @@ public class ScoreManager : MonoBehaviour
 
     static int totalBeats = 0;  // Total beat dalam permainan
     public static int successfulHits;  // Jumlah hit yang masuk kategori Perfect atau Good
+
+    [Header("SoundFX Arrow")]
+    public AudioSource switchButtonDK_SFX;
+    public AudioSource switchButtonFJ_SFX;
 
     [Header("Controlled by Buff")]
     public static float scoreMultiplier; // Default multiplier
@@ -227,6 +233,22 @@ public class ScoreManager : MonoBehaviour
 
     private void Update()
     {
+        // Play sound when pressing D or K
+        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.K))
+        {
+            if (switchButtonDK_SFX != null && !switchButtonDK_SFX.isPlaying)
+                switchButtonDK_SFX.Stop(); // Hentikan kalau sedang bermain
+                switchButtonDK_SFX.Play();
+        }
+
+        // Play sound when pressing F or J
+        if (Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.J))
+        {
+            if (switchButtonFJ_SFX != null && !switchButtonFJ_SFX.isPlaying)
+                switchButtonFJ_SFX.Stop();
+                switchButtonFJ_SFX.Play();
+        }
+
         resultText.text = result;
         if (comboScore > 0)
         {
@@ -253,15 +275,18 @@ public class ScoreManager : MonoBehaviour
         else if (comboScore > 0 && comboScore % 100 == 0 && isRegen2)
         {
             healthBar += (int)(slider.maxValue / 2);
+            healthBar += (int)(slider2.maxValue / 2);
         }
         else if (comboScore > 0 && comboScore % 200 == 0 && isRegen1)
         {
             healthBar += (int)(slider.maxValue / 4);
+            healthBar += (int)(slider2.maxValue / 4);
         }
         
         if (healthBar < 80 && oneMoreChance)
         {
             healthBar = (int)slider.maxValue;
+            healthBar = (int)slider2.maxValue;
             oneMoreChance = false;
         }
 
@@ -270,6 +295,7 @@ public class ScoreManager : MonoBehaviour
 
         healthBar = Mathf.Clamp(healthBar, 0, 1000);
         slider.value = healthBar;
+        slider2.value = healthBar;
         UpdateFillColor();
         PostProcessingController.Instance.UpdateLowHealthEffect(healthBar);
         if (slider.value == 0 && !isUndead)
@@ -318,18 +344,21 @@ public class ScoreManager : MonoBehaviour
         {
             // 500 - 1000: putih
             fillImage.color = Color.white;
+            fillImage2.color = Color.white;
         }
         else if (healthBar >= 250)
         {
             // 250 - 500: transisi putih ke kuning
             float t = (healthBar - 250f) / 250f; // hasil 0–1
             fillImage.color = Color.Lerp(Color.yellow, Color.white, t); // dari kuning ke putih
+            fillImage2.color = Color.Lerp(Color.yellow, Color.white, t);
         }
         else
         {
             // 0 - 250: transisi kuning ke merah
             float t = healthBar / 250f; // hasil 0–1
             fillImage.color = Color.Lerp(Color.red, Color.yellow, t); // dari merah ke kuning
+            fillImage2.color = Color.Lerp(Color.red, Color.yellow, t);
         }
     }
 
