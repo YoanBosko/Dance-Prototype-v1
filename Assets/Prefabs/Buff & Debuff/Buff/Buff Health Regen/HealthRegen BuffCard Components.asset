@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa99a8c3370aa0b488099c6801af31ff, type: 3}
   m_Name: HealthRegen BuffCard Components
   m_EditorClassIdentifier: 
-  cardImageBG: {fileID: 21300000, guid: 86a553fa36a3a6b4e9932aa5b840f261, type: 3}
+  cardImageBG: {fileID: 21300000, guid: ca2e3af155439a44983ce4c45500cdbc, type: 3}
   cardMoreDescriptionImage: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   cardTitleText: Health Regen
   cardDescriptionText: '"Recover with every beat."'

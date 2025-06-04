@@ -22,12 +22,12 @@ public class WinMenu : MonoBehaviour
 
     public void UpdateScoreDetails()
     {
-        score.text = "Total Score: " + scoreData.score;
-        accuracy.text = "Accuracy: " + scoreData.accuracy;
-        perfectText.text = "Perfect: " + scoreData.perfectHits;
-        goodText.text = "Good: " + scoreData.goodHits;
-        badText.text = "Bad: " + scoreData.badHits;
-        missText.text = "Miss: " + scoreData.missHits;
+        score.text = "" + scoreData.score;
+        accuracy.text = "" + scoreData.accuracy + "%";
+        perfectText.text = ": " + scoreData.perfectHits;
+        goodText.text = ": " + scoreData.goodHits;
+        badText.text = ": " + scoreData.badHits;
+        missText.text = ": " + scoreData.missHits;
         songTitle.text = beatmapDataAssign.songTitle;
         songDifficulty.text = beatmapDataAssign.songDifficulty;
     }

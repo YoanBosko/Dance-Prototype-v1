@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f427fb2b5c927e44baa60c100a7f1d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 21300000, guid: 86a553fa36a3a6b4e9932aa5b840f261, type: 3}
+  image: {fileID: 21300000, guid: 7ef4ac527dededa46a8add9118f8d825, type: 3}
   cardTitleText: Vulnerable
   cardDescriptionText: HP bar lebih gampang terkuras, pengurangan HP menjadi 2x lebih
     banyak

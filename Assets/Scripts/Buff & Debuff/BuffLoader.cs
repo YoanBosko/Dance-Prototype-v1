@@ -9,13 +9,13 @@ public class BuffLoader : MonoBehaviour
     public GameObject newBuffPrefab;
     public BuffCardComponents buffCardComponents;
 
-    [Header("Components")]
+    // [Header("Components")]
 
-    public Text cardTitleText;
-    public Text cardDescriptionText;
-    public GameObject cardMoreDescription;
-    public Image cardMoreDescriptionImage;
-    public Text cardMoreDescriptionText;
+    // public Text cardTitleText;
+    // public Text cardDescriptionText;
+    // public GameObject cardMoreDescription;
+    // public Image cardMoreDescriptionImage;
+    // public Text cardMoreDescriptionText;
 
     public void AddBuffToList()
     {
@@ -25,18 +25,23 @@ public class BuffLoader : MonoBehaviour
     {
         Image imageBG = GetComponent<Image>();
         imageBG.sprite = buffCardComponents.cardImageBG;
-        cardTitleText.text = buffCardComponents.cardTitleText;
-        cardDescriptionText.text = buffCardComponents.cardDescriptionText;
-        cardMoreDescriptionText.text = buffCardComponents.cardMoreDescriptionText;
-        cardMoreDescriptionImage.sprite = buffCardComponents.cardMoreDescriptionImage;
+        Text[] texts = GetComponentsInChildren<Text>();
+        foreach (Text text in texts)
+        {
+            text.gameObject.SetActive(false);
+        }
+        // cardTitleText.text = buffCardComponents.cardTitleText;
+        // cardDescriptionText.text = buffCardComponents.cardDescriptionText;
+        // cardMoreDescriptionText.text = buffCardComponents.cardMoreDescriptionText;
+        // cardMoreDescriptionImage.sprite = buffCardComponents.cardMoreDescriptionImage;
     }
     public void ActivateMoreDescription()
     {
-        cardMoreDescription.SetActive(true);
+        // cardMoreDescription.SetActive(true);
         Debug.Log("deskripsi aktif");
     }
     public void DeactivateMoreDescription()
     {
-        cardMoreDescription.SetActive(false);
+        // cardMoreDescription.SetActive(false);
     }
 }

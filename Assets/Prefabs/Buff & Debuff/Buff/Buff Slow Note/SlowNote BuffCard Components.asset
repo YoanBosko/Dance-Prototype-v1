@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa99a8c3370aa0b488099c6801af31ff, type: 3}
   m_Name: SlowNote BuffCard Components
   m_EditorClassIdentifier: 
-  cardImageBG: {fileID: 21300000, guid: 86a553fa36a3a6b4e9932aa5b840f261, type: 3}
+  cardImageBG: {fileID: 21300000, guid: 9f474ccca39691948b3e8e03fca1b8b5, type: 3}
   cardMoreDescriptionImage: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   cardTitleText: Slow Note
   cardDescriptionText: "\"Take your time\u2014breathe.\""

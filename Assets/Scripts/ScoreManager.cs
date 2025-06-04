@@ -69,7 +69,7 @@ public class ScoreManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // <--- ini penting
+            // DontDestroyOnLoad(gameObject); // <--- ini penting
         }
         else
         {

@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
-    public List<GameObject> buttonPrefabs; // Daftar prefab yang tersedia
+    // public List<GameObject> buttonPrefabs; // Daftar prefab yang tersedia
+    public PrefabMenuController buttonPrefabs;
     public Transform buttonParent; // Parent untuk menampung instansiasi button
     public Vector3[] buttonPositions; // Posisi untuk menampilkan button
 
@@ -20,6 +21,17 @@ public class MenuController : MonoBehaviour
     {
         PickRandomButtons();
         HighlightButton();
+        if (GameManager.Instance.cycleTime == 1)
+        {
+            foreach (GameObject obj in buttonPrefabs.removedBuffPrefabs)
+            {
+                if (!buttonPrefabs.buffPrefabs.Contains(obj))
+                {
+                    buttonPrefabs.buffPrefabs.Add(obj);
+                }
+            }
+            buttonPrefabs.removedBuffPrefabs.Clear(); // Kosongkan agar tidak double
+        }
     }
 
     void Update()
@@ -38,16 +50,18 @@ public class MenuController : MonoBehaviour
         {
             menuButtons[selectedIndex].onClick.Invoke();
             string menuButtonsName = menuButtons[selectedIndex].name.Replace("(Clone)", "").Trim();
-            GameObject selectedGameObject = buttonPrefabs.Find(obj => obj.name == menuButtonsName);
-            buttonPrefabs.Remove(selectedGameObject);
-            if (GameManager.Instance.cycleTime == 2)
-            {
-                SceneManager.LoadScene("DebuffScene");
-            }
-            else
-            {                
-                SceneManager.LoadScene("Menu Lagu");
-            }
+            GameObject selectedGameObject = buttonPrefabs.buffPrefabs.Find(obj => obj.name == menuButtonsName);
+            buttonPrefabs.buffPrefabs.Remove(selectedGameObject);
+            buttonPrefabs.removedBuffPrefabs.Add(selectedGameObject);
+            // if (GameManager.Instance.cycleTime == 2)
+            // {
+            //     SceneManager.LoadScene("DebuffScene");
+            // }
+            // else
+            // {                
+            //     SceneManager.LoadScene("Menu Lagu");
+            // }
+            SceneManager.LoadScene("DebuffScene");
         }
 
         UpdateButtonScales();
@@ -80,7 +94,7 @@ public class MenuController : MonoBehaviour
     void PickRandomButtons()
     {
         // Pastikan kita punya posisi yang cukup
-        if (buttonPositions.Length < 3 || buttonPrefabs.Count < 3)
+        if (buttonPositions.Length < 3 || buttonPrefabs.buffPrefabs.Count < 3)
         {
             Debug.LogWarning("Tidak cukup posisi atau prefab untuk memilih 3 button.");
             return;
@@ -94,12 +108,12 @@ public class MenuController : MonoBehaviour
             int randIndex;
             do
             {
-                randIndex = Random.Range(0, buttonPrefabs.Count);
+                randIndex = Random.Range(0, buttonPrefabs.buffPrefabs.Count);
             } while (chosenIndexes.Contains(randIndex));
 
             chosenIndexes.Add(randIndex);
 
-            GameObject buttonInstance = Instantiate(buttonPrefabs[randIndex], buttonParent);
+            GameObject buttonInstance = Instantiate(buttonPrefabs.buffPrefabs[randIndex], buttonParent);
             buttonInstance.transform.localPosition = buttonPositions[i];
             menuButtons[i] = buttonInstance.GetComponent<Button>();
         }
