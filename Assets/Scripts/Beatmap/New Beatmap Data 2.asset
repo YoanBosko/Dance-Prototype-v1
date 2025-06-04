@@ -13,7 +13,11 @@ MonoBehaviour:
   m_Name: New Beatmap Data 2
   m_EditorClassIdentifier: 
   image: {fileID: 21300000, guid: f6ed6d18e7ea7dd498ea457421c64cf1, type: 3}
-  audioClip: {fileID: 8300000, guid: 97c3fdcfa8252e14db17b04b4b38af88, type: 3}
+  audioClipForMenu: {fileID: 8300000, guid: 7b2487dc53293eb4cb798ce63843058c, type: 3}
+  audioClipForGameplay: {fileID: 8300000, guid: 610468ef56848ab40b8797f011e8339d, type: 3}
   videoClip: {fileID: 0}
-  midiFileHit: tapkalebsatu.mid
-  midiFileHold: holdkalebsatu.mid
+  songTitle: pepek
+  songDifficulty: Medium
+  songCredit: as
+  midiFileHit: Tap Bubble Pop.mid
+  midiFileHold: Hold Bubble Pop.mid

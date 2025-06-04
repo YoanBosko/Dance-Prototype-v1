@@ -11,6 +11,7 @@ public class WinState : MonoBehaviour
     public bool useDelay;
     public float delayTime;
     public FadeController fadeController; // Assign via Inspector
+    [HideInInspector] public bool enableButtonForWinning = false;
 
     private const float endThreshold = 0.1f; // toleransi error sedikit
 
@@ -37,7 +38,7 @@ public class WinState : MonoBehaviour
         {
             if (useDelay)
             {
-                float timer =+ Time.deltaTime;
+                float timer = +Time.deltaTime;
                 if (timer >= delayTime)
                 {
                     onAudioEnd?.Invoke();
@@ -50,6 +51,14 @@ public class WinState : MonoBehaviour
             else
             {
                 onAudioEnd?.Invoke();
+            }
+        }
+        if (enableButtonForWinning)
+        {
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                enableButtonForWinning = false;
+                SceneManager.LoadScene("BuffPicker");
             }
         }
     }

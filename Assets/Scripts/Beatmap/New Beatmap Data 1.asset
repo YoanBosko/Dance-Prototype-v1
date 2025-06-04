@@ -13,7 +13,11 @@ MonoBehaviour:
   m_Name: New Beatmap Data 1
   m_EditorClassIdentifier: 
   image: {fileID: 21300000, guid: b4b23b47d0129a8448b8825a456ba9aa, type: 3}
-  audioClip: {fileID: 8300000, guid: b8cf1ce34b74d624695ed70a935561a7, type: 3}
+  audioClipForMenu: {fileID: 8300000, guid: 36fb5ea2d6752814986acba06b53d7cf, type: 3}
+  audioClipForGameplay: {fileID: 8300000, guid: b8cf1ce34b74d624695ed70a935561a7, type: 3}
   videoClip: {fileID: 32900000, guid: 14f36129d8cda9c4aafc2ce68a8a37ff, type: 3}
-  midiFileHit: tapkalebsatu.mid
-  midiFileHold: holdkalebsatu.mid
+  songTitle: asu
+  songDifficulty: Hard
+  songCredit: aa
+  midiFileHit: Tap Bang It Out.mid
+  midiFileHold: Hold Bang It Out.mid

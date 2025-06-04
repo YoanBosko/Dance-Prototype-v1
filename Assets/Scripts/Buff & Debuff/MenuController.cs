@@ -53,15 +53,15 @@ public class MenuController : MonoBehaviour
             GameObject selectedGameObject = buttonPrefabs.buffPrefabs.Find(obj => obj.name == menuButtonsName);
             buttonPrefabs.buffPrefabs.Remove(selectedGameObject);
             buttonPrefabs.removedBuffPrefabs.Add(selectedGameObject);
-            // if (GameManager.Instance.cycleTime == 2)
-            // {
-            //     SceneManager.LoadScene("DebuffScene");
-            // }
-            // else
-            // {                
-            //     SceneManager.LoadScene("Menu Lagu");
-            // }
-            SceneManager.LoadScene("DebuffScene");
+            if (GameManager.Instance.cycleTime == 2)
+            {
+                SceneManager.LoadScene("DebuffScene");
+            }
+            else
+            {                
+                SceneManager.LoadScene("Menu Lagu");
+            }
+            // SceneManager.LoadScene("DebuffScene");
         }
 
         UpdateButtonScales();

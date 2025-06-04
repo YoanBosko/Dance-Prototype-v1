@@ -117,6 +117,12 @@ public class ScoreManager : MonoBehaviour
             resultMissPrefab.SetActive(false);
         }
         scoreData.ResetScore();
+        totalScore = scoreData.score;
+        perfectHits = scoreData.perfectHits;
+        goodHits = scoreData.goodHits;
+        badHits = scoreData.badHits;
+        missHits = scoreData.missHits;
+
 
         ledController = FindObjectOfType<LEDController_InGame>();
     }
@@ -220,7 +226,7 @@ public class ScoreManager : MonoBehaviour
         // return accuracy;
 
         if (totalBeats == 0)
-        return 100f; // Supaya awalnya langsung tampil 100%
+        return 0f; // Supaya awalnya langsung tampil 100%
         
         // Update formula untuk include hold notes
         float score = (perfectHits * 1.0f) + 
@@ -308,6 +314,7 @@ public class ScoreManager : MonoBehaviour
 
     public void ScoreDataUpdate()
     {
+        Debug.Log("Score dipindahkan lewat score manager ke score data");
         scoreData.score = totalScore;
         scoreData.accuracy = GetAccuracy();
         scoreData.perfectHits = perfectHits;

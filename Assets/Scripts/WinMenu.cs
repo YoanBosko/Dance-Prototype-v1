@@ -23,7 +23,7 @@ public class WinMenu : MonoBehaviour
     public void UpdateScoreDetails()
     {
         score.text = "" + scoreData.score;
-        accuracy.text = "" + scoreData.accuracy + "%";
+        accuracy.text = "" + scoreData.accuracy.ToString("F2") + "%";
         perfectText.text = ": " + scoreData.perfectHits;
         goodText.text = ": " + scoreData.goodHits;
         badText.text = ": " + scoreData.badHits;

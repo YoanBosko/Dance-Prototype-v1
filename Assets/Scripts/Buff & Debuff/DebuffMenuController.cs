@@ -28,8 +28,7 @@ public class DebuffMenuController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.K))
         {
             GameManager.Instance.AddDebuff(selectedPrefab);
-            // SceneManager.LoadScene("Menu Lagu");
-            SceneManager.LoadScene("BuffPicker");
+            SceneManager.LoadScene("Menu Lagu");
         }
     }
 

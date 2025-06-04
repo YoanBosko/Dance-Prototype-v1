@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     private List<BuffBase> activeBuffs = new List<BuffBase>();
     private DebuffBase activeDebuffs;
 
-    [HideInInspector] public int cycleTime = 0;
+    public int cycleTime = 0;
 
     private void Awake()
     {
@@ -51,6 +51,8 @@ public class GameManager : MonoBehaviour
 
         if (scene.name == "StartGame")
         {
+            buffPrefabs.Clear();
+            debuffPrefabs = null;
             cycleTime = 0;
         }
     }
