@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour
             buffPrefabs.Clear();
             debuffPrefabs = null;
             cycleTime = 0;
+            LeaderboardManager.Instance.AddScore(LeaderboardManager.Instance.scoreDataCummulative.score);
         }
     }
 

@@ -416,6 +416,7 @@ MonoBehaviour:
   songTitle: {fileID: 202742947}
   songDifficulty: {fileID: 186772009}
   scoreData: {fileID: 11400000, guid: e9832b9a566a1554e94aaaf6b09b8807, type: 2}
+  scoreDataCummulative: {fileID: 11400000, guid: 34a2b56c18635e64aa8c51fd3e2d6229, type: 2}
   beatmapDataAssign: {fileID: 11400000, guid: 67c147d45c2bf214e9837477b7259be5, type: 2}
 --- !u!4 &114372212
 Transform:
@@ -478,6 +479,7 @@ MonoBehaviour:
   useDelay: 0
   delayTime: 0
   fadeController: {fileID: 801118286}
+  enableButtonForWinning: 0
 --- !u!1 &123356929
 GameObject:
   m_ObjectHideFlags: 0

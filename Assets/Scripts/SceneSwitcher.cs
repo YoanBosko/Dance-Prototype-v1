@@ -76,6 +76,7 @@ public class SceneSwitcherWithSFX : MonoBehaviour
         {
             hasPressedKey = true;
             zoomTimer = 0f;
+            LeaderboardManager.Instance.scoreDataCummulative.score = 0;
 
             // Play SFX from custom time range
             if (enterSFX != null && audioSource != null)

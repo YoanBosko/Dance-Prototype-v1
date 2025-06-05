@@ -13,6 +13,7 @@ public class WinMenu : MonoBehaviour
     public TMPro.TextMeshPro songTitle;
     public TMPro.TextMeshPro songDifficulty;
     public ScoreData scoreData;
+    public ScoreData scoreDataCummulative;
     public BeatmapData beatmapDataAssign;
 
     void Start()
@@ -22,6 +23,7 @@ public class WinMenu : MonoBehaviour
 
     public void UpdateScoreDetails()
     {
+        //score data per lagu
         score.text = "" + scoreData.score;
         accuracy.text = "" + scoreData.accuracy.ToString("F2") + "%";
         perfectText.text = ": " + scoreData.perfectHits;
@@ -30,6 +32,9 @@ public class WinMenu : MonoBehaviour
         missText.text = ": " + scoreData.missHits;
         songTitle.text = beatmapDataAssign.songTitle;
         songDifficulty.text = beatmapDataAssign.songDifficulty;
+
+        //score data per player
+        scoreDataCummulative.score += scoreData.score;
     }
 
     int GetPerfectHits()
