@@ -12,15 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20729973ef525034ab8832be997599b0, type: 3}
   m_Name: Prefab For Menu Controller
   m_EditorClassIdentifier: 
-  buffPrefabs:
-  - {fileID: 931671816297715335, guid: 988956b6272711045b6a9f60eb0f877a, type: 3}
-  - {fileID: 6381670574473345234, guid: 4e5920763289bea4480d69a61f2a70fa, type: 3}
-  - {fileID: 931671816297715335, guid: 824b6fc5b80263349932f76045cece90, type: 3}
-  - {fileID: 931671816297715335, guid: 8514279297377064b86c8d8e4f619648, type: 3}
-  - {fileID: 931671816297715335, guid: 85b48aa6c133a384a848c23d27af281e, type: 3}
-  - {fileID: 931671816297715335, guid: cee2424b817b9184fa41f614070334ec, type: 3}
-  - {fileID: 931671816297715335, guid: 465c67c543c3e09439c81eb88165772b, type: 3}
-  - {fileID: 931671816297715335, guid: 387405cd1bf2d1043b6cc6ecb3a0d571, type: 3}
-  - {fileID: 931671816297715335, guid: ade5087516ba6864cabe12fae2447e9d, type: 3}
-  - {fileID: 931671816297715335, guid: 4b429637e5d613f448a81fda3a8a91d8, type: 3}
-  removedBuffPrefabs: []
+  availableBuffs:
+  - prefab: {fileID: 6381670574473345234, guid: 4e5920763289bea4480d69a61f2a70fa, type: 3}
+    weight: 50
+  - prefab: {fileID: 931671816297715335, guid: 824b6fc5b80263349932f76045cece90, type: 3}
+    weight: 35
+  - prefab: {fileID: 931671816297715335, guid: 988956b6272711045b6a9f60eb0f877a, type: 3}
+    weight: 35
+  - prefab: {fileID: 931671816297715335, guid: 8514279297377064b86c8d8e4f619648, type: 3}
+    weight: 15
+  - prefab: {fileID: 931671816297715335, guid: 85b48aa6c133a384a848c23d27af281e, type: 3}
+    weight: 50
+  - prefab: {fileID: 931671816297715335, guid: cee2424b817b9184fa41f614070334ec, type: 3}
+    weight: 35
+  - prefab: {fileID: 931671816297715335, guid: 465c67c543c3e09439c81eb88165772b, type: 3}
+    weight: 15
+  - prefab: {fileID: 931671816297715335, guid: 387405cd1bf2d1043b6cc6ecb3a0d571, type: 3}
+    weight: 50
+  - prefab: {fileID: 931671816297715335, guid: ade5087516ba6864cabe12fae2447e9d, type: 3}
+    weight: 35
+  - prefab: {fileID: 931671816297715335, guid: 4b429637e5d613f448a81fda3a8a91d8, type: 3}
+    weight: 5
+  removedBuffs: []

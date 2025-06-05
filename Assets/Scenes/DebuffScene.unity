@@ -616,12 +616,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3de772f806c90774ca1fd08d268b7c88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonPrefabs:
-  - {fileID: 1780403330594563993, guid: 01974c23bc4906d4399921bd4cef2c1d, type: 3}
-  - {fileID: 1780403330594563993, guid: 1fce9a786782cbf45bd281b459e04210, type: 3}
-  - {fileID: 1780403330594563993, guid: 38c65111d6bced14b8332f2a178dc2d2, type: 3}
-  - {fileID: 1780403330594563993, guid: f92c8b863621a6f46a9ab1f65da87611, type: 3}
-  image: {fileID: 5523395}
+  debuffPrefabs:
+  - prefab: {fileID: 1780403330594563993, guid: 01974c23bc4906d4399921bd4cef2c1d, type: 3}
+    weight: 1
+  - prefab: {fileID: 1780403330594563993, guid: 1fce9a786782cbf45bd281b459e04210, type: 3}
+    weight: 1
+  - prefab: {fileID: 1780403330594563993, guid: 38c65111d6bced14b8332f2a178dc2d2, type: 3}
+    weight: 1
+  - prefab: {fileID: 1780403330594563993, guid: f92c8b863621a6f46a9ab1f65da87611, type: 3}
+    weight: 1
+  - prefab: {fileID: 8663738253995576740, guid: 7617c406134047348b30774f1044b7a6, type: 3}
+    weight: 1
+  - prefab: {fileID: 1780403330594563993, guid: c9795764d510dbc4fbbf36f4c1bba9d0, type: 3}
+    weight: 1
+  - prefab: {fileID: 1780403330594563993, guid: 8bdeb248abcd5494a8e049f514538910, type: 3}
+    weight: 1
+  - prefab: {fileID: 1780403330594563993, guid: 29d043f0ecba71240b5345daee7f20fe, type: 3}
+    weight: 1
+  - prefab: {fileID: 1780403330594563993, guid: 6378f364b810c98499098389bb9e76af, type: 3}
+    weight: 1
+  - prefab: {fileID: 1780403330594563993, guid: 1eb7413459c0ffc4281fd9a1fcf1cf6a, type: 3}
+    weight: 1
+  imageDisplay: {fileID: 5523395}
   titleText: {fileID: 2031201131}
   descriptionText: {fileID: 714216566}
 --- !u!4 &1647185453

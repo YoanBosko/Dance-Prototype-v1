@@ -5,6 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BuffPrefab", menuName = "BuffPrefab")]
 public class PrefabMenuController : ScriptableObject
 {
-    public List<GameObject> buffPrefabs; // Daftar prefab yang tersedia
-    public List<GameObject> removedBuffPrefabs;
+    public List<WeightedBuffPrefab> availableBuffs = new List<WeightedBuffPrefab>(); // Daftar prefab yang tersedia
+    public List<WeightedBuffPrefab> removedBuffs = new List<WeightedBuffPrefab>();
 }

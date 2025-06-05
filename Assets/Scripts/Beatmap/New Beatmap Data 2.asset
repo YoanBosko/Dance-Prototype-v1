@@ -16,7 +16,7 @@ MonoBehaviour:
   audioClipForMenu: {fileID: 8300000, guid: 7b2487dc53293eb4cb798ce63843058c, type: 3}
   audioClipForGameplay: {fileID: 8300000, guid: 610468ef56848ab40b8797f011e8339d, type: 3}
   videoClip: {fileID: 0}
-  songTitle: pepek
+  songTitle: Bubble Pop
   songDifficulty: Medium
   songCredit: as
   midiFileHit: Tap Bubble Pop.mid
