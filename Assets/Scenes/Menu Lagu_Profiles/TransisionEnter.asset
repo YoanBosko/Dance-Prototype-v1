@@ -83,19 +83,19 @@ MonoBehaviour:
     value: {x: 1, y: 99}
   minLuminance:
     overrideState: 1
-    value: -5
+    value: -4.4
   maxLuminance:
     overrideState: 1
-    value: -5
+    value: -4.3
   keyValue:
     overrideState: 0
     value: 1
   eyeAdaptation:
-    overrideState: 0
-    value: 0
+    overrideState: 1
+    value: 1
   speedUp:
-    overrideState: 0
-    value: 2
+    overrideState: 1
+    value: 10.19
   speedDown:
     overrideState: 0
     value: 1

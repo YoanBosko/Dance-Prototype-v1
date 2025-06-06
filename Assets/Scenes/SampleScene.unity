@@ -2064,7 +2064,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 543626357}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
   m_Name: 
@@ -3092,6 +3092,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   volume: {fileID: 1192478324}
   defaultTransitionDuration: 1
+  volumeWeightFadeDuration: 0.3
   animateLensDistortion: 1
   targetIntensity: -100
   targetCenterX: 0.012
@@ -4016,7 +4017,7 @@ MonoBehaviour:
   sharedProfile: {fileID: 11400000, guid: 6018d89df15aec74bb6200e3292a90f4, type: 2}
   isGlobal: 1
   blendDistance: 0
-  weight: 1
+  weight: 0
   priority: 0
 --- !u!4 &1192478325
 Transform:
@@ -4249,6 +4250,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   volume: {fileID: 543626358}
   transitionDuration: 1
+  startEV: -5
+  endEV: 400
+  startBloomIntensity: 0.8
+  endBloomIntensity: 0
 --- !u!4 &1300933648
 Transform:
   m_ObjectHideFlags: 0

@@ -1051,7 +1051,7 @@ MonoBehaviour:
   volume: {fileID: 1953692961}
   transitionDuration: 1
   startEV: -5
-  endEV: 2600
+  endEV: 0
   startBloomIntensity: 0.8
   endBloomIntensity: 0
 --- !u!1 &620224850
@@ -4109,8 +4109,8 @@ MonoBehaviour:
       colorBlindnessType: 0
       colorBlindnessStrength: 1
   m_Resources: {fileID: 11400000, guid: d82512f9c8e5d4a4d938b575d47f88d4, type: 2}
-  m_ShowToolkit: 0
-  m_ShowCustomSorter: 0
+  m_ShowToolkit: 1
+  m_ShowCustomSorter: 1
   breakBeforeColorGrading: 0
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
