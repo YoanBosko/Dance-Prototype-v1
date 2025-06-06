@@ -5,7 +5,8 @@ using UnityEngine.UI;
 using System.Collections;
 using UnityEditor.SearchService;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.Events;
+using UnityEditor.PackageManager;
 
 public class Confirm : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class Confirm : MonoBehaviour
     public KeyCode input1;
     public GameObject script1;
     public GameObject menuCanvas;
+    public UnityEvent inputToStartEvent;
 
     void Update()
     {
@@ -33,7 +35,8 @@ public class Confirm : MonoBehaviour
         if (BeatmapTransfer.Instance != null && BeatmapTransfer.Instance.targetAsset != null)
         {
             Debug.Log("Loading scene with beatmap: " + BeatmapTransfer.Instance.targetAsset.name);
-            SceneManager.LoadScene("SampleScene");
+            inputToStartEvent?.Invoke();
+            //SceneManager.LoadScene("SampleScene");
         }
         else
         {

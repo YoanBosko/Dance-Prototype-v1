@@ -266,7 +266,7 @@ public class ScoreManager : MonoBehaviour
             comboText.gameObject.SetActive(false);
         }
 
-        if (comboScore % 15 == 0 && comboScore > 0 && comboScore != lastComboTriggered)
+        if (comboScore % 50 == 0 && comboScore > 0 && comboScore != lastComboTriggered)
         {
             PostProcessingController.Instance.TriggerEffect();
 

@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c255fe8edcce9634b9ee30279497da25, type: 3}
   m_Name: ScoreData
   m_EditorClassIdentifier: 
-  score: 0
-  accuracy: 0
-  perfectHits: 0
-  goodHits: 0
-  badHits: 0
-  missHits: 0
+  score: 12345
+  accuracy: 12
+  perfectHits: 1234
+  goodHits: 123
+  badHits: 12
+  missHits: 12

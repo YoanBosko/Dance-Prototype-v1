@@ -48,6 +48,7 @@ MonoBehaviour:
   image: {fileID: 21300000, guid: 2a451b87f37ea3943a05289d4608c724, type: 3}
   cardTitleText: Zoom
   cardDescriptionText: 
+  resultVideo: {fileID: 32900000, guid: a5d2671323573b748b955c5bec4002a5, type: 3}
 --- !u!114 &-7358768743702822577
 MonoBehaviour:
   m_ObjectHideFlags: 0

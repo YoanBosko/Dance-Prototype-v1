@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c255fe8edcce9634b9ee30279497da25, type: 3}
   m_Name: ScoreDataCummulative
   m_EditorClassIdentifier: 
-  score: 0
+  score: 85
   accuracy: 0
   perfectHits: 0
   goodHits: 0

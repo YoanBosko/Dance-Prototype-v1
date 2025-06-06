@@ -49,6 +49,7 @@ MonoBehaviour:
   cardTitleText: Vulnerable
   cardDescriptionText: HP bar lebih gampang terkuras, pengurangan HP menjadi 2x lebih
     banyak
+  resultVideo: {fileID: 32900000, guid: 9a66bd67184876747a8cfa830d73d149, type: 3}
 --- !u!114 &617285065913233297
 MonoBehaviour:
   m_ObjectHideFlags: 0

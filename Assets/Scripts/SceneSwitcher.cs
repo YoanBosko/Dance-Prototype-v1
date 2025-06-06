@@ -1,70 +1,25 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Rendering.PostProcessing;
+// using UnityEngine.Rendering.PostProcessing; // Tidak lagi dibutuhkan secara langsung di sini
 
 public class SceneSwitcherWithSFX : MonoBehaviour
 {
     [Header("Scene Settings")]
-    public float delayBeforeSwitch = 1.5f;
+    public float delayBeforeSwitch = 1.5f; // Total waktu dari input sampai scene berpindah
     public string nextSceneName = "Menu Lagu";
 
-    [Header("Post Process Volume")]
-    public PostProcessVolume volume;
+    [Header("Post Process Transition")]
+    public PostProcessTransitionController ppTransitionController; // Assign controller Anda di sini
+    public float postProcessTransitionDuration = 1.0f; // Durasi spesifik untuk transisi PP ini
 
     [Header("SFX Settings")]
     public AudioSource audioSource;
     public AudioClip enterSFX;
     public float sfxStartTime = 0f;
-    public float sfxEndTime = 2f;
+    public float sfxEndTime = 2f; // Ini adalah durasi SFX, bukan waktu akhir absolut
 
-    private LensDistortion lensDistortion;
-    private Bloom bloom;
-    private AutoExposure autoExposure;
-
-    private float zoomDuration = 1.0f;
-    private float zoomTimer = 0f;
     private bool hasPressedKey = false;
-
-    // Target and start values (dari sebelumnya)
-    private float startIntensity, startCenterX, startScale;
-    private float startBloomIntensity, startBloomThreshold;
-    private Color startBloomColor;
-    private float startMinExposure;
-
-    private float targetIntensity = -100f;
-    private float targetCenterX = 0.012f;
-    private float targetScale = 5f;
-
-    private float targetBloomIntensity = 40f;
-    private float targetBloomThreshold = 0f;
-    private Color targetBloomColor = new Color(132f / 255f, 255f / 255f, 255f / 255f);
-    private float targetMinExposure = -5f;
-
-    void Start()
-    {
-        volume.profile.TryGetSettings(out lensDistortion);
-        volume.profile.TryGetSettings(out bloom);
-        volume.profile.TryGetSettings(out autoExposure);
-
-        if (lensDistortion != null)
-        {
-            startIntensity = lensDistortion.intensity.value;
-            startCenterX = lensDistortion.centerX.value;
-            startScale = lensDistortion.scale.value;
-        }
-
-        if (bloom != null)
-        {
-            startBloomIntensity = bloom.intensity.value;
-            startBloomThreshold = bloom.threshold.value;
-            startBloomColor = bloom.color.value;
-        }
-
-        if (autoExposure != null)
-        {
-            startMinExposure = autoExposure.minLuminance.value;
-        }
-    }
+    private bool sceneSwitchInvoked = false;
 
     void Update()
     {
@@ -75,54 +30,75 @@ public class SceneSwitcherWithSFX : MonoBehaviour
              Input.GetKeyDown(KeyCode.K)))
         {
             hasPressedKey = true;
-            zoomTimer = 0f;
-            LeaderboardManager.Instance.scoreDataCummulative.score = 0;
 
-            // Play SFX from custom time range
+            // Reset skor kumulatif (jika LeaderboardManager ada dan memiliki struktur ini)
+            // Pastikan LeaderboardManager ada dan scoreDataCumulative.score bisa diakses
+            // Jika LeaderboardManager adalah Singleton:
+            // if (LeaderboardManager.Instance != null && LeaderboardManager.Instance.scoreDataCumulative != null)
+            // {
+            // LeaderboardManager.Instance.scoreDataCumulative.score = 0;
+            // }
+            // Jika tidak, Anda perlu cara lain untuk mengakses dan mereset skor.
+            // Untuk sekarang, saya akan mengomentarinya karena LeaderboardManager Anda tidak lagi Singleton.
+            // Anda perlu menyesuaikan ini dengan cara Anda mengakses data skor kumulatif.
+            // Debug.Log("Score kumulatif direset (logika perlu disesuaikan).");
+
+
+            // Mulai Post Processing Transition
+            if (ppTransitionController != null)
+            {
+                // ppTransitionController.StartTransition(postProcessTransitionDuration, OnPostProcessComplete);
+                // Jika Anda tidak butuh callback spesifik saat PP selesai, bisa null:
+                ppTransitionController.StartTransition(postProcessTransitionDuration, null);
+            }
+            else
+            {
+                Debug.LogWarning("PostProcessTransitionController belum di-assign di SceneSwitcherWithSFX.", this);
+            }
+
+            // Mainkan SFX
             if (enterSFX != null && audioSource != null)
             {
                 audioSource.clip = enterSFX;
-                audioSource.time = sfxStartTime;
+                audioSource.time = sfxStartTime; // Mulai dari waktu spesifik
                 audioSource.Play();
-                Invoke(nameof(StopSFX), sfxEndTime - sfxStartTime);
-            }
-        }
-
-        if (hasPressedKey)
-        {
-            zoomTimer += Time.deltaTime;
-            float t = Mathf.Clamp01(zoomTimer / zoomDuration);
-            float smoothT = Mathf.SmoothStep(0, 1, t);
-
-            if (lensDistortion != null)
-            {
-                lensDistortion.intensity.value = Mathf.Lerp(startIntensity, targetIntensity, smoothT);
-                lensDistortion.centerX.value = Mathf.Lerp(startCenterX, targetCenterX, smoothT);
-                lensDistortion.scale.value = Mathf.Lerp(startScale, targetScale, smoothT);
+                // Hitung durasi SFX akan dimainkan
+                float sfxPlayDuration = Mathf.Max(0, sfxEndTime - sfxStartTime);
+                if (sfxPlayDuration > 0)
+                {
+                    Invoke(nameof(StopSFX), sfxPlayDuration);
+                }
+                else
+                {
+                    // Jika sfxEndTime <= sfxStartTime, mungkin SFX tidak perlu di-stop manual
+                    // atau ini adalah one-shot yang akan berhenti sendiri.
+                    // Jika ingin berhenti segera: StopSFX();
+                }
             }
 
-            if (bloom != null)
+            // Jadwalkan perpindahan scene
+            if (!sceneSwitchInvoked)
             {
-                bloom.intensity.value = Mathf.Lerp(startBloomIntensity, targetBloomIntensity, smoothT);
-                bloom.threshold.value = Mathf.Lerp(startBloomThreshold, targetBloomThreshold, smoothT);
-                bloom.color.value = Color.Lerp(startBloomColor, targetBloomColor, smoothT);
-            }
-
-            if (autoExposure != null)
-            {
-                autoExposure.minLuminance.value = Mathf.Lerp(startMinExposure, targetMinExposure, smoothT);
-            }
-
-            if (zoomTimer >= delayBeforeSwitch)
-            {
-                SceneManager.LoadScene(nextSceneName);
+                Invoke(nameof(SwitchScene), delayBeforeSwitch);
+                sceneSwitchInvoked = true;
             }
         }
     }
 
+    // Callback opsional jika Anda perlu melakukan sesuatu tepat setelah transisi PP selesai
+    // void OnPostProcessComplete()
+    // {
+    // Debug.Log("Transisi Post Processing Selesai.");
+    // }
+
+    void SwitchScene()
+    {
+        SceneManager.LoadScene(nextSceneName);
+    }
+
     void StopSFX()
     {
-        if (audioSource.isPlaying)
+        if (audioSource != null && audioSource.isPlaying)
         {
             audioSource.Stop();
         }

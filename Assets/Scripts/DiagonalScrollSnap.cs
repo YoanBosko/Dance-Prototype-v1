@@ -103,18 +103,7 @@ public class DiagonalScrollSnap : MonoBehaviour
             }
             else if (Input.GetKeyDown(input3))
             {
-                GameObject obj = items[currentIndex].gameObject;
-                DataHolder dataHolder = obj.GetComponent<DataHolder>();
-
-                if (dataHolder != null && dataHolder.beatmapData != null)
-                {
-                    // 🔁 Kirim beatmap yang dipilih
-                    BeatmapTransfer.Instance.CopyData(dataHolder.beatmapData);
-
-                    // Tampilkan canvas preview
-                    menuCanvas.gameObject.SetActive(true);
-                    script1.gameObject.SetActive(false);
-                }
+                SelectedSong();
             }
         }
         
@@ -122,6 +111,23 @@ public class DiagonalScrollSnap : MonoBehaviour
         {
             menuCanvas.gameObject.SetActive(false);
             isCanvasActive = false;
+        }
+    }
+
+    public void SelectedSong()
+    {
+
+        GameObject obj = items[currentIndex].gameObject;
+        DataHolder dataHolder = obj.GetComponent<DataHolder>();
+
+        if (dataHolder != null && dataHolder.beatmapData != null)
+        {
+            // 🔁 Kirim beatmap yang dipilih
+            BeatmapTransfer.Instance.CopyData(dataHolder.beatmapData);
+
+            // Tampilkan canvas preview
+            menuCanvas.gameObject.SetActive(true);
+            script1.gameObject.SetActive(false);
         }
     }
 

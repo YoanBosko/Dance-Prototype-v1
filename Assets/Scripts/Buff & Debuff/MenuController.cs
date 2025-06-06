@@ -28,6 +28,7 @@ public class MenuController : MonoBehaviour
     private int selectedIndex = 0;
     public float highlightScale = 1.2f;
     public float transitionSpeed = 10f;
+    public WinState winState;
 
     void Start()
     {
@@ -109,6 +110,8 @@ public class MenuController : MonoBehaviour
                 return;
             }
 
+            
+
             menuButtons[selectedIndex].onClick.Invoke(); // Panggil event onClick pada tombol yang dipilih
 
             // Dapatkan nama prefab asli dari nama GameObject yang di-instantiate
@@ -131,14 +134,17 @@ public class MenuController : MonoBehaviour
             }
 
             // Ganti scene berdasarkan cycleTime
-            if (GameManager.Instance != null && GameManager.Instance.cycleTime == 2)
-            {
-                SceneManager.LoadScene("DebuffScene");
-            }
-            else
-            {
-                SceneManager.LoadScene("Menu Lagu");
-            }
+            //if (GameManager.Instance != null && GameManager.Instance.cycleTime == 2)
+            //{
+            //    SceneManager.LoadScene("DebuffScene");
+            //}
+            //else
+            //{
+            //    SceneManager.LoadScene("Menu Lagu");
+            //}
+
+            //for post processing
+            winState.ChangeScene("DebuffScene");
         }
 
         UpdateButtonScales(); // Update skala tombol (efek visual)

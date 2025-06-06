@@ -407,16 +407,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5916a4276dbeb674aa9bb07e0ce39c8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  score: {fileID: 540023485}
-  accuracy: {fileID: 1598772517}
-  perfectText: {fileID: 1416276287}
-  goodText: {fileID: 1957669102}
-  badText: {fileID: 2072165202}
-  missText: {fileID: 28332513}
-  songTitle: {fileID: 202742947}
-  songDifficulty: {fileID: 186772009}
+  scoreAnimationSettings:
+    textMeshElement: {fileID: 540023485}
+    transitionDuration: 2
+    delayBeforeStart: 6
+    prefix: 
+    suffix: 
+    floatFormat: F0
+  accuracyAnimationSettings:
+    textMeshElement: {fileID: 1598772517}
+    transitionDuration: 2
+    delayBeforeStart: 0
+    prefix: 
+    suffix: '%'
+    floatFormat: F2
+  perfectHitsAnimationSettings:
+    textMeshElement: {fileID: 1416276287}
+    transitionDuration: 2
+    delayBeforeStart: 0
+    prefix: ': '
+    suffix: 
+    floatFormat: F0
+  goodHitsAnimationSettings:
+    textMeshElement: {fileID: 1957669102}
+    transitionDuration: 2
+    delayBeforeStart: 0
+    prefix: ': '
+    suffix: 
+    floatFormat: F0
+  badHitsAnimationSettings:
+    textMeshElement: {fileID: 2072165202}
+    transitionDuration: 2
+    delayBeforeStart: 0
+    prefix: ': '
+    suffix: 
+    floatFormat: F0
+  missHitsAnimationSettings:
+    textMeshElement: {fileID: 28332513}
+    transitionDuration: 2
+    delayBeforeStart: 0
+    prefix: ': '
+    suffix: 
+    floatFormat: F0
+  songTitleText: {fileID: 202742947}
+  songDifficultyText: {fileID: 186772009}
   scoreData: {fileID: 11400000, guid: e9832b9a566a1554e94aaaf6b09b8807, type: 2}
-  scoreDataCummulative: {fileID: 11400000, guid: 34a2b56c18635e64aa8c51fd3e2d6229, type: 2}
+  scoreDataCumulative: {fileID: 11400000, guid: 34a2b56c18635e64aa8c51fd3e2d6229, type: 2}
   beatmapDataAssign: {fileID: 11400000, guid: 67c147d45c2bf214e9837477b7259be5, type: 2}
 --- !u!4 &114372212
 Transform:
@@ -496,7 +532,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &123356930
 AudioSource:
   m_ObjectHideFlags: 0

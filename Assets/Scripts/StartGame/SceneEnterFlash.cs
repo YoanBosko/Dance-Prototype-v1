@@ -1,67 +1,100 @@
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+using System.Collections; // Diperlukan untuk Coroutine
 
 public class SceneEnterFlash : MonoBehaviour
 {
+    [Header("Post Process Settings")]
     public PostProcessVolume volume;
 
-    [Header("Flash Settings")]
-    public float transitionDuration = 1f;
+    [Header("Transition Settings")]
+    [Tooltip("Durasi animasi flash saat scene dimuat.")]
+    [SerializeField] private float transitionDuration = 1f;
 
+    // Nilai Awal dan Akhir sekarang bisa diatur dari Inspector agar lebih modular
+    [Header("Auto Exposure (FROM -> TO)")]
+    [SerializeField] private float startEV = -5f;
+    [SerializeField] private float endEV = 1f;
+
+    [Header("Bloom (FROM -> TO)")]
+    [SerializeField] private float startBloomIntensity = 0.8f;
+    [SerializeField] private float endBloomIntensity = 0f;
+
+    // Komponen Post-Processing (privat)
     private AutoExposure autoExposure;
     private Bloom bloom;
 
-    private float timer = 0f;
-    private bool isTransitioning = false;
-
-    // FROM -> TO values
-    private float startEV = -5f;
-    private float endEV = 1f;
-
-    private float startBloomIntensity = 0.8f;
-    private float endBloomIntensity = 0f;
-
     void Start()
     {
-        volume.enabled = false; // efek tidak aktif saat di editor
+        // Pastikan volume ada sebelum melanjutkan
+        if (volume == null)
+        {
+            Debug.LogError("PostProcessVolume belum di-assign di SceneEnterFlash.", this);
+            return;
+        }
 
+        // Coba dapatkan komponen efek dari profile
         if (volume.profile.TryGetSettings(out autoExposure) &&
             volume.profile.TryGetSettings(out bloom))
         {
-            // Set nilai awal untuk efek
-            autoExposure.minLuminance.value = startEV;
-            autoExposure.maxLuminance.value = startEV;
-            bloom.intensity.value = startBloomIntensity;
-
-            // Aktifkan efek baru memulai transisi
-            volume.enabled = true;
-            isTransitioning = true;
+            // Mulai transisi menggunakan Coroutine
+            StartCoroutine(TransitionFlashCoroutine());
+        }
+        else
+        {
+            Debug.LogError("Gagal mendapatkan AutoExposure atau Bloom dari PostProcessProfile.", this);
         }
     }
 
-    void Update()
+    private IEnumerator TransitionFlashCoroutine()
     {
-        if (!isTransitioning) return;
+        // --- Langkah 1: Persiapan Transisi ---
 
-        timer += Time.deltaTime;
-        float t = Mathf.Clamp01(timer / transitionDuration);
-        float smoothT = Mathf.SmoothStep(0, 1, t);
+        // Atur nilai awal untuk efek SEBELUM volume diaktifkan
+        autoExposure.minLuminance.value = startEV;
+        autoExposure.maxLuminance.value = startEV;
+        bloom.intensity.value = startBloomIntensity;
 
-        if (autoExposure != null)
+        // Aktifkan PostProcessVolume untuk memulai efek
+        volume.enabled = true;
+
+        // --- Langkah 2: Animasi Transisi ---
+
+        float timer = 0f;
+        while (timer < transitionDuration)
         {
-            autoExposure.minLuminance.value = Mathf.Lerp(startEV, endEV, smoothT);
-            autoExposure.maxLuminance.value = Mathf.Lerp(startEV, endEV, smoothT);
+            timer += Time.deltaTime;
+            // Hitung progres transisi (0 sampai 1)
+            float t = Mathf.Clamp01(timer / transitionDuration);
+            // Gunakan SmoothStep untuk interpolasi yang lebih halus
+            float smoothT = Mathf.SmoothStep(0, 1, t);
+
+            // Terapkan nilai efek secara bertahap menggunakan Lerp
+            if (autoExposure != null)
+            {
+                autoExposure.minLuminance.value = Mathf.Lerp(startEV, endEV, smoothT);
+                autoExposure.maxLuminance.value = Mathf.Lerp(startEV, endEV, smoothT);
+            }
+
+            if (bloom != null)
+            {
+                bloom.intensity.value = Mathf.Lerp(startBloomIntensity, endBloomIntensity, smoothT);
+            }
+
+            // Tunggu frame berikutnya sebelum melanjutkan loop
+            yield return null;
         }
 
-        if (bloom != null)
-        {
-            bloom.intensity.value = Mathf.Lerp(startBloomIntensity, endBloomIntensity, smoothT);
-        }
+        // --- Langkah 3: Finalisasi ---
 
-        if (t >= 1f)
-        {
-            isTransitioning = false;
-            volume.enabled = false;
-        }
+        // Pastikan nilai akhir tercapai dengan akurat
+        autoExposure.minLuminance.value = endEV;
+        autoExposure.maxLuminance.value = endEV;
+        bloom.intensity.value = endBloomIntensity;
+
+        // Nonaktifkan volume setelah transisi selesai agar tidak mempengaruhi scene
+        volume.enabled = false;
+
+        // Debug.Log("Scene enter flash transition complete.");
     }
 }

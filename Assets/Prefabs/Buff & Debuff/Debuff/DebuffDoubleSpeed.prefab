@@ -60,3 +60,4 @@ MonoBehaviour:
   image: {fileID: 21300000, guid: 9aff17f84ceca1443b8670446a57440a, type: 3}
   cardTitleText: Double Speed
   cardDescriptionText: Note fall speed akan di tambah
+  resultVideo: {fileID: 32900000, guid: a5d2671323573b748b955c5bec4002a5, type: 3}
