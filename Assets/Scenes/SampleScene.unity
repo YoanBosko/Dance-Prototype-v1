@@ -1772,7 +1772,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &417709518
 Transform:
   m_ObjectHideFlags: 0
@@ -4111,6 +4111,8 @@ MonoBehaviour:
   targetAudioSource: {fileID: 159419516}
   targetVideoPlayer: {fileID: 0}
   songManager: {fileID: 1787680572}
+  songTitle: {fileID: 0}
+  songDifficulty: {fileID: 0}
 --- !u!4 &1685692564
 Transform:
   m_ObjectHideFlags: 0
