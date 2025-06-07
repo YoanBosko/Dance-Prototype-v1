@@ -182,6 +182,7 @@ public class PostProcessTransitionController : MonoBehaviour
         if (autoExposure != null && animateAutoExposure)
         {
             autoExposure.minLuminance.value = Mathf.Lerp(startMinExposure, targetMinExposure, t);
+            autoExposure.maxLuminance.value = Mathf.Lerp(startMinExposure, targetMinExposure, t);
         }
     }
 

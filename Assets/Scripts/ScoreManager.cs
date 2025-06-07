@@ -186,7 +186,7 @@ public class ScoreManager : MonoBehaviour
         missHits++;
         totalBeats++;
         if (!isInstaDeath) healthBar -= (int)(70 * harmMultiplier);
-        else healthBar = 0;
+        else if (isInstaDeath == true) healthBar = 0;
 
         if (isFlashbang)
         {

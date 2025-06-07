@@ -97,7 +97,7 @@ public class SceneEnterFlash : MonoBehaviour
         bloom.intensity.value = endBloomIntensity;
         
         // Nonaktifkan volume setelah transisi selesai.
-        // volume.weight = 0.001f;
+        volume.weight = 0f;
 
         // Opsional: uncomment baris di bawah untuk notifikasi saat transisi selesai.
         // Debug.Log("Transisi flash saat masuk scene telah selesai.");

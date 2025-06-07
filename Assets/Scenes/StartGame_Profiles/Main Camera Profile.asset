@@ -147,14 +147,14 @@ MonoBehaviour:
     overrideState: 1
     value: 0
   maxLuminance:
-    overrideState: 0
+    overrideState: 1
     value: 0
   keyValue:
     overrideState: 0
     value: 1
   eyeAdaptation:
-    overrideState: 0
-    value: 0
+    overrideState: 1
+    value: 1
   speedUp:
     overrideState: 0
     value: 2

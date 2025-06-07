@@ -9,7 +9,7 @@ public class DebuffInstaDeath : DebuffBase
     // Start is called before the first frame update
     void Start()
     {
-
+        ActivateDebuff();
     }
 
     // Update is called once per frame

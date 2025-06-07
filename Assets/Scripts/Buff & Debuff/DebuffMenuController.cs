@@ -75,7 +75,8 @@ public class DebuffMenuController : MonoBehaviour
                 if (winState != null)
                 {
                     // Nama scene bisa Anda atur di sini, saya menggunakan "BuffPicker" sesuai skrip lama Anda
-                    winState.ChangeScene("BuffPicker");
+                    //winState.ChangeScene("BuffPicker");
+                    winState.ChangeScene("Menu Lagu");
                 }
                 else
                 {
