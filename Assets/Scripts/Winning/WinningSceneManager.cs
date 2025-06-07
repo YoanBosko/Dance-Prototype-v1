@@ -12,88 +12,82 @@ public class WinningSceneManager : MonoBehaviour
 
     [Header("UI & Scene Flow")]
     public GameObject textParent;           // Parent GameObject of all text elements
-    //public string nextSceneName = "MainMenu"; // Scene yang akan dimuat saat tombol 'K' ditekan
+    public WinMenu winMenu;                 // Assign WinMenu script component here
     public UnityEvent onButtonPress;
     public UnityEvent onButtonPress3rdCycle;
 
     private bool hasSwitchedToLoop = false;
-    private bool isInputEnabled = false;      // Flag baru untuk mengontrol input
+    private bool isInputEnabled = false;
 
     void Start()
     {
         // Validasi awal
-        if (videoPlayer == null)
-        {
-            Debug.LogError("VideoPlayer belum di-assign!", this);
-            return;
-        }
+        if (videoPlayer == null) { Debug.LogError("VideoPlayer belum di-assign!", this); return; }
+        if (winMenu == null) { Debug.LogError("WinMenu belum di-assign!", this); return; }
 
         if (textParent != null)
         {
             textParent.SetActive(false); // Sembunyikan statistik di awal
         }
 
-        // Memulai video pertama
         videoPlayer.clip = victory1;
         videoPlayer.isLooping = false;
         videoPlayer.Play();
-
-        // Mendaftarkan event listener untuk saat video selesai
         videoPlayer.loopPointReached += OnVideoEnd;
     }
 
-    // Dipanggil setiap frame
     void Update()
     {
         // Hanya cek input jika isInputEnabled adalah true
-        if (isInputEnabled && Input.GetKeyDown(KeyCode.K) || Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.D))
+        if (isInputEnabled && (Input.GetKeyDown(KeyCode.K) || Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.D)))
         {
-            Debug.Log("Tombol ditekan. Memuat scene berikutnya...");
-
-            // Nonaktifkan input lagi untuk mencegah pemanggilan berulang
-            isInputEnabled = false;
-
-            // Pindah ke scene berikutnya
-            if (onButtonPress != null && GameManager.Instance.cycleTime != 3)
+            // Cek apakah WinMenu sedang menganimasikan angka
+            if (winMenu.IsAnimating)
             {
-                //SceneManager.LoadScene(nextSceneName);
-                onButtonPress?.Invoke();
-            }
-            else if (onButtonPress3rdCycle != null && GameManager.Instance.cycleTime == 3)
-            {
-                onButtonPress3rdCycle?.Invoke();
+                // Jika ya, penekanan tombol pertama akan melewati animasi
+                winMenu.SkipAllAnimations();
             }
             else
             {
-                Debug.LogWarning("Next Scene belum diatur!", this);
+                // Jika animasi sudah selesai, penekanan tombol akan memicu event
+                Debug.Log("Animasi selesai. Memproses event perpindahan scene...");
+                isInputEnabled = false; // Nonaktifkan input setelah diproses
+
+                if (onButtonPress != null && winMenu.achievedGoodGrade == true && (GameManager.Instance == null || GameManager.Instance.cycleTime != 3) )
+                {
+                    onButtonPress?.Invoke();
+                }
+                else if (onButtonPress3rdCycle != null && GameManager.Instance != null && GameManager.Instance.cycleTime == 3 || winMenu.achievedGoodGrade == false)
+                {
+                    onButtonPress3rdCycle?.Invoke();
+                }
+                else
+                {
+                    Debug.LogWarning("Event untuk ditekan tidak diatur atau kondisi GameManager tidak terpenuhi!", this);
+                }
             }
         }
     }
 
-    // Dipanggil saat video mencapai akhir
     void OnVideoEnd(VideoPlayer vp)
     {
-        // Cek jika ini adalah akhir dari video pertama (victory1)
         if (!hasSwitchedToLoop && vp.clip == victory1)
         {
             hasSwitchedToLoop = true;
 
-            // Pindah ke video kedua dan buat looping
             videoPlayer.clip = victory2;
             videoPlayer.isLooping = true;
             videoPlayer.Play();
 
             if (textParent != null)
             {
-                textParent.SetActive(true); // Tampilkan statistik teks
+                textParent.SetActive(true); // Tampilkan statistik teks (ini akan memicu OnEnable di WinMenu)
             }
 
-            // Aktifkan input tombol 'K' SEKARANG
-            isInputEnabled = true;
+            isInputEnabled = true; // Aktifkan input
         }
     }
 
-    // Praktik yang baik untuk membersihkan event listener saat objek dihancurkan
     void OnDestroy()
     {
         if (videoPlayer != null)

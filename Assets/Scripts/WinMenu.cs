@@ -1,23 +1,18 @@
 using UnityEngine;
 using System.Collections;
-using TMPro; // Pastikan namespace TextMeshPro diimpor
+using System.Collections.Generic;
+using TMPro;
 
-// Kelas untuk menyimpan pengaturan animasi per elemen
+// Kelas TextAnimationSettings tetap sama
 [System.Serializable]
 public class TextAnimationSettings
 {
-    public TMP_Text textMeshElement; // Diubah ke TMP_Text
+    public TMP_Text textMeshElement;
     public float transitionDuration = 1.0f;
     public float delayBeforeStart = 0.2f;
     public string prefix = "";
     public string suffix = "";
     public string floatFormat = "F2";
-
-    // Konstruktor default jika diperlukan
-    public TextAnimationSettings(TMP_Text element) // Diubah ke TMP_Text
-    {
-        textMeshElement = element;
-    }
 }
 
 public class WinMenu : MonoBehaviour
@@ -31,13 +26,26 @@ public class WinMenu : MonoBehaviour
     public TextAnimationSettings missHitsAnimationSettings;
 
     [Header("Static Text References")]
-    public TMP_Text songTitleText; // Diubah ke TMP_Text
-    public TMP_Text songDifficultyText; // Diubah ke TMP_Text
+    public TMP_Text songTitleText;
+    public TMP_Text songDifficultyText;
+    [Tooltip("Komponen teks untuk menampilkan grade (S, A, B, C, D).")]
+    public TMP_Text gradeText;
+
+    [Header("Post-Animation Settings")]
+    [Tooltip("GameObject yang akan diaktifkan setelah semua animasi selesai.")]
+    public GameObject objectToActivateAfterAnimation; // Variabel baru
 
     [Header("Data References")]
     public ScoreData scoreData;
     public ScoreData scoreDataCumulative;
     public BeatmapData beatmapDataAssign;
+
+    // Properti publik untuk mengecek status animasi
+    public bool IsAnimating { get; private set; } = false;
+
+    // Variabel boolean baru untuk grade
+    [HideInInspector] // Disembunyikan dari Inspector karena diatur oleh skrip
+    public bool achievedGoodGrade = false;
 
     private int targetScore;
     private float targetAccuracy;
@@ -48,19 +56,59 @@ public class WinMenu : MonoBehaviour
 
     void OnEnable()
     {
+        // Pastikan objek dinonaktifkan di awal
+        if (objectToActivateAfterAnimation != null)
+        {
+            objectToActivateAfterAnimation.SetActive(false);
+        }
+
         StoreTargetValues();
         UpdateStaticTexts();
-        StopAllCoroutines(); // Hentikan coroutine sebelumnya jika ada
+        UpdateGradeDisplay();
+        StopAllCoroutines();
         StartCoroutine(StartAllConfiguredAnimations());
+    }
+
+    /// <summary>
+    /// Fungsi publik untuk melewati semua animasi dan langsung menampilkan hasil akhir.
+    /// </summary>
+    public void SkipAllAnimations()
+    {
+        if (!IsAnimating) return;
+
+        Debug.Log("Melewati animasi skor...");
+        StopAllCoroutines();
+
+        // Langsung atur semua teks ke nilai akhirnya
+        SetFinalTextValue(scoreAnimationSettings, targetScore.ToString());
+        SetFinalTextValue(accuracyAnimationSettings, targetAccuracy.ToString(accuracyAnimationSettings.floatFormat));
+        SetFinalTextValue(perfectHitsAnimationSettings, targetPerfectHits.ToString());
+        SetFinalTextValue(goodHitsAnimationSettings, targetGoodHits.ToString());
+        SetFinalTextValue(badHitsAnimationSettings, targetBadHits.ToString());
+        SetFinalTextValue(missHitsAnimationSettings, targetMissHits.ToString());
+
+        UpdateGradeDisplay();
+
+        IsAnimating = false;
+
+        // Aktifkan GameObject setelah skip
+        if (objectToActivateAfterAnimation != null)
+        {
+            objectToActivateAfterAnimation.SetActive(true);
+        }
+    }
+
+    private void SetFinalTextValue(TextAnimationSettings settings, string value)
+    {
+        if (settings != null && settings.textMeshElement != null)
+        {
+            settings.textMeshElement.SetText(settings.prefix + value + settings.suffix);
+        }
     }
 
     void StoreTargetValues()
     {
-        if (scoreData == null)
-        {
-            Debug.LogError("ScoreData belum di-assign di WinMenu!");
-            return;
-        }
+        if (scoreData == null) { Debug.LogError("ScoreData belum di-assign!"); return; }
 
         targetScore = scoreData.score;
         targetAccuracy = scoreData.accuracy;
@@ -71,8 +119,6 @@ public class WinMenu : MonoBehaviour
 
         if (scoreDataCumulative != null)
         {
-            // Pastikan ini hanya terjadi sekali per 'kemenangan' jika scoreDataCumulative adalah data persisten
-            // Anda mungkin perlu logika tambahan di sini jika OnEnable bisa terpanggil beberapa kali untuk hasil yang sama
             scoreDataCumulative.score += scoreData.score;
         }
     }
@@ -84,95 +130,97 @@ public class WinMenu : MonoBehaviour
             if (songTitleText != null) songTitleText.text = beatmapDataAssign.songTitle;
             if (songDifficultyText != null) songDifficultyText.text = beatmapDataAssign.songDifficulty;
         }
+    }
+
+    void UpdateGradeDisplay()
+    {
+        achievedGoodGrade = false;
+
+        if (gradeText == null) return;
+
+        string grade = "";
+
+        if (targetAccuracy >= 90f)
+        {
+            grade = "S";
+            achievedGoodGrade = true;
+        }
+        else if (targetAccuracy >= 80f)
+        {
+            grade = "A";
+            achievedGoodGrade = true;
+        }
+        else if (targetAccuracy >= 70f)
+        {
+            grade = "B";
+            achievedGoodGrade = true;
+        }
+        else if (targetAccuracy >= 60f)
+        {
+            grade = "C";
+            achievedGoodGrade = true;
+        }
         else
         {
-            Debug.LogError("BeatmapDataAssign belum di-assign di WinMenu!");
+            grade = "F";
         }
+
+        gradeText.text = grade;
     }
 
     IEnumerator StartAllConfiguredAnimations()
     {
-        // Score
-        if (scoreAnimationSettings != null && scoreAnimationSettings.textMeshElement != null)
+        IsAnimating = true;
+
+        var allSettings = new List<TextAnimationSettings>
         {
-            yield return new WaitForSeconds(scoreAnimationSettings.delayBeforeStart);
-            StartCoroutine(AnimateIntNumberCoroutine(
-                scoreAnimationSettings.textMeshElement,
-                targetScore,
-                scoreAnimationSettings.transitionDuration,
-                scoreAnimationSettings.prefix
-            ));
+            scoreAnimationSettings, accuracyAnimationSettings, perfectHitsAnimationSettings,
+            goodHitsAnimationSettings, badHitsAnimationSettings, missHitsAnimationSettings
+        };
+
+        float maxAnimationTime = 0f;
+
+        StartCoroutine(AnimateIntNumberCoroutine(scoreAnimationSettings, targetScore));
+        StartCoroutine(AnimateFloatNumberCoroutine(accuracyAnimationSettings, targetAccuracy));
+        StartCoroutine(AnimateIntNumberCoroutine(perfectHitsAnimationSettings, targetPerfectHits));
+        StartCoroutine(AnimateIntNumberCoroutine(goodHitsAnimationSettings, targetGoodHits));
+        StartCoroutine(AnimateIntNumberCoroutine(badHitsAnimationSettings, targetBadHits));
+        StartCoroutine(AnimateIntNumberCoroutine(missHitsAnimationSettings, targetMissHits));
+
+        foreach (var setting in allSettings)
+        {
+            if (setting != null && setting.textMeshElement != null)
+            {
+                float totalTime = setting.delayBeforeStart + setting.transitionDuration;
+                if (totalTime > maxAnimationTime)
+                {
+                    maxAnimationTime = totalTime;
+                }
+            }
         }
 
-        // Accuracy
-        if (accuracyAnimationSettings != null && accuracyAnimationSettings.textMeshElement != null)
+        yield return new WaitForSeconds(maxAnimationTime);
+
+        // Aktifkan GameObject setelah animasi terlama selesai
+        if (objectToActivateAfterAnimation != null)
         {
-            yield return new WaitForSeconds(accuracyAnimationSettings.delayBeforeStart);
-            StartCoroutine(AnimateFloatNumberCoroutine(
-                accuracyAnimationSettings.textMeshElement,
-                targetAccuracy,
-                accuracyAnimationSettings.transitionDuration,
-                accuracyAnimationSettings.floatFormat,
-                accuracyAnimationSettings.prefix,
-                accuracyAnimationSettings.suffix
-            ));
+            objectToActivateAfterAnimation.SetActive(true);
         }
 
-        // Perfect Hits
-        if (perfectHitsAnimationSettings != null && perfectHitsAnimationSettings.textMeshElement != null)
-        {
-            yield return new WaitForSeconds(perfectHitsAnimationSettings.delayBeforeStart);
-            StartCoroutine(AnimateIntNumberCoroutine(
-                perfectHitsAnimationSettings.textMeshElement,
-                targetPerfectHits,
-                perfectHitsAnimationSettings.transitionDuration,
-                perfectHitsAnimationSettings.prefix
-            ));
-        }
-
-        // Good Hits
-        if (goodHitsAnimationSettings != null && goodHitsAnimationSettings.textMeshElement != null)
-        {
-            yield return new WaitForSeconds(goodHitsAnimationSettings.delayBeforeStart);
-            StartCoroutine(AnimateIntNumberCoroutine(
-                goodHitsAnimationSettings.textMeshElement,
-                targetGoodHits,
-                goodHitsAnimationSettings.transitionDuration,
-                goodHitsAnimationSettings.prefix
-            ));
-        }
-
-        // Bad Hits
-        if (badHitsAnimationSettings != null && badHitsAnimationSettings.textMeshElement != null)
-        {
-            yield return new WaitForSeconds(badHitsAnimationSettings.delayBeforeStart);
-            StartCoroutine(AnimateIntNumberCoroutine(
-                badHitsAnimationSettings.textMeshElement,
-                targetBadHits,
-                badHitsAnimationSettings.transitionDuration,
-                badHitsAnimationSettings.prefix
-            ));
-        }
-
-        // Miss Hits
-        if (missHitsAnimationSettings != null && missHitsAnimationSettings.textMeshElement != null)
-        {
-            yield return new WaitForSeconds(missHitsAnimationSettings.delayBeforeStart);
-            StartCoroutine(AnimateIntNumberCoroutine(
-                missHitsAnimationSettings.textMeshElement,
-                targetMissHits,
-                missHitsAnimationSettings.transitionDuration,
-                missHitsAnimationSettings.prefix
-            ));
-        }
+        IsAnimating = false;
+        Debug.Log("Semua animasi skor selesai.");
     }
 
-    IEnumerator AnimateIntNumberCoroutine(TMP_Text textMesh, int targetValue, float transitionDuration, string prefix = "")
+    IEnumerator AnimateIntNumberCoroutine(TextAnimationSettings settings, int targetValue)
     {
-        if (textMesh == null) yield break;
+        if (settings == null || settings.textMeshElement == null) yield break;
+        yield return new WaitForSeconds(settings.delayBeforeStart);
+
+        TMP_Text textMesh = settings.textMeshElement;
+        float transitionDuration = settings.transitionDuration;
+        string prefix = settings.prefix;
 
         float currentValue = 0;
-        // Menggunakan SetText untuk kompatibilitas yang lebih baik dan performa potensial
         textMesh.SetText(prefix + "0");
 
         float timer = 0f;
@@ -188,9 +236,16 @@ public class WinMenu : MonoBehaviour
         textMesh.SetText(prefix + targetValue.ToString());
     }
 
-    IEnumerator AnimateFloatNumberCoroutine(TMP_Text textMesh, float targetValue, float transitionDuration, string format = "F2", string prefix = "", string suffix = "")
+    IEnumerator AnimateFloatNumberCoroutine(TextAnimationSettings settings, float targetValue)
     {
-        if (textMesh == null) yield break;
+        if (settings == null || settings.textMeshElement == null) yield break;
+        yield return new WaitForSeconds(settings.delayBeforeStart);
+
+        TMP_Text textMesh = settings.textMeshElement;
+        float transitionDuration = settings.transitionDuration;
+        string format = settings.floatFormat;
+        string prefix = settings.prefix;
+        string suffix = settings.suffix;
 
         float currentValue = 0f;
         textMesh.SetText(prefix + currentValue.ToString(format) + suffix);
@@ -208,8 +263,9 @@ public class WinMenu : MonoBehaviour
         textMesh.SetText(prefix + targetValue.ToString(format) + suffix);
     }
 
-    // Fungsi GetHits tetap sama
-    int GetPerfectHits()
+
+// Fungsi GetHits tetap sama
+int GetPerfectHits()
     {
         return typeof(ScoreManager).GetField("perfectHits", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null) as int? ?? 0;
     }
