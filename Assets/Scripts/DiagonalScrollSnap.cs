@@ -1,35 +1,49 @@
-using System.Collections.Generic;
-using System.Net.Mime;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
-using UnityEditor.SearchService;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+
+public enum Difficulty { Easy, Medium, Hard }
+
+[System.Serializable] // Agar bisa dilihat dan diatur di Inspector
+public class SongItemData
+{
+    [Tooltip("Transform dari item UI di dalam ScrollRect.")]
+    public RectTransform itemTransform;
+
+    [Tooltip("Tingkat kesulitan untuk lagu ini.")]
+    public Difficulty difficulty;
+
+    // Anda bisa menambahkan referensi lain di sini jika perlu,
+    // misalnya ke DataHolder jika masih digunakan.
+    // public DataHolder dataHolder; 
+}
+
 
 public class DiagonalScrollSnap : MonoBehaviour
 {
+    [Header("Core Components")]
     public ScrollRect scrollRect;
-    private bool isCanvasActive = false;
-    public GameObject menuCanvas;
-    public GameObject script1; // Assign dari Inspector
-    public KeyCode input1;
-    public KeyCode input2;
-    public KeyCode input3;
-    public KeyCode input4;
     public RectTransform content;
     public RectTransform viewport;
-    public List<string> songNames;
-    public List<RectTransform> items = new List<RectTransform>();
-    // public List<DaftarLagu> items = new List<DaftarLagu>();
+    public GameObject menuCanvas;
 
-    public int visibleItemCount = 5;
+    [Header("Song Lists")]
+    [Tooltip("Daftar LENGKAP semua lagu yang tersedia. Atur difficulty di sini.")]
+    public List<SongItemData> allSongItems; // Master list
+    private List<SongItemData> activeItems = new List<SongItemData>(); // Filtered list
+
+    [Header("Snapping & Visuals")]
     public float snapSpeed = 5f;
     public float highlightScale = 1.2f;
+    [Tooltip("Jarak horizontal antar item. Harus konsisten.")]
     public float spacing = 170f;
 
-    private int currentIndex = 0;
-    private Vector2 targetPosition;
-    private float targetPos;
+    [Header("Input")]
+    public KeyCode inputUp;
+    public KeyCode inputDown;
+    public KeyCode inputSelect;
+    public KeyCode inputBack;
 
     [Header("Menu Preview")]
     public Image imagePreview;
@@ -37,159 +51,217 @@ public class DiagonalScrollSnap : MonoBehaviour
     public Text songTitle;
     public Text songCredit;
 
-    private bool onetime = true;
+    private int currentIndex = 0;
+    private float targetPos;
 
     void Start()
     {
-        // SnapToIndex(currentIndex);
-        // LoadAllSong();
+        FilterActiveItems();
+        UpdateItemVisibility();
 
-        // Panggil setiap item dalam list satu kali di awal scene
-        for (int i = 0; i < items.Count; i++)
+        if (activeItems.Count > 0)
         {
-            currentIndex = (currentIndex + 1) % items.Count;
+            currentIndex = 0;
             SnapToIndex(currentIndex);
-            PreviewMenu();  // Misalnya untuk memuat preview atau menyiapkan UI
-            audioSourcePreview.Play();
+            PreviewMenu();
         }
-
-        // Setelah selesai, bisa reset ke index awal
-        currentIndex = 7;
-        SnapToIndex(currentIndex);
-        PreviewMenu();
+        else
+        {
+            Debug.LogError("Tidak ada item aktif yang bisa ditampilkan setelah filter!", this);
+        }
     }
 
     void Update()
     {
+        if (activeItems.Count == 0) return;
+
         HandleInput();
         SnapContent();
         HighlightItem();
-        
     }
 
-    // void LoadAllSong()
-    // {
-    //     foreach (char name in items.gameObject.GetComponent<DataHolder>().beatmapData.audioClip.name)
-    //     {
-    //         AudioClip clip = Resources.Load<AudioClip>("Songs/" + name);
-    //         if (clip != null)
-    //         {
-    //             items[currentIndex].gameObject.GetComponent<DataHolder>().beatmapData.audioClip = clip;
-    //         }
-    //         else
-    //         {
-    //             Debug.Log("kosong");
-    //         }
-    //     }
-    // }
-    void HandleInput()
+    private void FilterActiveItems()
     {
-        // Blokir input1 dan input2 jika canvas aktif
-        if (!menuCanvas.gameObject.activeSelf)
+        activeItems.Clear();
+        int cycleTime = 1;
+
+        if (GameManager.Instance != null)
         {
-            if (Input.GetKeyDown(input1))
+            cycleTime = GameManager.Instance.cycleTime;
+        }
+        else
+        {
+            Debug.LogWarning("GameManager.Instance tidak ditemukan. Menggunakan cycleTime default = 1.", this);
+        }
+
+        Debug.Log($"Filtering items for cycleTime: {cycleTime}");
+
+        switch (cycleTime)
+        {
+            case 2:
+                foreach (var song in allSongItems)
+                {
+                    if (song.difficulty == Difficulty.Medium || song.difficulty == Difficulty.Hard)
+                    {
+                        activeItems.Add(song);
+                    }
+                }
+                break;
+            case 3:
+                foreach (var song in allSongItems)
+                {
+                    if (song.difficulty == Difficulty.Hard)
+                    {
+                        activeItems.Add(song);
+                    }
+                }
+                break;
+            default:
+                activeItems.AddRange(allSongItems);
+                break;
+        }
+    }
+
+    private void UpdateItemVisibility()
+    {
+        HashSet<RectTransform> activeTransforms = new HashSet<RectTransform>();
+        foreach (var activeItem in activeItems)
+        {
+            activeTransforms.Add(activeItem.itemTransform);
+        }
+
+        foreach (var masterItem in allSongItems)
+        {
+            if (masterItem.itemTransform != null)
             {
-                currentIndex = (currentIndex + 1) % items.Count;
-                SnapToIndex(currentIndex);
-                PreviewMenu();
-                audioSourcePreview.Play();
-            }
-            else if (Input.GetKeyDown(input2))
-            {
-                currentIndex = (currentIndex - 1 + items.Count) % items.Count;
-                SnapToIndex(currentIndex);
-                PreviewMenu();
-                audioSourcePreview.Play();
-            }
-            else if (Input.GetKeyDown(input3))
-            {
-                SelectedSong();
+                bool shouldBeActive = activeTransforms.Contains(masterItem.itemTransform);
+                masterItem.itemTransform.gameObject.SetActive(shouldBeActive);
             }
         }
-        
-        if (Input.GetKeyDown(input4))
+    }
+
+    void HandleInput()
+    {
+        if (menuCanvas != null && menuCanvas.activeSelf) return;
+
+        if (Input.GetKeyDown(inputDown))
         {
-            menuCanvas.gameObject.SetActive(false);
-            isCanvasActive = false;
+            currentIndex = (currentIndex + 1) % activeItems.Count;
+            SnapToIndex(currentIndex);
+            PreviewMenu();
+            if (audioSourcePreview != null) audioSourcePreview.Play();
+        }
+        else if (Input.GetKeyDown(inputUp))
+        {
+            currentIndex = (currentIndex - 1 + activeItems.Count) % activeItems.Count;
+            SnapToIndex(currentIndex);
+            PreviewMenu();
+            if (audioSourcePreview != null) audioSourcePreview.Play();
+        }
+        else if (Input.GetKeyDown(inputSelect))
+        {
+            SelectedSong();
+        }
+        else if (Input.GetKeyDown(inputBack))
+        {
+            if (menuCanvas != null) menuCanvas.SetActive(false);
         }
     }
 
     public void SelectedSong()
     {
-
-        GameObject obj = items[currentIndex].gameObject;
+        if (activeItems.Count == 0) return;
+        GameObject obj = activeItems[currentIndex].itemTransform.gameObject;
         DataHolder dataHolder = obj.GetComponent<DataHolder>();
 
         if (dataHolder != null && dataHolder.beatmapData != null)
         {
-            // 🔁 Kirim beatmap yang dipilih
             BeatmapTransfer.Instance.CopyData(dataHolder.beatmapData);
-
-            // Tampilkan canvas preview
-            menuCanvas.gameObject.SetActive(true);
-            script1.gameObject.SetActive(false);
+            if (menuCanvas != null) menuCanvas.SetActive(true);
         }
     }
 
+    /// <summary>
+    /// Mengatur target posisi snap dan memanggil LoopItemPositions untuk ilusi tak terbatas.
+    /// </summary>
     void SnapToIndex(int index)
     {
-        if (items.Count == 0) return;
+        if (activeItems.Count == 0) return;
 
-        Vector2 itemLocalPos = items[index].anchoredPosition;
-        Vector2 viewportCenter = viewport.rect.size / 2f;
-        // targetPosition = -itemLocalPos + viewportCenter;
-        targetPosition = -itemLocalPos;
-
-        float itemPos = items[index].anchoredPosition.x;
-        targetPos = -itemPos + 550f;
-
+        // Panggil fungsi untuk mengatur ulang posisi item agar terlihat looping.
         LoopItemPositions();
+
+        // Setelah posisi item diatur ulang, hitung target posisi untuk content panel
+        // agar item yang dipilih berada di tengah viewport.
+        float itemPos = activeItems[index].itemTransform.anchoredPosition.x;
+        targetPos = -itemPos + (viewport.rect.width / 2);
     }
+
     void PreviewMenu()
     {
-        GameObject obj = items[currentIndex].gameObject;
+        if (activeItems.Count == 0) return;
+        GameObject obj = activeItems[currentIndex].itemTransform.gameObject;
         DataHolder dataHolder = obj.GetComponent<DataHolder>();
-        imagePreview.sprite = dataHolder.beatmapData.image;
-        audioSourcePreview.clip = dataHolder.beatmapData.audioClipForMenu;
-        songCredit.text = dataHolder.beatmapData.songCredit;
-        songTitle.text = dataHolder.beatmapData.songTitle;  
+
+        if (dataHolder != null && dataHolder.beatmapData != null)
+        {
+            if (imagePreview != null) imagePreview.sprite = dataHolder.beatmapData.image;
+            if (audioSourcePreview != null) audioSourcePreview.clip = dataHolder.beatmapData.audioClipForMenu;
+            if (songCredit != null) songCredit.text = dataHolder.beatmapData.songCredit;
+            if (songTitle != null) songTitle.text = dataHolder.beatmapData.songTitle;
+        }
     }
 
     void SnapContent()
     {
-        content.anchoredPosition = Vector2.Lerp(content.anchoredPosition, new Vector2(targetPos, content.anchoredPosition.y), Time.deltaTime * snapSpeed);
+        if (content != null)
+        {
+            content.anchoredPosition = Vector2.Lerp(content.anchoredPosition, new Vector2(targetPos, content.anchoredPosition.y), Time.deltaTime * snapSpeed);
+        }
     }
 
     void HighlightItem()
     {
-        for (int i = 0; i < items.Count; i++)
+        for (int i = 0; i < activeItems.Count; i++)
         {
             float scale = (i == currentIndex) ? highlightScale : 1f;
-            items[i].localScale = Vector3.Lerp(items[i].localScale, Vector3.one * scale, Time.deltaTime * 10f);
+            activeItems[i].itemTransform.localScale = Vector3.Lerp(activeItems[i].itemTransform.localScale, Vector3.one * scale, Time.deltaTime * 10f);
         }
     }
 
-    void LoopItemPositions()
+    /// <summary>
+    /// Mengatur ulang posisi item di dalam content panel untuk menciptakan ilusi "infinite loop".
+    /// Ini adalah logika dari skrip lama Anda yang dikembalikan.
+    /// </summary>
+    private void LoopItemPositions()
     {
-        if (items.Count == 0) return;
+        if (activeItems.Count <= 1) return;
 
-        // float spacing = items[1].anchoredPosition.x - items[0].anchoredPosition.x;
-        int halfCount = items.Count / 2;
+        // Ambil posisi X dari item yang sedang dipilih sebagai titik referensi.
+        float centerItemX = activeItems[currentIndex].itemTransform.anchoredPosition.x;
+        int halfCount = activeItems.Count / 2;
 
-        for (int i = 0; i < items.Count; i++)
+        for (int i = 0; i < activeItems.Count; i++)
         {
             int offset = i - currentIndex;
 
-            // Wrap offset agar item terdekat tetap berada dekat visual center
-            if (offset >=  halfCount)
-                offset -= items.Count;
+            // Logika "wrap around". Jika sebuah item terlalu jauh di satu sisi,
+            // pindahkan ke sisi lain untuk membuatnya terlihat berdekatan.
+            if (offset > halfCount)
+            {
+                offset -= activeItems.Count;
+            }
             else if (offset < -halfCount)
-                offset += items.Count;
+            {
+                offset += activeItems.Count;
+            }
 
-            float newX = items[currentIndex].anchoredPosition.x + offset * spacing;
-            Vector2 newPos = new Vector2(newX, items[i].anchoredPosition.y);
-            items[i].anchoredPosition = newPos;
+            // Hitung posisi X yang baru berdasarkan titik referensi, offset, dan jarak.
+            float newX = centerItemX + (offset * spacing);
+            Vector2 newPos = new Vector2(newX, activeItems[i].itemTransform.anchoredPosition.y);
+
+            // Terapkan posisi baru ke item.
+            activeItems[i].itemTransform.anchoredPosition = newPos;
         }
     }
-
 }

@@ -3044,41 +3044,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scrollRect: {fileID: 89229344}
-  menuCanvas: {fileID: 1672768026}
-  script1: {fileID: 1492672214}
-  input1: 100
-  input2: 106
-  input3: 107
-  input4: 102
   content: {fileID: 1850040816}
   viewport: {fileID: 853289569}
-  songNames:
-  - ADE BAJU BIRU  EXTENDED VERSION  Angelbertrap Ft Etgard Kalengke ( ANA TIMUR
-    )
-  - Adnan Veron Erga Liquid Silva - Lowkey [TubeRipper.cc]
-  - Bad Boys
-  - CINTA BEDA PRODI [Viral Tik Tok]  Lagu Acara Timur - Kelvin Remixer (OMV)
-  - HALLO ADE NONA - Fresly Nikijuluw Feat. Bryso (Official Music Video)
-  - mainmenu_song
-  - PICA PICA - Juan Reza (Official Music Video)
-  - Whisnu Santika ft. Liquid Silva - Que Pasa
-  - Whisnu Santika hbrp Keebo - Cartel (Official Music Video) [TubeRipper.cc]
-  - Whisnu Santika, Adnan Veron, Dub It, Liquid Silva - MAMBO JAMBO
-  items:
-  - {fileID: 1102906853}
-  - {fileID: 1743119481}
-  - {fileID: 919788255}
-  - {fileID: 568577474}
-  - {fileID: 1531057096}
-  - {fileID: 761321607}
-  - {fileID: 258511118}
-  - {fileID: 744193970}
-  - {fileID: 1495313855}
-  - {fileID: 888820205}
-  visibleItemCount: 5
+  menuCanvas: {fileID: 1672768026}
+  allSongItems:
+  - itemTransform: {fileID: 1102906853}
+    difficulty: 0
+  - itemTransform: {fileID: 1743119481}
+    difficulty: 0
+  - itemTransform: {fileID: 919788255}
+    difficulty: 0
+  - itemTransform: {fileID: 568577474}
+    difficulty: 0
+  - itemTransform: {fileID: 1531057096}
+    difficulty: 1
+  - itemTransform: {fileID: 761321607}
+    difficulty: 1
+  - itemTransform: {fileID: 258511118}
+    difficulty: 1
+  - itemTransform: {fileID: 744193970}
+    difficulty: 2
+  - itemTransform: {fileID: 1495313855}
+    difficulty: 2
+  - itemTransform: {fileID: 888820205}
+    difficulty: 2
   snapSpeed: 5
   highlightScale: 1.2
   spacing: 170
+  inputUp: 100
+  inputDown: 106
+  inputSelect: 107
+  inputBack: 102
   imagePreview: {fileID: 817046300}
   audioSourcePreview: {fileID: 1028464766}
   songTitle: {fileID: 1761576633}
