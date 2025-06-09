@@ -46,9 +46,11 @@ public class DiagonalScrollSnap : MonoBehaviour
     public KeyCode inputBack;
 
     [Header("Menu Preview")]
-    public Image imagePreview;
+    public Image imageBG;
+    public SpriteRenderer imageAlbum;
     public AudioSource audioSourcePreview;
     public Text songTitle;
+    public Text songDificulity;
     public Text songCredit;
 
     private int currentIndex = 0;
@@ -205,10 +207,12 @@ public class DiagonalScrollSnap : MonoBehaviour
 
         if (dataHolder != null && dataHolder.beatmapData != null)
         {
-            if (imagePreview != null) imagePreview.sprite = dataHolder.beatmapData.image;
+            if (imageAlbum != null) imageAlbum.sprite = dataHolder.beatmapData.imageForAlbum;
+            if (imageBG != null) imageBG.sprite = dataHolder.beatmapData.imageForBG;
             if (audioSourcePreview != null) audioSourcePreview.clip = dataHolder.beatmapData.audioClipForMenu;
             if (songCredit != null) songCredit.text = dataHolder.beatmapData.songCredit;
             if (songTitle != null) songTitle.text = dataHolder.beatmapData.songTitle;
+            if (songDificulity != null) songDificulity.text = dataHolder.beatmapData.songDifficulty;
         }
     }
 

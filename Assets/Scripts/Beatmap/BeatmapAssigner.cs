@@ -39,13 +39,15 @@ public class BeatmapAssigner : MonoBehaviour
         // Assign Sprite ke SpriteRenderer (jika ada)
         if (targetSpriteRenderer != null)
         {
-            targetSpriteRenderer.sprite = beatmapData.image;
+            targetSpriteRenderer.sprite = beatmapData.imageForAlbum;
+            targetSpriteRenderer.sprite = beatmapData.imageForBG;
         }
 
         // Assign Sprite ke UI Image (jika ada)
         if (targetUIImage != null)
         {
-            targetUIImage.sprite = beatmapData.image;
+            targetUIImage.sprite = beatmapData.imageForAlbum;
+            targetUIImage.sprite = beatmapData.imageForBG;
         }
 
         // Assign AudioClip ke AudioSource (jika ada)

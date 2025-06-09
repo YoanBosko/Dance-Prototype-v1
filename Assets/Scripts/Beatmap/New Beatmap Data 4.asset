@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edabd391fbb10c64191cf81ca8cdac5b, type: 3}
   m_Name: New Beatmap Data 4
   m_EditorClassIdentifier: 
-  image: {fileID: 21300000, guid: 90df92ec8034f0d41a4b14d0ecf08008, type: 3}
-  audioClip: {fileID: 8300000, guid: 5b1591b73b5afe041aa09b0ffbd4fcaf, type: 3}
-  videoClip: {fileID: 0}
-  midiFileHit: TAP (1).mid
-  midiFileHold: HOLD (1).mid
+  imageForAlbum: {fileID: 0}
+  imageForBG: {fileID: 21300000, guid: 90df92ec8034f0d41a4b14d0ecf08008, type: 3}
+  audioClipForMenu: {fileID: 0}
+  audioClipForGameplay: {fileID: 8300000, guid: 3c7296d4db86f5945a4fc43819913deb, type: 3}
+  videoClip: {fileID: 32900000, guid: e1c83a9cd8f3eaa45943319f88e01d66, type: 3}
+  songTitle: In The Quiet
+  songDifficulty: Easy
+  songCredit: Kaleb
+  midiFileHit: tapdemo.mid
+  midiFileHold: holddemo.mid

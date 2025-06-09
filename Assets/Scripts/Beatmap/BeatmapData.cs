@@ -6,7 +6,8 @@ using UnityEngine.Video;
 public class BeatmapData : ScriptableObject
 {
     [Header("Image Asset")]
-    public Sprite image;
+    public Sprite imageForAlbum;
+    public Sprite imageForBG;
 
     [Header("Audio Asset")]
     public AudioClip audioClipForMenu;

@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edabd391fbb10c64191cf81ca8cdac5b, type: 3}
   m_Name: New Beatmap Data 5
   m_EditorClassIdentifier: 
-  image: {fileID: 21300000, guid: ed7f0b8d4f2a7564fabe776958c98d70, type: 3}
-  audioClip: {fileID: 8300000, guid: 42fff4ded2e715848a66dfe01e400cd3, type: 3}
+  imageForAlbum: {fileID: 21300000, guid: 4b6cc33b6b80c8c42b745a45e252a367, type: 3}
+  imageForBG: {fileID: 21300000, guid: a0f975564e9b27946a593930ab91dbc6, type: 3}
+  audioClipForMenu: {fileID: 0}
+  audioClipForGameplay: {fileID: 8300000, guid: b3c30411380f35248824b9cb7b506439, type: 3}
   videoClip: {fileID: 0}
-  midiFileHit: TAP (1).mid
-  midiFileHold: HOLD (1).mid
+  songTitle: Lights Down Low
+  songDifficulty: Easy
+  songCredit: Kaleb
+  midiFileHit: tapkaleblima.mid
+  midiFileHold: holdkaleblima.mid

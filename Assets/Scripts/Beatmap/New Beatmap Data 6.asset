@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edabd391fbb10c64191cf81ca8cdac5b, type: 3}
   m_Name: New Beatmap Data 6
   m_EditorClassIdentifier: 
-  image: {fileID: 21300000, guid: 9300880401a1af84f88840655b9fa65d, type: 3}
-  audioClip: {fileID: 8300000, guid: f3762df9d9ec200479917221c0418712, type: 3}
+  imageForAlbum: {fileID: 0}
+  imageForBG: {fileID: 21300000, guid: 0fb1b4ac48bd5a74794c50468bdc75f6, type: 3}
+  audioClipForMenu: {fileID: 0}
+  audioClipForGameplay: {fileID: 8300000, guid: c83d61bbec085954d9f2a7d8666d7b0a, type: 3}
   videoClip: {fileID: 0}
-  midiFileHit: TAP (1).mid
-  midiFileHold: HOLD (1).mid
+  songTitle: Untitled
+  songDifficulty: Hard
+  songCredit: Afif
+  midiFileHit: tapafifsatu.mid
+  midiFileHold: holdafifsatu.mid

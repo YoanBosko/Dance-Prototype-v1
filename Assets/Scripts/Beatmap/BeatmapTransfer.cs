@@ -19,7 +19,8 @@ public class BeatmapTransfer : MonoBehaviour
             return;
         }
 
-        targetAsset.image = sourceAsset.image;
+        targetAsset.imageForAlbum = sourceAsset.imageForAlbum;
+        targetAsset.imageForBG = sourceAsset.imageForBG;
         targetAsset.audioClipForGameplay = sourceAsset.audioClipForGameplay;
         targetAsset.videoClip = sourceAsset.videoClip;
         targetAsset.midiFileHit = sourceAsset.midiFileHit;

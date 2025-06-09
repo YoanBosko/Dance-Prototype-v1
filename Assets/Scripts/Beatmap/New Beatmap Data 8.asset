@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edabd391fbb10c64191cf81ca8cdac5b, type: 3}
   m_Name: New Beatmap Data 8
   m_EditorClassIdentifier: 
-  image: {fileID: 21300000, guid: 1d2c687802c41c6409ea349e771e430e, type: 3}
-  audioClip: {fileID: 8300000, guid: 3b4f95e314de0c049a6d07b58164a460, type: 3}
+  imageForAlbum: {fileID: 21300000, guid: d7c9e586711bd494d8d2cf7b6d9e39d5, type: 3}
+  imageForBG: {fileID: 21300000, guid: 7458c69ff56cfd743b1e1efb53b76201, type: 3}
+  audioClipForMenu: {fileID: 0}
+  audioClipForGameplay: {fileID: 8300000, guid: 5677ac35bc5fe4346bfe704f206c99cb, type: 3}
   videoClip: {fileID: 0}
-  midiFileHit: TAP (1).mid
-  midiFileHold: HOLD (1).mid
+  songTitle: Flash Like Diamonds
+  songDifficulty: Medium
+  songCredit: Afif
+  midiFileHit: Instrument(4).mid
+  midiFileHold: kosonghold.mid
