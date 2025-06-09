@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edabd391fbb10c64191cf81ca8cdac5b, type: 3}
   m_Name: New Beatmap Data 2
   m_EditorClassIdentifier: 
-  image: {fileID: 21300000, guid: f6ed6d18e7ea7dd498ea457421c64cf1, type: 3}
-  audioClipForMenu: {fileID: 8300000, guid: 7b2487dc53293eb4cb798ce63843058c, type: 3}
-  audioClipForGameplay: {fileID: 8300000, guid: 610468ef56848ab40b8797f011e8339d, type: 3}
-  videoClip: {fileID: 0}
-  songTitle: Bubble Pop
-  songDifficulty: Medium
-  songCredit: as
-  midiFileHit: Tap Bubble Pop.mid
-  midiFileHold: Hold Bubble Pop.mid
+  image: {fileID: 21300000, guid: 76ba1a50b66c58e4caefb6b3a003b79f, type: 3}
+  audioClipForMenu: {fileID: 8300000, guid: 90d8d27fb41e3f84b8d0db375e33f856, type: 3}
+  audioClipForGameplay: {fileID: 8300000, guid: 58c09afa6408fa3438c0766cc9467e39, type: 3}
+  videoClip: {fileID: 32900000, guid: 0ce3a21e8b28c37488e393cfa0e49724, type: 3}
+  songTitle: Bang It Out
+  songDifficulty: Hard
+  songCredit: Suno
+  midiFileHit: tapkalebsatu.mid
+  midiFileHold: holdkalebsatu.mid
