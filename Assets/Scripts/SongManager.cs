@@ -80,6 +80,14 @@ public class SongManager : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Debug.Log((double)Instance.audioSource.timeSamples / Instance.audioSource.clip.frequency);
+        }
+    }
+
     private IEnumerator LoadAudioAndMidi()
     {
         string audioPath = "file://" + SongDataBridge.songPath;

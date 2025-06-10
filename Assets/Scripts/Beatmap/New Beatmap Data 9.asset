@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edabd391fbb10c64191cf81ca8cdac5b, type: 3}
   m_Name: New Beatmap Data 9
   m_EditorClassIdentifier: 
-  image: {fileID: 21300000, guid: d6dfecb6b2d26e3428940d816f817c9f, type: 3}
-  audioClip: {fileID: 8300000, guid: 1e83adc81cc7b7b429ccf107d66a870c, type: 3}
+  imageForAlbum: {fileID: 0}
+  imageForBG: {fileID: 0}
+  audioClipForMenu: {fileID: 8300000, guid: 1381901235dc0e741b66b08ccf643ec2, type: 3}
+  audioClipForGameplay: {fileID: 8300000, guid: 1381901235dc0e741b66b08ccf643ec2, type: 3}
   videoClip: {fileID: 0}
-  midiFileHit: TAP (1).mid
-  midiFileHold: HOLD (1).mid
+  songTitle: CanCan
+  songDifficulty: Easy
+  songCredit: 
+  midiFileHit: TapCanCan.mid
+  midiFileHold: HoldCanCan.mid

@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edabd391fbb10c64191cf81ca8cdac5b, type: 3}
   m_Name: New Beatmap Data 10
   m_EditorClassIdentifier: 
-  image: {fileID: 21300000, guid: 867aae30c7a65dd4594ff4466fc32a2b, type: 3}
-  audioClip: {fileID: 8300000, guid: bd87b666bbef3e8439bc86786b9d5d39, type: 3}
+  imageForAlbum: {fileID: 0}
+  imageForBG: {fileID: 0}
+  audioClipForMenu: {fileID: 8300000, guid: 37ba7b9f279a2d64c927354b2dc189bd, type: 3}
+  audioClipForGameplay: {fileID: 8300000, guid: 37ba7b9f279a2d64c927354b2dc189bd, type: 3}
   videoClip: {fileID: 0}
-  midiFileHit: we_made_a_chart_pog.mid
-  midiFileHold: hold trial.mid
+  songTitle: Tetris
+  songDifficulty: Easy
+  songCredit: 
+  midiFileHit: TapTetris.mid
+  midiFileHold: HoldTetris.mid
