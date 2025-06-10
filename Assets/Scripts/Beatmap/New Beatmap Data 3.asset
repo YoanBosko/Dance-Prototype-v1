@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edabd391fbb10c64191cf81ca8cdac5b, type: 3}
   m_Name: New Beatmap Data 3
   m_EditorClassIdentifier: 
-  imageForAlbum: {fileID: 0}
-  imageForBG: {fileID: 21300000, guid: ed7f0b8d4f2a7564fabe776958c98d70, type: 3}
+  imageForAlbum: {fileID: 21300000, guid: 24ccd7ff8ecc4a447abf7dfaf4849d3e, type: 3}
+  imageForBG: {fileID: 21300000, guid: d078d8e16f626cc419ebb7870f0ad7f9, type: 3}
   audioClipForMenu: {fileID: 0}
   audioClipForGameplay: {fileID: 8300000, guid: 9c7fc1fcb7835a240a756511eefe925b, type: 3}
   videoClip: {fileID: 32900000, guid: cb5661e512d6c9f47a32c8d88070bbb1, type: 3}
