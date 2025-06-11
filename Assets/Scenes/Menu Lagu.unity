@@ -2855,6 +2855,7 @@ MonoBehaviour:
   songTitle: {fileID: 0}
   songDifficulty: {fileID: 0}
   isReversedAudio: 0
+  videoClipMeme: {fileID: 0}
 --- !u!114 &1037014581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2953,13 +2954,13 @@ MonoBehaviour:
   audioSource: {fileID: 1208842347}
   keySoundPairs:
   - key: 100
-    soundClip: {fileID: 8300000, guid: d8023804e086b204d8d0ed35e6eab074, type: 3}
+    soundClip: {fileID: 8300000, guid: 048ce490934f61a4986a68a28cfe0267, type: 3}
   - key: 102
-    soundClip: {fileID: 8300000, guid: a34ed07621549f34092bdd84e8ac571f, type: 3}
+    soundClip: {fileID: 8300000, guid: 79c50b1fd9f2eec4590a99ad65f13f10, type: 3}
   - key: 106
-    soundClip: {fileID: 8300000, guid: 935ced318ecad0f4eb26b1c27e5b5c01, type: 3}
+    soundClip: {fileID: 8300000, guid: 048ce490934f61a4986a68a28cfe0267, type: 3}
   - key: 107
-    soundClip: {fileID: 8300000, guid: 76b1d1de4a3850046abf0d7e71dda7bb, type: 3}
+    soundClip: {fileID: 8300000, guid: c66d05f8bc4485e418eec7f03d47a083, type: 3}
 --- !u!82 &1208842347
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3488,6 +3489,7 @@ MonoBehaviour:
   songTitle: {fileID: 0}
   songDifficulty: {fileID: 0}
   isReversedAudio: 0
+  videoClipMeme: {fileID: 0}
 --- !u!1001 &1495313854
 PrefabInstance:
   m_ObjectHideFlags: 0
