@@ -48,7 +48,8 @@ MonoBehaviour:
   image: {fileID: 21300000, guid: e60733755e8c1f747957eb9c697267dc, type: 3}
   cardTitleText: HP Hide
   cardDescriptionText: 
-  resultVideo: {fileID: 32900000, guid: 9a66bd67184876747a8cfa830d73d149, type: 3}
+  revealVideo: {fileID: 32900000, guid: ce4032a9b214cfe40a148cca0de94524, type: 3}
+  loopingResultVideo: {fileID: 32900000, guid: 93abc5576c660614c95a4914b9596aac, type: 3}
 --- !u!114 &5109198427252269423
 MonoBehaviour:
   m_ObjectHideFlags: 0
