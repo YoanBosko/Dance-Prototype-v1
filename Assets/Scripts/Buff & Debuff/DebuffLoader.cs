@@ -12,6 +12,9 @@ public class DebuffLoader : MonoBehaviour
     public string cardDescriptionText;
     
     //videoplayer
-    [Tooltip("Video yang akan diputar setelah roulette selesai untuk debuff ini.")]
-    public VideoClip resultVideo;
+    [Tooltip("Video pengungkapan (reveal) yang akan diputar sekali setelah roulette.")]
+    public VideoClip revealVideo;
+
+    [Tooltip("Video hasil yang akan di-loop setelah video pengungkapan selesai.")]
+    public VideoClip loopingResultVideo;
 }

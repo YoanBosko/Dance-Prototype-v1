@@ -60,4 +60,5 @@ MonoBehaviour:
   image: {fileID: 21300000, guid: 58339c6d7c47c7443aa5166632d94acc, type: 3}
   cardTitleText: Flashbang
   cardDescriptionText: 
-  resultVideo: {fileID: 32900000, guid: 9a66bd67184876747a8cfa830d73d149, type: 3}
+  revealVideo: {fileID: 32900000, guid: 6fe6f28cf8e059149b38af29a8807730, type: 3}
+  loopingResultVideo: {fileID: 32900000, guid: 3d9d5e2599f8c5a4b8dbddfd9200574f, type: 3}
