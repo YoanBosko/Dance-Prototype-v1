@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageForAlbum: {fileID: 21300000, guid: 0ba7a11be22f624488d5ada54437f4f7, type: 3}
   imageForBG: {fileID: 21300000, guid: ae5b12ed56bb2d24cb05c4270ff6f036, type: 3}
-  audioClipForMenu: {fileID: 0}
+  audioClipForMenu: {fileID: 8300000, guid: e8a3198eb2ca74242ab4601a548e0839, type: 3}
   audioClipForGameplay: {fileID: 8300000, guid: 3c7296d4db86f5945a4fc43819913deb, type: 3}
-  videoClip: {fileID: 32900000, guid: e1c83a9cd8f3eaa45943319f88e01d66, type: 3}
+  audioClipForReverse: {fileID: 0}
+  videoClip: {fileID: 32900000, guid: 59d46beb9f607634fa0ec43764476ea3, type: 3}
   songTitle: In The Quiet
   songDifficulty: Easy
   songCredit: Kaleb
