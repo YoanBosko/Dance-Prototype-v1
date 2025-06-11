@@ -11,6 +11,9 @@ TagManager:
   - LaneForHide
   - Flashbang
   - VideoPlayerForMeme
+  - UpperShadow
+  - LowerShadow
+  - Shadow
   layers:
   - Default
   - TransparentFX

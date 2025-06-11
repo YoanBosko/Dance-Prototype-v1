@@ -3,10 +3,8 @@ using System.Net.Mime;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using UnityEditor.SearchService;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
-using UnityEditor.PackageManager;
 
 public class Confirm : MonoBehaviour
 {
