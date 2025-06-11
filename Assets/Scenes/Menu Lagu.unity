@@ -566,6 +566,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: e79e06005f48b6841921b853ff90beca, type: 3}
+    - target: {fileID: 6379431486785682982, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 18f92657f8da18a41984e51a0ad0256e, type: 3}
     - target: {fileID: 6436415254783550363, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
       propertyPath: m_Name
       value: Lagu7
@@ -575,8 +579,20 @@ PrefabInstance:
       value: lagu7
       objectReference: {fileID: 0}
     - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 151
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 151
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 25.599998
+      value: 74.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -75.9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -1630,7 +1646,11 @@ PrefabInstance:
     - target: {fileID: 3778702073439889678, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: d7c9e586711bd494d8d2cf7b6d9e39d5, type: 3}
+      objectReference: {fileID: 21300000, guid: bc075eecc1863224585f852b520014d9, type: 3}
+    - target: {fileID: 6379431486785682982, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 18f92657f8da18a41984e51a0ad0256e, type: 3}
     - target: {fileID: 6436415254783550363, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
       propertyPath: m_Name
       value: Lagu8
@@ -1644,8 +1664,20 @@ PrefabInstance:
       value: lagu8
       objectReference: {fileID: 0}
     - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 151
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 151
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 25.599998
+      value: 74.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -74.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -2295,7 +2327,11 @@ PrefabInstance:
     - target: {fileID: 3778702073439889678, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 89e9de339a63d044c80f755d77b713c5, type: 3}
+      objectReference: {fileID: 21300000, guid: bb4144c369ca3ae49b21332e82d5b89f, type: 3}
+    - target: {fileID: 6379431486785682982, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: d0893374bcc444c41ba767693936e7a4, type: 3}
     - target: {fileID: 6436415254783550363, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
       propertyPath: m_Name
       value: Lagu10
@@ -2305,8 +2341,20 @@ PrefabInstance:
       value: lagu10
       objectReference: {fileID: 0}
     - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 159.47
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 159.47
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 25.599998
+      value: 75.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -78.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -3505,7 +3553,11 @@ PrefabInstance:
     - target: {fileID: 3778702073439889678, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: ad8c556fa982954468466198a96bd742, type: 3}
+      objectReference: {fileID: 21300000, guid: c4bb587d0d8e0584f91d79116e0b578e, type: 3}
+    - target: {fileID: 6379431486785682982, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: d0893374bcc444c41ba767693936e7a4, type: 3}
     - target: {fileID: 6436415254783550363, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
       propertyPath: m_Name
       value: Lagu9
@@ -3515,8 +3567,20 @@ PrefabInstance:
       value: lagu9
       objectReference: {fileID: 0}
     - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 161.19
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 159.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 25.599998
+      value: 75.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -80.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -4024,7 +4088,11 @@ PrefabInstance:
     - target: {fileID: 3778702073439889678, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 89e9de339a63d044c80f755d77b713c5, type: 3}
+      objectReference: {fileID: 21300000, guid: cf08b99b29f02a045b4fd79b5e84d1b1, type: 3}
+    - target: {fileID: 6379431486785682982, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b91326bb021464745b7c17d2b791a40c, type: 3}
     - target: {fileID: 6436415254783550363, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
       propertyPath: m_Name
       value: Lagu11
@@ -4034,8 +4102,20 @@ PrefabInstance:
       value: lagu10
       objectReference: {fileID: 0}
     - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 151
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 151
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 25.599998
+      value: 77.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -75.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -4885,6 +4965,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1850040816}
     m_Modifications:
+    - target: {fileID: 6450299881722543256, guid: d9678d24c01936b4f87aabd584507b62, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b91326bb021464745b7c17d2b791a40c, type: 3}
     - target: {fileID: 7345387430760739178, guid: d9678d24c01936b4f87aabd584507b62, type: 3}
       propertyPath: m_Name
       value: Lagu1
@@ -5103,9 +5187,25 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3565115203782886560, guid: cb14bb3df9695fa47b1b74a866c3eb61, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 25.599998
+      propertyPath: m_SizeDelta.x
+      value: 151
       objectReference: {fileID: 0}
+    - target: {fileID: 3565115203782886560, guid: cb14bb3df9695fa47b1b74a866c3eb61, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 151
+      objectReference: {fileID: 0}
+    - target: {fileID: 3565115203782886560, guid: cb14bb3df9695fa47b1b74a866c3eb61, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 75.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3565115203782886560, guid: cb14bb3df9695fa47b1b74a866c3eb61, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -75.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4635913137842764033, guid: cb14bb3df9695fa47b1b74a866c3eb61, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 18f92657f8da18a41984e51a0ad0256e, type: 3}
     - target: {fileID: 7887138664933580809, guid: cb14bb3df9695fa47b1b74a866c3eb61, type: 3}
       propertyPath: m_Name
       value: Lagu3
@@ -5214,7 +5314,11 @@ PrefabInstance:
     - target: {fileID: 3778702073439889678, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 64a5ad8ba15dbd24da608c429a575271, type: 3}
+      objectReference: {fileID: 21300000, guid: 9b19f7da087b36445b51a1d264ddef84, type: 3}
+    - target: {fileID: 6379431486785682982, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b91326bb021464745b7c17d2b791a40c, type: 3}
     - target: {fileID: 6436415254783550363, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
       propertyPath: m_Name
       value: Lagu6
@@ -5248,8 +5352,20 @@ PrefabInstance:
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 25.599998
+      value: 74.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978810542425050513, guid: ed7bf421c910365499cb5a45ab711f8b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -75
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -5394,6 +5510,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9013807461998812458, guid: a666aa9e632b20e4ca6f641bfa75af07, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b91326bb021464745b7c17d2b791a40c, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 7999715769020014750, guid: a666aa9e632b20e4ca6f641bfa75af07, type: 3}
@@ -5411,6 +5531,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1850040816}
     m_Modifications:
+    - target: {fileID: 346625383853603392, guid: c71a932d4afa2394497e3f4fbe55e2d6, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: d0893374bcc444c41ba767693936e7a4, type: 3}
     - target: {fileID: 1961356984458130315, guid: c71a932d4afa2394497e3f4fbe55e2d6, type: 3}
       propertyPath: m_Name
       value: Lagu5
@@ -5422,7 +5546,7 @@ PrefabInstance:
     - target: {fileID: 2921534366934205954, guid: c71a932d4afa2394497e3f4fbe55e2d6, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 4b6cc33b6b80c8c42b745a45e252a367, type: 3}
+      objectReference: {fileID: 21300000, guid: b99af5989496d494c8b60a7e2b3f6db8, type: 3}
     - target: {fileID: 4026221830208586109, guid: c71a932d4afa2394497e3f4fbe55e2d6, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -5503,6 +5627,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6447727283102446638, guid: c71a932d4afa2394497e3f4fbe55e2d6, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 163.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 6447727283102446638, guid: c71a932d4afa2394497e3f4fbe55e2d6, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 163.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 6447727283102446638, guid: c71a932d4afa2394497e3f4fbe55e2d6, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 74.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6447727283102446638, guid: c71a932d4afa2394497e3f4fbe55e2d6, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -81
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 4889397624323390164, guid: c71a932d4afa2394497e3f4fbe55e2d6, type: 3}
@@ -5520,9 +5660,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1850040816}
     m_Modifications:
+    - target: {fileID: 99257632128929020, guid: c34843d61a8f47640a6efa374dd87b5f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: d0893374bcc444c41ba767693936e7a4, type: 3}
+    - target: {fileID: 4604489130265578863, guid: c34843d61a8f47640a6efa374dd87b5f, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 158.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 4604489130265578863, guid: c34843d61a8f47640a6efa374dd87b5f, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 158.07
+      objectReference: {fileID: 0}
     - target: {fileID: 4604489130265578863, guid: c34843d61a8f47640a6efa374dd87b5f, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 25.099998
+      value: 75.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4604489130265578863, guid: c34843d61a8f47640a6efa374dd87b5f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -79.92
       objectReference: {fileID: 0}
     - target: {fileID: 5590891701396238229, guid: c34843d61a8f47640a6efa374dd87b5f, type: 3}
       propertyPath: m_Name
@@ -5641,7 +5797,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 45}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1415, y: -610}
+  m_AnchoredPosition: {x: 1403.8, y: -602.2}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8778153620308077536
