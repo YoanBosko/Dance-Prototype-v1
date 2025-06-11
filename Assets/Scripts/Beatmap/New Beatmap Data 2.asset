@@ -16,7 +16,7 @@ MonoBehaviour:
   imageForBG: {fileID: 21300000, guid: 7a152006e5f3fb34d8b61edfec466fa1, type: 3}
   audioClipForMenu: {fileID: 8300000, guid: 90d8d27fb41e3f84b8d0db375e33f856, type: 3}
   audioClipForGameplay: {fileID: 8300000, guid: 58c09afa6408fa3438c0766cc9467e39, type: 3}
-  audioClipForReverse: {fileID: 0}
+  audioClipForReverse: {fileID: 8300000, guid: f199f95b898a75049989aae6856d0277, type: 3}
   videoClip: {fileID: 32900000, guid: ccfc1fb9478e2454dbe386d545a68b55, type: 3}
   songTitle: Bang It Out
   songDifficulty: Hard
