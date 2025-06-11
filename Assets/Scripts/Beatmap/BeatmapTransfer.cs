@@ -27,6 +27,7 @@ public class BeatmapTransfer : MonoBehaviour
         targetAsset.midiFileHold = sourceAsset.midiFileHold;
         targetAsset.songDifficulty = sourceAsset.songDifficulty;
         targetAsset.songTitle = sourceAsset.songTitle;
+        targetAsset.audioClipForReverse = sourceAsset.audioClipForReverse;
 
         Debug.Log("MediaAsset data copied from source to target.");
 

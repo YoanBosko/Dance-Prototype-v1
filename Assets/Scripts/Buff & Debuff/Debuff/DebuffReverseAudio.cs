@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[DefaultExecutionOrder(-3)]
+[DefaultExecutionOrder(-15)]
 public class DebuffReverseAudio : DebuffBase
 {
     public string targetTag = "VideoPlayerForMeme";
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         ActivateDebuff();
     }
