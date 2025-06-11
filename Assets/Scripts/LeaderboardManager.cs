@@ -262,7 +262,7 @@ public class LeaderboardManager : MonoBehaviour
         for (int i = 0; i < displayCount; i++)
         {
             if (rankUiTexts.Length > i && rankUiTexts[i] != null) rankUiTexts[i].text = (i + 1).ToString() + ".";
-            if (nameUiTexts.Length > i && nameUiTexts[i] != null) nameUiTexts[i].text = topEntries[i].playerName;
+            if (nameUiTexts.Length > i && nameUiTexts[i] != null) nameUiTexts[i].text = "Player: " + topEntries[i].playerName;
             if (scoreUiTexts.Length > i && scoreUiTexts[i] != null) scoreUiTexts[i].text = topEntries[i].score.ToString();
         }
 
