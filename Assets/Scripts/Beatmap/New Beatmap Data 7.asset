@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageForAlbum: {fileID: 21300000, guid: e79e06005f48b6841921b853ff90beca, type: 3}
   imageForBG: {fileID: 21300000, guid: ec64dfccae75a25418ebb27fa0164c43, type: 3}
-  audioClipForMenu: {fileID: 0}
+  audioClipForMenu: {fileID: 8300000, guid: ed06e1622c2fbd44d815fcf95113bccc, type: 3}
   audioClipForGameplay: {fileID: 8300000, guid: 157040ca77c0f57468d7e989c5119035, type: 3}
+  audioClipForReverse: {fileID: 0}
   videoClip: {fileID: 0}
   songTitle: Close Your Eyes
   songDifficulty: Medium

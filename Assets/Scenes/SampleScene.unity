@@ -38,6 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5156,10 +5157,11 @@ MonoBehaviour:
   targetSpriteRenderer: {fileID: 0}
   targetUIImage: {fileID: 0}
   targetAudioSource: {fileID: 159419516}
-  targetVideoPlayer: {fileID: 0}
+  targetVideoPlayer: {fileID: 1814592990}
   songManager: {fileID: 1787680572}
   songTitle: {fileID: 0}
   songDifficulty: {fileID: 0}
+  isReversedAudio: 0
 --- !u!4 &1685692564
 Transform:
   m_ObjectHideFlags: 0

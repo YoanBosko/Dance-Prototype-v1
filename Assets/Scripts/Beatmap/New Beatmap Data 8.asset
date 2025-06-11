@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageForAlbum: {fileID: 21300000, guid: d7c9e586711bd494d8d2cf7b6d9e39d5, type: 3}
   imageForBG: {fileID: 21300000, guid: 7458c69ff56cfd743b1e1efb53b76201, type: 3}
-  audioClipForMenu: {fileID: 0}
+  audioClipForMenu: {fileID: 8300000, guid: 0367f559267a6a143ab5470c2bbe85cd, type: 3}
   audioClipForGameplay: {fileID: 8300000, guid: 5677ac35bc5fe4346bfe704f206c99cb, type: 3}
+  audioClipForReverse: {fileID: 0}
   videoClip: {fileID: 0}
   songTitle: Flash Like Diamonds
   songDifficulty: Medium
