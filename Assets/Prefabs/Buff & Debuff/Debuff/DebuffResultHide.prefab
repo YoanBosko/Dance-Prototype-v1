@@ -48,7 +48,8 @@ MonoBehaviour:
   image: {fileID: 21300000, guid: bd65aa3fe4b61704291d7d52600081e2, type: 3}
   cardTitleText: Result Hide
   cardDescriptionText: Menghilangkan indikator tipe hit (Perfect, Good, Bad, Miss)
-  resultVideo: {fileID: 32900000, guid: 9a66bd67184876747a8cfa830d73d149, type: 3}
+  revealVideo: {fileID: 32900000, guid: 55cbf7c4df2ed754bbd4449c5dc5ac91, type: 3}
+  loopingResultVideo: {fileID: 32900000, guid: f5def0bed9b537d41be1e1e112bc8bd2, type: 3}
 --- !u!114 &-2345648805606761251
 MonoBehaviour:
   m_ObjectHideFlags: 0

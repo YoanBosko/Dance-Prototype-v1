@@ -48,7 +48,8 @@ MonoBehaviour:
   image: {fileID: 21300000, guid: 5421db59ffbeef24baf3ff50806fd962, type: 3}
   cardTitleText: Lane Disappear
   cardDescriptionText: 
-  resultVideo: {fileID: 32900000, guid: 9a66bd67184876747a8cfa830d73d149, type: 3}
+  revealVideo: {fileID: 32900000, guid: ee4a257e6a07e5e4ea1fe23f6e7afad3, type: 3}
+  loopingResultVideo: {fileID: 32900000, guid: cda9fdde830a8c745b33c6bf9e7373c6, type: 3}
 --- !u!114 &-4366302886717782494
 MonoBehaviour:
   m_ObjectHideFlags: 0
