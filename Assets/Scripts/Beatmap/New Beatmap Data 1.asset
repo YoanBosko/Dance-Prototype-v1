@@ -21,5 +21,5 @@ MonoBehaviour:
   songTitle: Bubble Pop
   songDifficulty: Hard
   songCredit: Suno
-  midiFileHit: tapkalebdua.mid
-  midiFileHold: holdkalebdua.mid
+  midiFileHit: tapbubblepop.mid
+  midiFileHold: holdbubblepop.mid

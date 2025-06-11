@@ -15,7 +15,7 @@ MonoBehaviour:
   imageForAlbum: {fileID: 0}
   imageForBG: {fileID: 21300000, guid: 0fb1b4ac48bd5a74794c50468bdc75f6, type: 3}
   audioClipForMenu: {fileID: 0}
-  audioClipForGameplay: {fileID: 8300000, guid: c83d61bbec085954d9f2a7d8666d7b0a, type: 3}
+  audioClipForGameplay: {fileID: 8300000, guid: 90928a76ac4a225428863f6e3ec5d9ed, type: 3}
   videoClip: {fileID: 0}
   songTitle: Untitled
   songDifficulty: Hard
