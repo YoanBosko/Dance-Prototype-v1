@@ -10,6 +10,7 @@ TagManager:
   - HPForHide
   - LaneForHide
   - Flashbang
+  - VideoPlayerForMeme
   layers:
   - Default
   - TransparentFX

@@ -479,7 +479,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 550, y: 0, z: 0}
   - {x: -550, y: 0, z: 0}
-  menuButtons: []
+  beatmapData: {fileID: 11400000, guid: 67c147d45c2bf214e9837477b7259be5, type: 2}
   highlightScale: 1.75
   transitionSpeed: 10
   winStateToDebuff: {fileID: 156317326}

@@ -12,6 +12,7 @@ public class BeatmapData : ScriptableObject
     [Header("Audio Asset")]
     public AudioClip audioClipForMenu;
     public AudioClip audioClipForGameplay;
+    public AudioClip audioClipForReverse;
 
     [Header("Video Asset")]
     public VideoClip videoClip;

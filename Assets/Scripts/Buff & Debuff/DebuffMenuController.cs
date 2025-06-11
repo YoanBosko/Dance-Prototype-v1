@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.SceneManagement;
 
-// Pastikan kelas WeightedBuffPrefab sudah ada dan dapat diakses oleh skrip ini.
+// Pastikan kelas WeightedBuffPrefab dan enum Rarity sudah ada dan dapat diakses
+// public enum Rarity { Common, Epic, Legendary }
+// [System.Serializable] public class WeightedBuffPrefab { ... }
 
 public class DebuffMenuController : MonoBehaviour
 {
@@ -71,17 +73,15 @@ public class DebuffMenuController : MonoBehaviour
                     Debug.LogError("GameManager.Instance tidak ditemukan!");
                 }
 
-                // Panggil ChangeScene dari WinState untuk transisi yang benar
                 if (winState != null)
                 {
-                    // Nama scene bisa Anda atur di sini, saya menggunakan "BuffPicker" sesuai skrip lama Anda
-                    //winState.ChangeScene("BuffPicker");
+                    // Menggunakan nama scene dari skrip lama Anda
                     winState.ChangeScene("Menu Lagu");
                 }
                 else
                 {
                     Debug.LogError("WinState belum di-assign! Memuat scene secara langsung.", this);
-                    SceneManager.LoadScene("BuffPicker"); // Fallback jika WinState tidak ada
+                    SceneManager.LoadScene("Menu Lagu"); // Fallback
                 }
             }
             else
@@ -108,17 +108,15 @@ public class DebuffMenuController : MonoBehaviour
         }
 
         // Mulai memutar video pertama (roulette)
-        canPressKey = false; // Kunci input pemain
+        canPressKey = false;
         videoPlayer.clip = rouletteVideo;
-        videoPlayer.isLooping = false; // Pastikan video roulette tidak looping
+        videoPlayer.isLooping = false;
         videoPlayer.Play();
         Debug.Log("Memutar video roulette...");
     }
 
-    // Fungsi ini akan dipanggil secara otomatis oleh event 'loopPointReached' dari VideoPlayer
     void OnVideoFinished(VideoPlayer source)
     {
-        // Cek apakah video yang baru saja selesai adalah video roulette
         if (source.clip == rouletteVideo)
         {
             Debug.Log("Video roulette selesai. Memutar video hasil...");
@@ -126,63 +124,73 @@ public class DebuffMenuController : MonoBehaviour
             DebuffLoader debuffLoader = selectedWeightedDebuff.prefab.GetComponent<DebuffLoader>();
             if (debuffLoader != null && debuffLoader.resultVideo != null)
             {
-                // Ganti klip ke video hasil dari prefab debuff yang terpilih
                 source.clip = debuffLoader.resultVideo;
-                source.isLooping = true; // Buat video hasil looping agar tetap tampil
+                source.isLooping = true;
                 source.Play();
 
-                // Izinkan pemain menekan tombol 'K' SEKARANG
                 canPressKey = true;
                 Debug.Log("Input diizinkan. Pemain bisa menekan 'K'.");
             }
             else
             {
                 Debug.LogError($"Prefab '{selectedWeightedDebuff.prefab.name}' tidak memiliki komponen DebuffLoader atau 'resultVideo'-nya kosong.", this);
-                // Jika tidak ada video hasil, izinkan input agar tidak macet
                 canPressKey = true;
             }
         }
-        // Jika video yang selesai bukan video roulette (berarti video hasil yang sedang looping),
-        // tidak perlu melakukan apa-apa, biarkan saja terus looping.
     }
 
-    // Fungsi GetRandomWeightedIndex tetap sama
-    private int GetRandomWeightedIndex(List<WeightedBuffPrefab> weightedItems)
+    /// <summary>
+    /// Mengonversi nilai enum Rarity menjadi bobot numerik.
+    /// </summary>
+    private float GetWeightFromRarity(Rarity rarity)
     {
-        if (weightedItems == null || weightedItems.Count == 0)
+        switch (rarity)
         {
-            Debug.LogWarning("GetRandomWeightedIndex: Daftar item kosong.");
+            case Rarity.Common: return 50f;
+            case Rarity.Epic: return 35f;
+            case Rarity.Legendary: return 15f;
+            default: return 1f;
+        }
+    }
+
+    /// <summary>
+    /// Memilih indeks acak dari daftar berdasarkan Rarity.
+    /// </summary>
+    private int GetRandomWeightedIndex(List<WeightedBuffPrefab> weightedList)
+    {
+        if (weightedList == null || weightedList.Count == 0) return -1;
+
+        // Buat daftar sementara yang berisi item dan bobot kalkulasinya
+        var calculatedWeights = weightedList
+            .Select(item => new {
+                Item = item,
+                Weight = GetWeightFromRarity(item.rarity) // Menggunakan fungsi helper baru
+            })
+            .Where(x => x.Item.prefab != null && x.Weight > 0)
+            .ToList();
+
+        if (calculatedWeights.Count == 0)
+        {
+            Debug.LogWarning("Tidak ada item yang bisa dipilih setelah kalkulasi bobot.");
             return -1;
         }
 
-        List<WeightedBuffPrefab> validItems = weightedItems.Where(item => item.prefab != null && item.weight > 0).ToList();
-        if (validItems.Count == 0)
-        {
-            Debug.LogWarning("GetRandomWeightedIndex: Tidak ada item valid (prefab non-null dengan bobot > 0) untuk dipilih.");
-            return -1;
-        }
-
-        float totalWeight = validItems.Sum(item => item.weight);
-
-        if (totalWeight <= 0f)
-        {
-            Debug.LogWarning("GetRandomWeightedIndex: Total bobot 0 atau kurang. Memilih secara uniform dari item valid.");
-            return weightedItems.IndexOf(validItems[Random.Range(0, validItems.Count)]);
-        }
+        float totalWeight = calculatedWeights.Sum(x => x.Weight);
+        if (totalWeight <= 0) return -1;
 
         float randomNumber = Random.Range(0f, totalWeight);
         float cumulativeWeight = 0f;
 
-        for (int i = 0; i < validItems.Count; i++)
+        foreach (var weightedItem in calculatedWeights)
         {
-            cumulativeWeight += validItems[i].weight;
+            cumulativeWeight += weightedItem.Weight;
             if (randomNumber <= cumulativeWeight)
             {
-                return weightedItems.IndexOf(validItems[i]);
+                // Kembalikan indeks item dari daftar asli
+                return weightedList.IndexOf(weightedItem.Item);
             }
         }
 
-        Debug.LogWarning("GetRandomWeightedIndex: Fallback, memilih item valid terakhir.");
-        return weightedItems.IndexOf(validItems[validItems.Count - 1]);
+        return weightedList.IndexOf(calculatedWeights.Last().Item); // Fallback
     }
 }

@@ -20,11 +20,13 @@ public class BeatmapAssigner : MonoBehaviour
     public Text songDifficulty;
 
     public static BeatmapAssigner Instance;
+    [HideInInspector] public bool isReversedAudio = false;
 
     void Start()
     {
         AssignBeatmapAsset();
         Instance = this;
+        isReversedAudio = false;
     }
 
     public void AssignBeatmapAsset()
@@ -50,12 +52,25 @@ public class BeatmapAssigner : MonoBehaviour
             targetUIImage.sprite = beatmapData.imageForBG;
         }
 
+
         // Assign AudioClip ke AudioSource (jika ada)
-        if (targetAudioSource != null)
+        if (isReversedAudio) //untuk audio reversed
         {
-            targetAudioSource.clip = beatmapData.audioClipForGameplay;
-            targetAudioSource.Play();
+            if (targetAudioSource != null)
+            {
+                targetAudioSource.clip = beatmapData.audioClipForReverse;
+                targetAudioSource.Play();
+            }
         }
+        else //untuk audio normal
+        {
+            if (targetAudioSource != null)
+            {
+                targetAudioSource.clip = beatmapData.audioClipForGameplay;
+                targetAudioSource.Play();
+            }
+        }
+
 
         // Assign VideoClip ke VideoPlayer (jika ada)
         if (targetVideoPlayer != null)
