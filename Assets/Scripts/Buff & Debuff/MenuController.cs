@@ -4,13 +4,14 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using UnityEngine.Video; // Diperlukan untuk komponen Video
 
 // Enum untuk mendefinisikan tingkat kelangkaan buff, telah diperbarui
 public enum Rarity
 {
-    Common,
-    Epic,
-    Legendary
+    Common, 
+    Epic,   
+    Legendary 
 }
 
 // Kelas WeightedBuffPrefab sekarang menggunakan Rarity enum yang baru
@@ -30,28 +31,39 @@ public class MenuController : MonoBehaviour
     public Transform buttonParent;
     public Vector3[] buttonPositions;
     [Tooltip("Data dari lagu yang dimainkan sebelumnya untuk menentukan modifier.")]
-    public BeatmapData beatmapData; // Variabel BeatmapData baru
+    public BeatmapData beatmapData;
 
     [Header("UI & Animation")]
     public float highlightScale = 1.2f;
     public float transitionSpeed = 10f;
 
+    [Header("Video Settings")]
+    [Tooltip("Komponen VideoPlayer untuk memutar video roulette.")]
+    public VideoPlayer videoPlayer;
+    [Tooltip("Video roulette yang akan diputar sebelum buff muncul.")]
+    public VideoClip rouletteVideo;
+    [Tooltip("Parent GameObject untuk semua tombol buff. Akan disembunyikan selama video.")]
+    public GameObject buffButtonsContainer;
+
     [Header("Scene Transition")]
     public WinState winStateToDebuff;
     public WinState winStateToMenuLagu;
 
-    // Variabel 'X' yang akan dihitung secara dinamis, tidak lagi diatur dari Inspector.
     private float randomizerModifierX = 0f;
-
     private Button[] menuButtons;
     private int selectedIndex = 0;
+    private bool canNavigate = false; // Flag untuk mengontrol input
 
     void Start()
     {
         // Validasi
         if (buttonPrefabs == null) { Debug.LogError("PrefabMenuController (buttonPrefabs) belum di-assign!"); return; }
-        if (buttonParent == null) { Debug.LogError("Button Parent belum di-assign!"); return; }
-        if (buttonPositions == null || buttonPositions.Length < 3) { Debug.LogError("Button Positions tidak cukup atau belum di-assign."); return; }
+        if (videoPlayer == null || rouletteVideo == null) { Debug.LogError("VideoPlayer atau Roulette Video belum di-assign!"); return; }
+        if (buffButtonsContainer == null) { Debug.LogError("Buff Buttons Container belum di-assign!"); return; }
+
+        // Sembunyikan container buff dan nonaktifkan navigasi
+        buffButtonsContainer.SetActive(false);
+        canNavigate = false;
 
         // Reset buff jika cycleTime adalah 1
         if (GameManager.Instance != null && GameManager.Instance.cycleTime == 1)
@@ -66,17 +78,52 @@ public class MenuController : MonoBehaviour
             buttonPrefabs.removedBuffs.Clear();
         }
 
-        PickRandomButtons();
+        // Daftarkan event dan putar video roulette
+        videoPlayer.loopPointReached += OnRouletteVideoEnd;
+        videoPlayer.clip = rouletteVideo;
+        videoPlayer.isLooping = false;
+        videoPlayer.Play();
+    }
 
-        if (menuButtons != null && menuButtons.Length > 0 && menuButtons[0] != null)
+    void OnDestroy()
+    {
+        // Membersihkan event listener untuk mencegah memory leak
+        if (videoPlayer != null)
         {
-            HighlightButton();
+            videoPlayer.loopPointReached -= OnRouletteVideoEnd;
+        }
+    }
+    
+    // Dipanggil saat video roulette selesai
+    private void OnRouletteVideoEnd(VideoPlayer source)
+    {
+        // Hanya jalankan sekali untuk video roulette
+        if (source.clip == rouletteVideo)
+        {
+            // Hapus listener agar tidak terpanggil lagi
+            source.loopPointReached -= OnRouletteVideoEnd;
+
+            // Tampilkan container buff
+            if(buffButtonsContainer != null) buffButtonsContainer.SetActive(true);
+
+            // Sekarang buat dan tampilkan tombol buff
+            PickRandomButtons();
+
+            if (menuButtons != null && menuButtons.Length > 0 && menuButtons[0] != null)
+            {
+                 HighlightButton();
+            }
+
+            // Aktifkan navigasi
+            canNavigate = true;
         }
     }
 
+
     void Update()
     {
-        if (menuButtons == null || menuButtons.Length == 0) return;
+        // Hanya proses input jika navigasi diizinkan
+        if (!canNavigate || menuButtons == null || menuButtons.Length == 0) return;
 
         // Navigasi
         if (Input.GetKeyDown(KeyCode.J))
@@ -151,73 +198,56 @@ public class MenuController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Memilih indeks acak dari daftar berdasarkan Rarity dan logika kondisional baru.
-    /// </summary>
     private int GetRandomWeightedIndex(List<WeightedBuffPrefab> weightedList)
     {
         if (weightedList == null || weightedList.Count == 0) return -1;
-
-        // --- Langkah 1: Kalkulasi Modifier 'X' berdasarkan kondisi ---
+        
+        randomizerModifierX = 0f;
 
         if (GameManager.Instance != null && beatmapData != null)
         {
             int cycleTime = GameManager.Instance.cycleTime;
-            string difficulty = beatmapData.songDifficulty; // Asumsi 'songDifficulty' adalah string "Easy", "Medium", "Hard"
+            string difficulty = beatmapData.songDifficulty;
 
             if (cycleTime == 1)
             {
-                
-            randomizerModifierX = 0f; // Reset X setiap kali fungsi dipanggil
-                // Kondisi 1
                 if (difficulty == "Medium")
                 {
-                    randomizerModifierX += 5f;
+                    randomizerModifierX = 5f;
                 }
-                // Kondisi 2
                 else if (difficulty == "Hard")
                 {
-                    randomizerModifierX += 10f; // Reset + 10 = 10
+                    randomizerModifierX = 10f;
                 }
             }
-            // Kondisi 3
             else if (cycleTime == 2)
             {
                 if (difficulty == "Hard")
                 {
-                    // Di cycle 2, X tidak di-reset, tapi karena ini dipanggil per scene, kita set saja nilainya
-                    // Jika X harus persisten antar scene, perlu sistem save/static.
-                    // Untuk sekarang, kita anggap kondisinya adalah X = 10
-                    randomizerModifierX += 10f;
+                    randomizerModifierX = 10f;
                 }
             }
         }
 
-        // --- Langkah 2: Tentukan Bobot (Weight) Final untuk setiap Rarity ---
-        // Bobot dasar
         float commonWeight = 50f;
         float epicWeight = 35f;
         float legendaryWeight = 15f;
 
-        // Terapkan modifier X
         commonWeight -= randomizerModifierX;
         legendaryWeight += randomizerModifierX;
 
-        // Pastikan bobot tidak menjadi negatif
-        commonWeight = Mathf.Max(1f, commonWeight); // Minimal bobot adalah 1
+        commonWeight = Mathf.Max(1f, commonWeight);
         legendaryWeight = Mathf.Max(1f, legendaryWeight);
 
-        // --- Langkah 3: Debug Log untuk Testing ---
         Debug.Log($"--- Randomizer Check ---\nCycleTime: {GameManager.Instance?.cycleTime}, Difficulty: {beatmapData?.songDifficulty}\nModifier X = {randomizerModifierX}\nFinal Weights -> Common: {commonWeight}, Epic: {epicWeight}, Legendary: {legendaryWeight}");
 
-        // --- Langkah 4: Buat daftar dengan bobot yang sudah dihitung ---
         var calculatedWeights = weightedList
             .Select(item => {
                 float weight = 1f;
                 switch (item.rarity)
                 {
-                    case Rarity.Common: weight = commonWeight; break;
-                    case Rarity.Epic: weight = epicWeight; break;
+                    case Rarity.Common:    weight = commonWeight; break;
+                    case Rarity.Epic:      weight = epicWeight; break;
                     case Rarity.Legendary: weight = legendaryWeight; break;
                 }
                 return new { Item = item, Weight = weight };
@@ -231,7 +261,6 @@ public class MenuController : MonoBehaviour
             return -1;
         }
 
-        // --- Langkah 5: Pilih Item secara Acak ---
         float totalWeight = calculatedWeights.Sum(x => x.Weight);
         if (totalWeight <= 0) return -1;
 
@@ -247,7 +276,7 @@ public class MenuController : MonoBehaviour
             }
         }
 
-        return weightedList.IndexOf(calculatedWeights.Last().Item); // Fallback
+        return weightedList.IndexOf(calculatedWeights.Last().Item);
     }
 
     void PickRandomButtons()
@@ -258,7 +287,7 @@ public class MenuController : MonoBehaviour
             menuButtons = new Button[0];
             return;
         }
-
+        
         if (buttonPrefabs.availableBuffs.Count < numberOfButtonsToPick)
         {
             Debug.LogWarning($"Tidak cukup buff unik yang bisa dipilih ({buttonPrefabs.availableBuffs.Count}) untuk mengisi {numberOfButtonsToPick} slot.");
@@ -302,25 +331,3 @@ public class MenuController : MonoBehaviour
         }
     }
 }
-
-
-// Jangan lupa untuk meng-assign GameManager Anda atau pastikan Instance-nya dapat diakses.
-// Contoh sederhana GameManager (jika belum ada):
-// public class GameManager : MonoBehaviour
-// {
-// public static GameManager Instance { get; private set; }
-// public int cycleTime = 0; // Atau nilai default lain
-//
-// void Awake()
-// {
-// if (Instance == null)
-// {
-// Instance = this;
-// DontDestroyOnLoad(gameObject);
-// }
-// else
-// {
-// Destroy(gameObject);
-// }
-// }
-// }
