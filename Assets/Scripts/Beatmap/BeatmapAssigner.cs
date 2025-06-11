@@ -22,6 +22,9 @@ public class BeatmapAssigner : MonoBehaviour
     public static BeatmapAssigner Instance;
     public bool isReversedAudio = false;
 
+    [Header("untuk debuff meme")]
+    public VideoClip videoClipMeme;
+
     void Start()
     {
         AssignBeatmapAsset();

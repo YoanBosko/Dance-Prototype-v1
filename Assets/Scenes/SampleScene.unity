@@ -5354,6 +5354,7 @@ MonoBehaviour:
   songTitle: {fileID: 0}
   songDifficulty: {fileID: 0}
   isReversedAudio: 0
+  videoClipMeme: {fileID: 32900000, guid: a572bd710e87066439af2577017c2f67, type: 3}
 --- !u!4 &1685692564
 Transform:
   m_ObjectHideFlags: 0

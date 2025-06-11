@@ -58,7 +58,7 @@ public class DiagonalScrollSnap : MonoBehaviour
 
         if (activeItems.Count > 0)
         {
-            currentIndex = 4;
+            currentIndex = 0;
             SnapToIndex(currentIndex);
             PreviewMenu();
 
