@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f427fb2b5c927e44baa60c100a7f1d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 21300000, guid: 2a451b87f37ea3943a05289d4608c724, type: 3}
-  cardTitleText: Zoom
+  image: {fileID: 21300000, guid: 0296cd6c674e3ca41989a440271d740c, type: 3}
+  cardTitleText: Reversed Music
   cardDescriptionText: 
   revealVideo: {fileID: 32900000, guid: 958d2010c36ee1d489ed6b7b4a9832ab, type: 3}
   loopingResultVideo: {fileID: 32900000, guid: 413536ddeb79e874182e5820f956ea13, type: 3}

@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3666790512396506602}
   - component: {fileID: 1008420580961805946}
-  - component: {fileID: -4494377842988277433}
+  - component: {fileID: -8972600318699442888}
   m_Layer: 0
-  m_Name: DebuffLowerShadow
+  m_Name: DebuffBackgroundMeme
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,12 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f427fb2b5c927e44baa60c100a7f1d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 21300000, guid: 26cdb42513a316f4cad694c3c7e322c0, type: 3}
-  cardTitleText: Lower Shadow
+  image: {fileID: 21300000, guid: def855b0543aeb14782bbeee98a9dda8, type: 3}
+  cardTitleText: Background Meme
   cardDescriptionText: 
-  revealVideo: {fileID: 32900000, guid: 0f8e8c29f150e114f95e0891924c2f3d, type: 3}
-  loopingResultVideo: {fileID: 32900000, guid: 0b1476ed74456594ab62091066a2c3cc, type: 3}
---- !u!114 &-4494377842988277433
+  revealVideo: {fileID: 32900000, guid: 28db3092623380f469da319af5c8ee06, type: 3}
+  loopingResultVideo: {fileID: 32900000, guid: 95eec8b6a889de44a8aaa694d4c4c7f4, type: 3}
+--- !u!114 &-8972600318699442888
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -59,7 +59,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 1780403330594563993}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58a8aeed74aeb2e45b60cb28d3eda320, type: 3}
+  m_Script: {fileID: 11500000, guid: eeec603dba815224aa5cf26ceb54b630, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetTag: Shadow
+  targetTag: VideoPlayerForMeme
+  videoClipMeme: {fileID: 32900000, guid: a5d2671323573b748b955c5bec4002a5, type: 3}

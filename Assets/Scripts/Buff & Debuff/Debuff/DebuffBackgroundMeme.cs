@@ -24,6 +24,8 @@ public class DebuffBackgroundMeme : DebuffBase
     {
         GameObject laneShifts = GameObject.FindGameObjectWithTag(targetTag);
         BeatmapAssigner beatmapAssigner = laneShifts.GetComponent<BeatmapAssigner>();
+        videoClipMeme = beatmapAssigner.videoClipMeme;
         beatmapAssigner.targetVideoPlayer.clip = videoClipMeme;
+        // beatmapAssigner.beatmapData.videoClip = videoClipMeme;
     }
 }

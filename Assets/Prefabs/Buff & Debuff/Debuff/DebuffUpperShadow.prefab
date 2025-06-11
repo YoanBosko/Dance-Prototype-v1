@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f427fb2b5c927e44baa60c100a7f1d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 21300000, guid: 2a451b87f37ea3943a05289d4608c724, type: 3}
-  cardTitleText: Zoom
+  image: {fileID: 21300000, guid: 81e47d9714ea0c74181241a3b3a2a4b3, type: 3}
+  cardTitleText: Upper Shadow
   cardDescriptionText: 
   revealVideo: {fileID: 32900000, guid: caa91519cb0f7014fa750be630ac3d00, type: 3}
   loopingResultVideo: {fileID: 32900000, guid: 16eaa13dca8e23844a18c1fd19e3070b, type: 3}
