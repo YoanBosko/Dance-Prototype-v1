@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public enum Difficulty { Easy, Medium, Hard }
 
-[System.Serializable] // Agar bisa dilihat dan diatur di Inspector
+[System.Serializable]
 public class SongItemData
 {
     [Tooltip("Transform dari item UI di dalam ScrollRect.")]
@@ -13,12 +13,7 @@ public class SongItemData
 
     [Tooltip("Tingkat kesulitan untuk lagu ini.")]
     public Difficulty difficulty;
-
-    // Anda bisa menambahkan referensi lain di sini jika perlu,
-    // misalnya ke DataHolder jika masih digunakan.
-    // public DataHolder dataHolder; 
 }
-
 
 public class DiagonalScrollSnap : MonoBehaviour
 {
@@ -30,8 +25,8 @@ public class DiagonalScrollSnap : MonoBehaviour
 
     [Header("Song Lists")]
     [Tooltip("Daftar LENGKAP semua lagu yang tersedia. Atur difficulty di sini.")]
-    public List<SongItemData> allSongItems; // Master list
-    private List<SongItemData> activeItems = new List<SongItemData>(); // Filtered list
+    public List<SongItemData> allSongItems;
+    private List<SongItemData> activeItems = new List<SongItemData>();
 
     [Header("Snapping & Visuals")]
     public float snapSpeed = 5f;
@@ -50,7 +45,7 @@ public class DiagonalScrollSnap : MonoBehaviour
     public SpriteRenderer imageAlbum;
     public AudioSource audioSourcePreview;
     public Text songTitle;
-    public Text songDificulity;
+    public Text songDificulity; // Pastikan nama variabel cocok dengan Inspector Anda
     public Text songCredit;
 
     private int currentIndex = 0;
@@ -63,9 +58,26 @@ public class DiagonalScrollSnap : MonoBehaviour
 
         if (activeItems.Count > 0)
         {
-            currentIndex = 0;
+            currentIndex = 4;
             SnapToIndex(currentIndex);
             PreviewMenu();
+
+            // --- PERBAIKAN ---
+
+            // 1. Putar audio saat mulai
+            if (audioSourcePreview != null)
+            {
+                audioSourcePreview.Play();
+            }
+
+            // 2. Atur posisi dan skala awal secara instan tanpa Lerp
+            // Ini membuat tampilan awal langsung benar tanpa animasi.
+            content.anchoredPosition = new Vector2(targetPos, content.anchoredPosition.y);
+            for (int i = 0; i < activeItems.Count; i++)
+            {
+                float scale = (i == currentIndex) ? highlightScale : 1f;
+                activeItems[i].itemTransform.localScale = Vector3.one * scale;
+            }
         }
         else
         {
@@ -78,6 +90,7 @@ public class DiagonalScrollSnap : MonoBehaviour
         if (activeItems.Count == 0) return;
 
         HandleInput();
+        // Fungsi Lerp di Update akan bekerja untuk transisi SETELAH input pertama
         SnapContent();
         HighlightItem();
     }
@@ -183,20 +196,17 @@ public class DiagonalScrollSnap : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Mengatur target posisi snap dan memanggil LoopItemPositions untuk ilusi tak terbatas.
-    /// </summary>
     void SnapToIndex(int index)
     {
         if (activeItems.Count == 0) return;
 
-        // Panggil fungsi untuk mengatur ulang posisi item agar terlihat looping.
         LoopItemPositions();
-
-        // Setelah posisi item diatur ulang, hitung target posisi untuk content panel
-        // agar item yang dipilih berada di tengah viewport.
+        
         float itemPos = activeItems[index].itemTransform.anchoredPosition.x;
-        targetPos = -itemPos + (viewport.rect.width / 2);
+        // Penyesuaian agar item benar-benar di tengah viewport
+        // Anda mungkin perlu mengubah nilai 0 jika pivot viewport tidak di tengah.
+        float viewportCenterX = viewport.rect.width * (0.5f - viewport.pivot.x);
+        targetPos = -itemPos + viewportCenterX;
     }
 
     void PreviewMenu()
@@ -233,15 +243,10 @@ public class DiagonalScrollSnap : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Mengatur ulang posisi item di dalam content panel untuk menciptakan ilusi "infinite loop".
-    /// Ini adalah logika dari skrip lama Anda yang dikembalikan.
-    /// </summary>
     private void LoopItemPositions()
     {
         if (activeItems.Count <= 1) return;
 
-        // Ambil posisi X dari item yang sedang dipilih sebagai titik referensi.
         float centerItemX = activeItems[currentIndex].itemTransform.anchoredPosition.x;
         int halfCount = activeItems.Count / 2;
 
@@ -249,8 +254,6 @@ public class DiagonalScrollSnap : MonoBehaviour
         {
             int offset = i - currentIndex;
 
-            // Logika "wrap around". Jika sebuah item terlalu jauh di satu sisi,
-            // pindahkan ke sisi lain untuk membuatnya terlihat berdekatan.
             if (offset > halfCount)
             {
                 offset -= activeItems.Count;
@@ -260,11 +263,9 @@ public class DiagonalScrollSnap : MonoBehaviour
                 offset += activeItems.Count;
             }
 
-            // Hitung posisi X yang baru berdasarkan titik referensi, offset, dan jarak.
             float newX = centerItemX + (offset * spacing);
             Vector2 newPos = new Vector2(newX, activeItems[i].itemTransform.anchoredPosition.y);
-
-            // Terapkan posisi baru ke item.
+            
             activeItems[i].itemTransform.anchoredPosition = newPos;
         }
     }
