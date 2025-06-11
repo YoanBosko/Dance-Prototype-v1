@@ -58,7 +58,7 @@ public class DebuffMenuController : MonoBehaviour
     void Update()
     {
         // Hanya izinkan input 'K' jika flag canPressKey adalah true
-        if (canPressKey && Input.GetKeyDown(KeyCode.K))
+        if (canPressKey && Input.GetKeyDown(KeyCode.K) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.J))
         {
             canPressKey = false; // Nonaktifkan input lagi untuk mencegah penekanan berulang
 
