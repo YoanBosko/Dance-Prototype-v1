@@ -72,7 +72,7 @@ public class DebuffMenuController : MonoBehaviour
                 {
                     Debug.LogError("GameManager.Instance tidak ditemukan!");
                 }
-
+                
                 if (winState != null)
                 {
                     // Menggunakan nama scene dari skrip lama Anda
@@ -103,8 +103,8 @@ public class DebuffMenuController : MonoBehaviour
         selectedWeightedDebuff = debuffPrefabs[randomIndex];
         if (selectedWeightedDebuff.prefab == null)
         {
-            Debug.LogError($"Prefab pada indeks {randomIndex} adalah null.", this);
-            return;
+             Debug.LogError($"Prefab pada indeks {randomIndex} adalah null.", this);
+             return;
         }
 
         // Mulai memutar video pertama (roulette)
@@ -114,28 +114,58 @@ public class DebuffMenuController : MonoBehaviour
         videoPlayer.Play();
         Debug.Log("Memutar video roulette...");
     }
-
+    
+    // Fungsi ini sekarang menangani alur 3 video
     void OnVideoFinished(VideoPlayer source)
     {
+        DebuffLoader debuffLoader = selectedWeightedDebuff.prefab.GetComponent<DebuffLoader>();
+
+        // Cek jika video 1 (roulette) selesai
         if (source.clip == rouletteVideo)
         {
-            Debug.Log("Video roulette selesai. Memutar video hasil...");
+            Debug.Log("Video roulette selesai. Memutar video reveal (video 2)...");
 
-            DebuffLoader debuffLoader = selectedWeightedDebuff.prefab.GetComponent<DebuffLoader>();
-            if (debuffLoader != null && debuffLoader.resultVideo != null)
+            if (debuffLoader != null && debuffLoader.revealVideo != null)
             {
-                source.clip = debuffLoader.resultVideo;
-                source.isLooping = true;
+                // Putar video 2 (reveal), jangan di-loop
+                source.clip = debuffLoader.revealVideo;
+                source.isLooping = false;
                 source.Play();
-
-                canPressKey = true;
-                Debug.Log("Input diizinkan. Pemain bisa menekan 'K'.");
             }
             else
             {
-                Debug.LogError($"Prefab '{selectedWeightedDebuff.prefab.name}' tidak memiliki komponen DebuffLoader atau 'resultVideo'-nya kosong.", this);
-                canPressKey = true;
+                Debug.LogError($"Prefab '{selectedWeightedDebuff.prefab.name}' tidak memiliki DebuffLoader atau 'revealVideo'-nya kosong. Mencoba langsung ke video loop.", this);
+                // Langsung coba putar video loop jika video reveal tidak ada
+                PlayLoopingVideo(source, debuffLoader);
             }
+        }
+        // Cek jika video 2 (reveal) selesai
+        else if (debuffLoader != null && source.clip == debuffLoader.revealVideo)
+        {
+            Debug.Log("Video reveal selesai. Memutar video hasil looping (video 3)...");
+            PlayLoopingVideo(source, debuffLoader);
+        }
+    }
+
+    // Fungsi helper baru untuk memulai video looping
+    void PlayLoopingVideo(VideoPlayer source, DebuffLoader debuffLoader)
+    {
+        if (debuffLoader != null && debuffLoader.loopingResultVideo != null)
+        {
+            // Putar video 3 (looping result), atur agar looping
+            source.clip = debuffLoader.loopingResultVideo;
+            source.isLooping = true;
+            source.Play();
+
+            // Izinkan input SEKARANG
+            canPressKey = true;
+            Debug.Log("Input diizinkan. Pemain bisa menekan 'K'.");
+        }
+        else
+        {
+            Debug.LogError($"Prefab '{selectedWeightedDebuff.prefab.name}' tidak memiliki DebuffLoader atau 'loopingResultVideo'-nya kosong.", this);
+            // Izinkan input agar tidak macet
+            canPressKey = true;
         }
     }
 
@@ -146,10 +176,10 @@ public class DebuffMenuController : MonoBehaviour
     {
         switch (rarity)
         {
-            case Rarity.Common: return 50f;
-            case Rarity.Epic: return 35f;
+            case Rarity.Common:    return 50f;
+            case Rarity.Epic:      return 35f;
             case Rarity.Legendary: return 15f;
-            default: return 1f;
+            default:               return 1f;
         }
     }
 
@@ -159,7 +189,7 @@ public class DebuffMenuController : MonoBehaviour
     private int GetRandomWeightedIndex(List<WeightedBuffPrefab> weightedList)
     {
         if (weightedList == null || weightedList.Count == 0) return -1;
-
+        
         // Buat daftar sementara yang berisi item dan bobot kalkulasinya
         var calculatedWeights = weightedList
             .Select(item => new {
@@ -174,7 +204,7 @@ public class DebuffMenuController : MonoBehaviour
             Debug.LogWarning("Tidak ada item yang bisa dipilih setelah kalkulasi bobot.");
             return -1;
         }
-
+        
         float totalWeight = calculatedWeights.Sum(x => x.Weight);
         if (totalWeight <= 0) return -1;
 
