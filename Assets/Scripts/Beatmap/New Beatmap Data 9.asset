@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageForAlbum: {fileID: 0}
   imageForBG: {fileID: 0}
-  audioClipForMenu: {fileID: 8300000, guid: 1381901235dc0e741b66b08ccf643ec2, type: 3}
+  audioClipForMenu: {fileID: 8300000, guid: 6047796f86a82284f9754dcb106776d3, type: 3}
   audioClipForGameplay: {fileID: 8300000, guid: 1381901235dc0e741b66b08ccf643ec2, type: 3}
+  audioClipForReverse: {fileID: 0}
   videoClip: {fileID: 0}
   songTitle: CanCan
   songDifficulty: Easy

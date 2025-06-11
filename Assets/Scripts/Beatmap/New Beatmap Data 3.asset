@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageForAlbum: {fileID: 21300000, guid: 24ccd7ff8ecc4a447abf7dfaf4849d3e, type: 3}
   imageForBG: {fileID: 21300000, guid: d078d8e16f626cc419ebb7870f0ad7f9, type: 3}
-  audioClipForMenu: {fileID: 8300000, guid: 0cd9930a601f4a644af43efe6e6287da, type: 3}
+  audioClipForMenu: {fileID: 8300000, guid: 88f3dc668d1ddea46a478bbc73f3ccc2, type: 3}
   audioClipForGameplay: {fileID: 8300000, guid: 9c7fc1fcb7835a240a756511eefe925b, type: 3}
-  audioClipForReverse: {fileID: 0}
+  audioClipForReverse: {fileID: 8300000, guid: 9c7fc1fcb7835a240a756511eefe925b, type: 3}
   videoClip: {fileID: 32900000, guid: cb5661e512d6c9f47a32c8d88070bbb1, type: 3}
   songTitle: Breathe It In
   songDifficulty: Medium
   songCredit: Kaleb
-  midiFileHit: tapkalebtiga.mid
-  midiFileHold: holdkalebtiga.mid
+  midiFileHit: TAPKALEB3.mid
+  midiFileHold: HOLDKALEB3.mid

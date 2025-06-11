@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageForAlbum: {fileID: 0}
   imageForBG: {fileID: 21300000, guid: 0fb1b4ac48bd5a74794c50468bdc75f6, type: 3}
-  audioClipForMenu: {fileID: 0}
+  audioClipForMenu: {fileID: 8300000, guid: a1cfb78e785cfdd4b8326c554a7bc813, type: 3}
   audioClipForGameplay: {fileID: 8300000, guid: 90928a76ac4a225428863f6e3ec5d9ed, type: 3}
+  audioClipForReverse: {fileID: 8300000, guid: 967b4b8ac546f3c46a78e7418cc26088, type: 3}
   videoClip: {fileID: 0}
   songTitle: Untitled
   songDifficulty: Hard

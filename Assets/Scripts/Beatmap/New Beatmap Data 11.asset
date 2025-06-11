@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageForAlbum: {fileID: 0}
   imageForBG: {fileID: 0}
-  audioClipForMenu: {fileID: 8300000, guid: 8cb713d5010aacd42a298c52bad21298, type: 3}
+  audioClipForMenu: {fileID: 8300000, guid: bdf79cb586a09154b8a6cca20b5cd110, type: 3}
   audioClipForGameplay: {fileID: 8300000, guid: 8cb713d5010aacd42a298c52bad21298, type: 3}
-  audioClipForReverse: {fileID: 0}
+  audioClipForReverse: {fileID: 8300000, guid: c547333269a5e094c9c96ed6c685f5aa, type: 3}
   videoClip: {fileID: 0}
   songTitle: KickRave
   songDifficulty: Hard
