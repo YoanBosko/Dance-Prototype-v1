@@ -21,5 +21,5 @@ MonoBehaviour:
   songTitle: Bang It Out
   songDifficulty: Hard
   songCredit: Suno
-  midiFileHit: tapkalebsatu.mid
-  midiFileHold: holdkalebsatu.mid
+  midiFileHit: TapBangItOut.mid
+  midiFileHold: HoldBangItOut.mid
